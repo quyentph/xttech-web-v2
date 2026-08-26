@@ -151,6 +151,7 @@ export function LogFormModal({ isOpen, onClose, customerId, title, submitText = 
               label="Kênh tương tác *"
               options={CUSTOMER_LOG_CHANNEL_OPTIONS}
               placeholder="Chọn kênh tương tác"
+              defaultValue={CUSTOMER_LOG_CHANNEL_OPTIONS[0].value}
               fullWidth
               {...register('channel')}
               error={errors.channel?.message}
