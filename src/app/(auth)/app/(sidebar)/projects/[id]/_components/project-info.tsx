@@ -11,7 +11,7 @@ interface ProjectInfoProps {
 export function ProjectInfo({ project, formattedDate }: ProjectInfoProps) {
   return (
     <div className="space-y-3">
-      <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Chi tiết dự án</h2>
+      <h2 className="text-xs font-bold text-slate-500 tracking-wider">Chi tiết dự án</h2>
       <div className="bg-white rounded-lg border border-slate-200/80 p-5 shadow-xs">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
@@ -34,9 +34,7 @@ export function ProjectInfo({ project, formattedDate }: ProjectInfoProps) {
         {project.note && (
           <div className="mt-4 pt-4 border-t border-slate-100">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Ghi chú / Mô tả</span>
-            <p className="text-sm text-slate-655 mt-1 whitespace-pre-line leading-relaxed">
-              {project.note}
-            </p>
+            <p className="text-sm text-slate-655 mt-1 whitespace-pre-line leading-relaxed">{project.note}</p>
           </div>
         )}
       </div>
