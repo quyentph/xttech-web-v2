@@ -10,7 +10,7 @@ interface OwnerInfoProps {
 export function OwnerInfo({ user }: OwnerInfoProps) {
   return (
     <div className="space-y-3">
-      <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Người phụ trách</h2>
+      <h2 className="text-xs font-bold text-slate-500  tracking-wider">Người phụ trách</h2>
       <div className="bg-white rounded-lg border border-slate-200/80 p-5 shadow-xs space-y-4">
         {user ? (
           <>
@@ -20,7 +20,7 @@ export function OwnerInfo({ user }: OwnerInfoProps) {
               </div>
               <div className="flex flex-col">
                 <h3 className="font-bold text-slate-800 text-sm leading-tight">{user.fullName as string}</h3>
-                <span className="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">@{user.username as string}</span>
+                <span className="text-[10px] text-slate-400 font-semibold mt-0.5">@{user.username as string}</span>
               </div>
             </div>
             <div className="divide-y divide-slate-100 text-sm pt-2">
