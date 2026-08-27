@@ -128,7 +128,6 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       {/* Header & Breadcrumb & Action Buttons */}
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between pb-5 border-b border-slate-200/80">
         <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quản lý dự án</span>
           <Heading size="h1" className="text-primary text-2xl md:text-3xl font-bold mt-0.5">
             {project.name}
           </Heading>
@@ -146,11 +145,10 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             Chỉnh sửa
           </Button>
           <Button 
-            variant="outline" 
             size="sm" 
             leftIcon={<Trash2 size={16} />}
             onClick={() => setIsDeleteOpen(true)}
-            className="h-9 px-3 text-sm font-semibold border-red-200 text-red-650 hover:bg-red-50"
+            className="h-9 px-3 text-sm font-semibold bg-red-500 hover:bg-red-400 text-white border-transparent"
           >
             Xóa dự án
           </Button>
