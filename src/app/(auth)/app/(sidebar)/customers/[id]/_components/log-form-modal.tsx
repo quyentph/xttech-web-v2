@@ -100,7 +100,7 @@ export function LogFormModal({ isOpen, onClose, customerId, title, submitText = 
         reset({
           channel: initialData.channel || initialData.type || 'call',
           type: initialData.type || 'pending',
-          status: initialData.status || 'completed',
+          status: initialData.status || 'pending',
           note: initialData.note || '',
           nextFollowDate: initialData.nextFollowDate ? new Date(initialData.nextFollowDate).toISOString().split('T')[0] : '',
         });
@@ -108,8 +108,8 @@ export function LogFormModal({ isOpen, onClose, customerId, title, submitText = 
         reset({
           channel: 'call',
           type: 'pending',
-          status: 'pending',
-          note: ' ',
+          status: 'completed',
+          note: '',
           nextFollowDate: '',
         });
       }
@@ -117,8 +117,8 @@ export function LogFormModal({ isOpen, onClose, customerId, title, submitText = 
       reset({
         channel: 'call',
         type: 'pending',
-        status: 'pending',
-        note: ' ',
+        status: 'completed',
+        note: '',
         nextFollowDate: '',
       });
     }
@@ -129,8 +129,8 @@ export function LogFormModal({ isOpen, onClose, customerId, title, submitText = 
     const payload = {
       index: initialData?.index ?? 0,
       channel: data.channel,
-      type: data.type,
-      status: data.status,
+      type: data.type || 'pending',
+      status: data.status || 'completed',
       note: data.note ? data.note.trim() : '',
       nextFollowDate: data.nextFollowDate || null,
     };

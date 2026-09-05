@@ -10,7 +10,7 @@ interface CustomerInfoProps {
 export function CustomerInfo({ customer }: CustomerInfoProps) {
   return (
     <div className="space-y-3">
-      <h2 className="text-xs font-bold text-slate-500  tracking-wider">Khách hàng</h2>
+      <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Khách hàng</h2>
       <div className="bg-white rounded-lg border border-slate-200/80 p-5 shadow-xs space-y-4">
         {customer ? (
           <>
@@ -20,10 +20,10 @@ export function CustomerInfo({ customer }: CustomerInfoProps) {
               </div>
               <div className="flex flex-col">
                 <h3 className="font-bold text-slate-800 text-sm leading-tight">{customer.name}</h3>
-                <span className="text-[10px] text-slate-400 font-semibold mt-0.5">Khách hàng liên kết</span>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">Khách hàng liên kết</span>
               </div>
             </div>
-            <div className="divide-y divide-slate-100 text-sm pt-2">
+            <div className="divide-y divide-slate-100 text-sm pt-1">
               <div className="flex justify-between py-2.5">
                 <span className="text-slate-500">Số điện thoại</span>
                 <span className="font-semibold text-slate-800">{customer.phone || '—'}</span>
