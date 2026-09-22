@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -33,72 +34,71 @@ const Polyline = dynamic(
 );
 
 /**
- * Lọc bớt các điểm nhiễu, điểm văng ảo (Outlier Spike) và điểm quá gần (< 12m)
+ * Tính khoảng cách xấp xỉ giữa 2 điểm tọa độ (mét)
+ */
+function getPointDistance(p1: StaffRoutePoint, p2: StaffRoutePoint): number {
+  const dLat = (p2.latitude - p1.latitude) * 111320;
+  const avgLat = (((p1.latitude + p2.latitude) / 2) * Math.PI) / 180;
+  const dLon = (p2.longitude - p1.longitude) * 111320 * Math.cos(avgLat);
+  return Math.sqrt(dLat * dLat + dLon * dLon);
+}
+
+/**
+ * Lọc bớt các điểm nhiễu, điểm văng trạm sóng BTS và điểm quá gần (< 6m)
  */
 function filterPointsForMatching(points: StaffRoutePoint[]): StaffRoutePoint[] {
   if (points.length <= 2) return points;
 
-  // 1. Lọc bỏ các điểm có sai số lớn (> 30m)
+  // 1. Lọc bỏ các điểm có sai số lớn (> 50m) nếu có accuracy
   const accuratePoints = points.filter(
-    (p) => p.accuracy === undefined || p.accuracy === null || p.accuracy <= 30
+    (p) => p.accuracy === undefined || p.accuracy === null || p.accuracy <= 50
   );
-  if (accuratePoints.length <= 2) return accuratePoints;
+  const basePoints = accuratePoints.length >= 2 ? accuratePoints : points;
 
-  // 2. Lọc bỏ điểm văng ảo dạng gai nhọn (nhảy xa > 150m rồi lập tức quay về tim đường cũ)
-  const nonSpikePoints: StaffRoutePoint[] = [accuratePoints[0]];
-  for (let i = 1; i < accuratePoints.length; i++) {
-    const prev = nonSpikePoints[nonSpikePoints.length - 1];
-    const curr = accuratePoints[i];
-    const next = i + 1 < accuratePoints.length ? accuratePoints[i + 1] : null;
+  // 2. Lọc điểm văng nảy con thoi (Ping-Pong Spike / BTS bounce):
+  // Nếu điểm B văng xa khỏi A (>= 50m) nhưng điểm C ngay sau đó lại quay về gần A (<= 35m)
+  // -> B là điểm văng ảo do trạm sóng BTS -> loại bỏ B
+  const nonSpikePoints: StaffRoutePoint[] = [];
+  const n = basePoints.length;
+  let i = 0;
 
-    const dLat = (curr.latitude - prev.latitude) * 111320;
-    const dLon =
-      (curr.longitude - prev.longitude) *
-      111320 *
-      Math.cos((curr.latitude * Math.PI) / 180);
-    const distToPrev = Math.sqrt(dLat * dLat + dLon * dLon);
+  while (i < n) {
+    const curr = basePoints[i];
+    if (nonSpikePoints.length > 0 && i + 1 < n) {
+      const prev = nonSpikePoints[nonSpikePoints.length - 1];
+      const next = basePoints[i + 1];
 
-    // Nếu có điểm tiếp theo, kiểm tra xem curr có phải gai nhọn bất thường không
-    if (next) {
-      const dLatNext = (next.latitude - curr.latitude) * 111320;
-      const dLonNext =
-        (next.longitude - curr.longitude) *
-        111320 *
-        Math.cos((curr.latitude * Math.PI) / 180);
-      const distToNext = Math.sqrt(dLatNext * dLatNext + dLonNext * dLonNext);
+      const dPrevCurr = getPointDistance(prev, curr);
+      const dCurrNext = getPointDistance(curr, next);
+      const dPrevNext = getPointDistance(prev, next);
 
-      const dLatBase = (next.latitude - prev.latitude) * 111320;
-      const dLonBase =
-        (next.longitude - prev.longitude) *
-        111320 *
-        Math.cos((next.latitude * Math.PI) / 180);
-      const distBase = Math.sqrt(dLatBase * dLatBase + dLonBase * dLonBase);
+      const isBounceSpike =
+        dPrevCurr >= 50 &&
+        dCurrNext >= 50 &&
+        (dPrevNext <= 35 || dPrevNext < dPrevCurr * 0.35);
 
-      if (distToPrev > 150 && distToNext > 150 && distBase < 100) {
-        continue; // Bỏ qua điểm văng ảo gai nhọn này
+      if (isBounceSpike) {
+        i++;
+        continue;
       }
     }
 
     nonSpikePoints.push(curr);
+    i++;
   }
 
-  // 3. Lọc bỏ các điểm quá sát nhau (< 12m) để chống rung giật khi dừng xe
+  // 3. Lọc bỏ các điểm quá sát nhau khi dừng xe / đứng yên (< 6m)
   const filtered: StaffRoutePoint[] = [nonSpikePoints[0]];
-  for (let i = 1; i < nonSpikePoints.length; i++) {
+  for (let j = 1; j < nonSpikePoints.length; j++) {
     const prev = filtered[filtered.length - 1];
-    const curr = nonSpikePoints[i];
+    const curr = nonSpikePoints[j];
+    const dist = getPointDistance(prev, curr);
 
-    const dLat = (curr.latitude - prev.latitude) * 111320;
-    const dLon =
-      (curr.longitude - prev.longitude) *
-      111320 *
-      Math.cos((curr.latitude * Math.PI) / 180);
-    const dist = Math.sqrt(dLat * dLat + dLon * dLon);
-
-    if (dist >= 12 || i === nonSpikePoints.length - 1) {
+    if (dist >= 6 || j === nonSpikePoints.length - 1) {
       filtered.push(curr);
     }
   }
+
   return filtered;
 }
 
@@ -187,6 +187,7 @@ interface RoutePlaybackModalProps {
   userId: string;
   userName: string;
   attendanceId?: number;
+  initialDate?: string;
 }
 
 export function RoutePlaybackModal({
@@ -195,16 +196,17 @@ export function RoutePlaybackModal({
   userId,
   userName,
   attendanceId,
+  initialDate
 }: RoutePlaybackModalProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
-    dayjs().format('YYYY-MM-DD')
+    initialDate || dayjs().format('YYYY-MM-DD') // Ưu tiên ngày của bản ghi chấm công
   );
   const [filterMode, setFilterMode] = useState<'attendance' | 'day'>(
     attendanceId ? 'attendance' : 'day'
   );
   const [routeData, setRouteData] = useState<StaffRouteResponse | null>(null);
   const [matchedCoords, setMatchedCoords] = useState<[number, number][]>([]);
-  const [isSnapToRoad, setIsSnapToRoad] = useState<boolean>(true);
+  const [isSnapToRoad, setIsSnapToRoad] = useState<boolean>(false);
   const [isMatchingRoad, setIsMatchingRoad] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -236,8 +238,14 @@ export function RoutePlaybackModal({
     fetchRoute();
   }, [isOpen, userId, selectedDate, attendanceId, filterMode]);
 
+  useEffect(() => {
+    if (initialDate) {
+      setSelectedDate(initialDate);
+    }
+  }, [initialDate, isOpen]);
   const rawPoints = routeData?.points || [];
   const points = filterPointsForMatching(rawPoints);
+  console.log("point: ", points)
   const polylineCoords: [number, number][] = points.map((p) => [
     p.latitude,
     p.longitude,
@@ -378,7 +386,7 @@ export function RoutePlaybackModal({
             </span>
             <p className="text-sm font-bold text-slate-800">
               {points.length > 0
-                ? dayjs(points[0].recordedAt || points[0].recorded_at).format('HH:mm:ss')
+                ? dayjs(points[0].recordedAt).format('HH:mm:ss')
                 : '--:--'}
             </p>
           </div>
@@ -388,10 +396,7 @@ export function RoutePlaybackModal({
             </span>
             <p className="text-sm font-bold text-slate-800">
               {points.length > 0
-                ? dayjs(
-                    points[points.length - 1].recordedAt ||
-                    points[points.length - 1].recorded_at
-                  ).format('HH:mm:ss')
+                ? dayjs(points[points.length - 1].recordedAt).format('HH:mm:ss')
                 : '--:--'}
             </p>
           </div>
@@ -419,10 +424,9 @@ export function RoutePlaybackModal({
               style={{ height: '100%', width: '100%' }}
             >
               <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_2twi_1_650da3cf662548463efcc8fb"
+                attribution="&copy; Google Maps"
+                url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
               />
-
               {/* Vẽ đường đi Polyline (bám tim đường xanh ngọc lục bảo đẹp mắt, hoặc lam cho GPS gốc) */}
               <Polyline
                 positions={displayedCoords}
@@ -449,7 +453,7 @@ export function RoutePlaybackModal({
                       <p className="font-bold text-emerald-700">📍 Điểm bắt đầu</p>
                       <p>
                         Thời gian:{' '}
-                        {dayjs(points[0].recorded_at).format('HH:mm:ss DD/MM')}
+                        {dayjs(points[0].recordedAt).format('HH:mm:ss DD/MM')}
                       </p>
                     </div>
                   </Popup>
@@ -471,7 +475,7 @@ export function RoutePlaybackModal({
                       <p>
                         Thời gian:{' '}
                         {dayjs(
-                          points[points.length - 1].recorded_at
+                          points[points.length - 1].recordedAt
                         ).format('HH:mm:ss DD/MM')}
                       </p>
                     </div>

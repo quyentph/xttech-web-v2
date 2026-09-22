@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, CalendarCheck, Clock, FileText, ShieldCheck, ListChecks, User } from 'lucide-react';
+import { Layout, CalendarCheck, Clock, FileText, ShieldCheck, ListChecks, User, Smartphone } from 'lucide-react';
 import { SidebarItemProps as SidebarItemType, SidebarSectionProps as SidebarSectionType } from '@/components';
 
 export type UserRole = 'super' | 'admin' | 'hr' | 'sale' | 'technician' | 'accountant' | 'employee';
@@ -18,6 +18,9 @@ export const acceptedSections = [
   'departments',
   'projects',
   'customers',
+  'customers-root',
+  'providers',
+  'customer-providers',
   'configurations',
   'doors',
   'accessories',
@@ -28,6 +31,8 @@ export const acceptedSections = [
   'shifts',
   'attendances-reports',
   'attendances-live-map',
+  'app-versions',
+  'leave-request',
 ];
 
 export interface SidebarItemWithRoles extends Omit<SidebarItemType, 'subItems'> {
@@ -101,7 +106,7 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
             id: 'attendances-live-map',
             label: 'Bản đồ trực tiếp',
             href: '/app/attendances/live-map',
-            roles: ['super', 'admin', 'hr'],
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
           {
             id: 'attendances-reports',
@@ -135,7 +140,7 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
         label: 'Nghỉ phép & Đơn từ',
         icon: React.createElement(FileText, { size: 18 }),
         href: '/app/leave-requests',
-        roles: ['super', 'admin', 'hr'],
+        roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
       },
       {
         id: 'attendances-policy',
@@ -179,11 +184,25 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
         ],
       },
       {
-        id: 'customers',
+        id: 'customers-root',
         label: 'Khách hàng',
         icon: React.createElement(User, { size: 18 }),
         href: '/app/customers',
         roles: ['super', 'admin', 'sale', 'hr'],
+        subItems: [
+          {
+            id: 'customers',
+            label: 'Danh sách khách hàng',
+            href: '/app/customers',
+            roles: ['super', 'admin', 'sale', 'hr'],
+          },
+          {
+            id: 'providers',
+            label: 'Nhà cung cấp',
+            href: '/app/customers/providers',
+            roles: ['super', 'admin', 'sale', 'hr'],
+          },
+        ],
       },
       {
         id: 'project-tasks',
@@ -204,6 +223,19 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
         icon: React.createElement(CalendarCheck, { size: 18 }),
         href: '/app/suggestions',
         roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+      },
+    ],
+  },
+  // Cài đặt hệ thống
+  {
+    title: 'Hệ thống',
+    items: [
+      {
+        id: 'app-versions',
+        label: 'Quản trị hệ thống',
+        icon: React.createElement(Smartphone, { size: 18 }),
+        href: '/app/app-versions',
+        roles: ['super', 'admin'],
       },
     ],
   },
