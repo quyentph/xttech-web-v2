@@ -43,7 +43,7 @@ export const deleteDepartment = async (id: number) => {
 };
 
 // Cập nhật thông tin phòng ban
-export const updateDepartment = async (id: number, data: Omit<Department, 'id' | 'createdAt' | 'mainColor' | 'mainIcon'>) => {
+export const updateDepartment = async (id: number, data: Omit<Department, 'id' | 'create dAt' | 'mainColor' | 'mainIcon'>) => {
   try {
     const res = await api.put(`/api/v1/departments/${id}`, data);
     return res.data;
