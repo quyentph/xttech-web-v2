@@ -8,6 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { getFileUrl, showErrorToast } from '@/utils';
 import { Pencil, Trash2, Eye, Clock, FileEdit, Calendar, UserCheck, Users, UserCheck2, Plus, MessageSquareWarning, Route } from 'lucide-react';
+import { Image } from 'antd';
 
 import { Button, TableData, TableAction, Badge, Heading, ITableColumn, ITableFilterProps, Avatar, Modal } from '@/components';
 import { useQueryParam } from '@/hooks';
@@ -268,8 +269,14 @@ export default function AttendancesPage() {
         return (
           <div className="flex items-center gap-2">
             {imgSrc ? (
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
-                <img src={imgSrc} alt={row.user?.fullName || 'Check In'} className="object-cover w-full h-full" />
+              <div onClick={(e) => e.stopPropagation()} className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0 hover:opacity-85 transition-opacity cursor-pointer">
+                <Image
+                  src={imgSrc}
+                  alt={row.user?.fullName || 'Check In'}
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full rounded-full"
+                />
               </div>
             ) : (
               <div className="w-8 h-8 rounded-full bg-slate-100 shrink-0 flex items-center justify-center text-slate-400 border border-slate-200/60">
@@ -295,8 +302,14 @@ export default function AttendancesPage() {
         return (
           <div className="flex items-center gap-2">
             {imgSrc ? (
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
-                <img src={imgSrc} alt={row.user?.fullName || 'Check Out'} className="object-cover w-full h-full" />
+              <div onClick={(e) => e.stopPropagation()} className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0 hover:opacity-85 transition-opacity cursor-pointer">
+                <Image
+                  src={imgSrc}
+                  alt={row.user?.fullName || 'Check Out'}
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full rounded-full"
+                />
               </div>
             ) : (
               <div className="w-8 h-8 rounded-full bg-slate-100 shrink-0 flex items-center justify-center text-slate-400 border border-slate-200/60">

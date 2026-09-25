@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Button, Badge, TableData, TableAction, ITableColumn, ITableFilterProps, AutoTimekeepingModal } from '@/components';
+import { Button, Badge, TableData, TableAction, ITableColumn, ITableFilterProps, AutoTimekeepingModal, Modal } from '@/components';
 
 import { toast } from 'react-hot-toast';
 import { Calendar, Clock, AlertCircle, LogIn, LogOut, FileEdit, Briefcase, Eye, UserX } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Image } from 'antd';
 
 import { getAttendances } from '@/actions';
 import { Attendance, getAttendanceStatusLabel, getAttendanceStatusVariant } from '@/types';
@@ -210,15 +211,15 @@ export default function PayrollDataPage() {
         return (
           <div className="flex gap-2 items-center py-1">
             {inImgSrc ? (
-              <a
-                href={inImgSrc}
-                target="_blank"
-                rel="noreferrer"
-                className="block relative w-9 h-9 rounded-full border border-slate-200 overflow-hidden cursor-pointer hover:opacity-85 transition-opacity"
-                title="Ảnh check-in"
-              >
-                <img src={inImgSrc} alt="Check In" className="object-cover w-full h-full" />
-              </a>
+              <div onClick={(e) => e.stopPropagation()} className="relative w-9 h-9 rounded-full border border-slate-200 overflow-hidden shrink-0 hover:opacity-85 transition-opacity" title="Ảnh check-in">
+                <Image
+                  src={inImgSrc}
+                  alt="Check In"
+                  width={36}
+                  height={36}
+                  className="object-cover w-full h-full rounded-full"
+                />
+              </div>
             ) : (
               <div
                 className="w-9 h-9 rounded-full bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-xs"
@@ -228,15 +229,15 @@ export default function PayrollDataPage() {
               </div>
             )}
             {outImgSrc ? (
-              <a
-                href={outImgSrc}
-                target="_blank"
-                rel="noreferrer"
-                className="block relative w-9 h-9 rounded-full border border-slate-200 overflow-hidden cursor-pointer hover:opacity-85 transition-opacity"
-                title="Ảnh check-out"
-              >
-                <img src={outImgSrc} alt="Check Out" className="object-cover w-full h-full" />
-              </a>
+              <div onClick={(e) => e.stopPropagation()} className="relative w-9 h-9 rounded-full border border-slate-200 overflow-hidden shrink-0 hover:opacity-85 transition-opacity" title="Ảnh check-out">
+                <Image
+                  src={outImgSrc}
+                  alt="Check Out"
+                  width={36}
+                  height={36}
+                  className="object-cover w-full h-full rounded-full"
+                />
+              </div>
             ) : (
               <div
                 className="w-9 h-9 rounded-full bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-xs"
@@ -323,14 +324,15 @@ export default function PayrollDataPage() {
         <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
           <div className="flex gap-2">
             {inImgSrc ? (
-              <a
-                href={inImgSrc}
-                target="_blank"
-                rel="noreferrer"
-                className="block relative w-8 h-8 rounded-full border border-slate-200 overflow-hidden shrink-0 mt-0.5"
-              >
-                <img src={inImgSrc} alt="Check In" className="object-cover w-full h-full" />
-              </a>
+              <div onClick={(e) => e.stopPropagation()} className="relative w-8 h-8 rounded-full border border-slate-200 overflow-hidden shrink-0 mt-0.5" title="Ảnh check-in">
+                <Image
+                  src={inImgSrc}
+                  alt="Check In"
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full rounded-full"
+                />
+              </div>
             ) : null}
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase block">Check In</span>
@@ -340,14 +342,15 @@ export default function PayrollDataPage() {
           </div>
           <div className="flex gap-2">
             {outImgSrc ? (
-              <a
-                href={outImgSrc}
-                target="_blank"
-                rel="noreferrer"
-                className="block relative w-8 h-8 rounded-full border border-slate-200 overflow-hidden shrink-0 mt-0.5"
-              >
-                <img src={outImgSrc} alt="Check Out" className="object-cover w-full h-full" />
-              </a>
+              <div onClick={(e) => e.stopPropagation()} className="relative w-8 h-8 rounded-full border border-slate-200 overflow-hidden shrink-0 mt-0.5" title="Ảnh check-out">
+                <Image
+                  src={outImgSrc}
+                  alt="Check Out"
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full rounded-full"
+                />
+              </div>
             ) : null}
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase block">Check Out</span>

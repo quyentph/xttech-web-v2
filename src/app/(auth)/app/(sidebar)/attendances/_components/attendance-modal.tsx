@@ -4,6 +4,7 @@ import { Modal, Button, Badge, Avatar } from "@/components";
 import { Attendance, getAttendanceStatusInfo } from "@/types";
 import { getFileUrl } from "@/utils";
 import { LogIn, LogOut, Camera, Mail, } from "lucide-react";
+import { Image } from "antd";
 
 interface Props {
   open: boolean;
@@ -118,11 +119,11 @@ export default function AttendanceDetailModal({
                 Ảnh chụp Check In
               </p>
               {checkInImgSrc ? (
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200/60 bg-slate-100 group">
-                  <img
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200/60 bg-slate-100 group [&_.ant-image]:w-full [&_.ant-image]:h-full">
+                  <Image
                     src={checkInImgSrc}
                     alt="Check In Photo"
-                    className="h-full w-full object-cover transition transform duration-300 group-hover:scale-105"
+                    className="!h-full !w-full object-cover transition transform duration-300 group-hover:scale-105"
                   />
                 </div>
               ) : (
@@ -175,11 +176,11 @@ export default function AttendanceDetailModal({
                 Ảnh chụp Check Out
               </p>
               {checkOutImgSrc ? (
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200/60 bg-slate-100 group">
-                  <img
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200/60 bg-slate-100 group [&_.ant-image]:w-full [&_.ant-image]:h-full">
+                  <Image
                     src={checkOutImgSrc}
                     alt="Check Out Photo"
-                    className="h-full w-full object-cover transition transform duration-300 group-hover:scale-105"
+                    className="!h-full !w-full object-cover transition transform duration-300 group-hover:scale-105"
                   />
                 </div>
               ) : (
