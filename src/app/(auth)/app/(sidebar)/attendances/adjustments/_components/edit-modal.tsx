@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Modal, Button, Select, Input, Textarea } from '@/components';
 import toast from 'react-hot-toast';
+import { showErrorToast } from '@/utils';
 import { updateAdjustmentRequest } from "@/actions";
 import type { AttendanceAdjustmentRequest, RequestType, AttendanceAdjustmentRequestUpdate } from "@/types";
 
@@ -25,7 +27,7 @@ interface EditForm {
 
 export default function EditAdjustmentModal({ open, data, onClose, onSuccess }: Props) {
   const [form, setForm] = useState<EditForm>({
-    requestType: 'both',
+    requestType: 'forgot_attendance',
     workDate: '',
     oldCheckIn: '',
     oldCheckOut: '',
@@ -73,10 +75,8 @@ export default function EditAdjustmentModal({ open, data, onClose, onSuccess }: 
       toast.success('Cập nhật khiếu nại thành công');
       onSuccess?.();
       onClose();
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.detail?.[0]?.msg || "Cập nhật thất bại"
-      );
+    } catch (error: unknown) {
+      showErrorToast(error, 'Cập nhật thất bại');
     } finally {
       setIsSubmitting(false);
     }
@@ -84,13 +84,13 @@ export default function EditAdjustmentModal({ open, data, onClose, onSuccess }: 
 
   if (!data) return null;
 
-  const showCheckIn = form.requestType === 'check_in' || form.requestType === 'both';
-  const showCheckOut = form.requestType === 'check_out' || form.requestType === 'both';
+  const showCheckIn = form.requestType === 'check_in' || form.requestType === 'forgot_attendance';
+  const showCheckOut = form.requestType === 'check_out' || form.requestType === 'forgot_attendance';
 
   const requestTypeOptions = [
     { value: "check_in", label: "Điều chỉnh Check In" },
     { value: "check_out", label: "Điều chỉnh Check Out" },
-    { value: "both", label: "Điều chỉnh cả hai" },
+    { value: "forgot_attendance", label: "Quên chấm công" },
   ];
 
   const footer = (

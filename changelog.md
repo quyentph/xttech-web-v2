@@ -2,9 +2,297 @@
 
 All notable changes to the frontend project will be documented in this file.
 
+## [Unreleased] - 2026-09-19
+
+### Enhanced & Refactored (Native iOS Stop-Detection Engine & Battery Optimization)
+- **Tái Cấu Trúc Động Cơ Định Vị Nền Native iOS Sang Mô Hình Chuẩn Life360 & Transistor ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift)):**
+  - **Tích hợp cảm biến chuyển động `CMMotionActivityManager`:** Khai báo quyền `NSMotionUsageDescription` trong [`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist), theo dõi trạng thái `stationary`, `walking`, `running`, `automotive` trực tiếp qua bộ vi xử lý M-series tiết kiệm năng lượng của chip Apple.
+  - **Cơ chế Stop-Detection Engine tự động ngắt GPS khi Đứng yên:** Khi nhân viên đứng yên quá 2 phút, app tự động gửi 1 gói tin chốt hạ vị trí neo (`stationary`), thiết lập vùng Geofence `CLCircularRegion` bán kính 100m, kích hoạt Significant Location Changes (SLC) và **gọi `locationManager.stopUpdatingLocation()` để tắt hoàn toàn chip GPS**, đưa app vào giấc ngủ sâu nhằm tiết kiệm 100% pin điện thoại.
+  - **Tự động đánh thức và tái kích hoạt GPS khi Di chuyển:** Khi người dùng bước đi/lên xe (`walking`/`automotive`) hoặc bước ra khỏi bán kính 100m (`didExitRegion`), phần cứng iOS tự động đánh thức app dậy ➔ Chuyển ngay sang chế độ dẫn đường cao cấp `kCLLocationAccuracyBestForNavigation` và `activityType = .automotiveNavigation`.
+  - **Bộ lọc sai số GPS thích ứng khi thức dậy:** Nới lỏng dung sai `accuracy` lên 90m trong khoảnh khắc đầu tiên xuất phát (`isMovingTransition`), đảm bảo gói tin khởi động không bị vứt bỏ trước khi chip GPS khóa đủ vệ tinh ngoài trời.
+  - **Dọn dẹp GCD Timer không khả dụng:** Loại bỏ hoàn toàn luồng `DispatchSourceTimer` (vốn bị iOS Kernel đóng băng khi khóa màn hình) để chuyển hẳn sang cơ chế đánh thức dựa trên sự kiện phần cứng chuẩn Apple.
+
+## [1.0.0] - 2026-09-18
+
+### Fixed & Enhanced (Native iOS Background Location Engine - Chuẩn GCD Kernel Timer & Continuous Tracking)
+- **Nâng Cấp Động Cơ Định Vị Chạy Ngầm Native iOS & Khắc Phục Lỗi Mất Tín Hiệu Khi Đứng Yên ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift)):**
+  - **Khắc phục triệt để lỗi mất kết nối sau 15 phút khi đặt máy yên trên bàn:** Thay thế hoàn toàn `Timer` trên Main RunLoop (vốn bị iOS đóng băng ngay khi khóa màn hình) bằng **`DispatchSourceTimer` (GCD Kernel Timer)** chạy độc lập trên background queue (`com.xttech.ios.heartbeatQueue`), định kỳ gửi ping nhịp tim thật lên Backend mỗi 60 giây.
+  - **Cấu hình `kCLDistanceFilterNone` & `activityType = .other`:** Loại bỏ rào cản lọc 5 mét (khiến máy đứng yên 0m không bao giờ kích hoạt callback), cho phép CoreLocation duy trì liên tục luồng cập nhật ngầm.
+  - **Nới lỏng dung sai sai số trong phòng (250m):** Chấp nhận tọa độ ban đầu và nhịp tim trong nhà với độ chính xác đến 250m, tránh tình trạng sóng yếu trong phòng bị loại bỏ.
+  - **Chủ động làm mới tọa độ (`locationManager.requestLocation()`):** Tự động kích hoạt chip GPS lấy điểm mới nếu chưa có điểm neo ban đầu trong chu kỳ của Timer.
+  - **Bổ sung quyền `fetch` & `processing` vào `UIBackgroundModes` ([`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist)):**
+    - Khởi tạo công tắc gạt **"Làm mới trong nền" (Background App Refresh)** trong Cài đặt của iPhone/iPad (giống như Messenger, Zalo).
+    - Cấu hình các định danh tác vụ nền `BGTaskSchedulerPermittedIdentifiers` (`com.xttech.app.refresh`, `com.xttech.app.background-processing`), cho phép app giữ nhịp tim định kỳ và chạy ngầm bền bỉ mà không bị iOS đình chỉ tiến trình.
+  - **Khắc phục lỗi cú pháp Swift:** Đóng chuẩn xác hàm `openSettings` và loại bỏ hoàn toàn đoạn code lặp `didUpdateLocations`.
+
+### Added & Enhanced (User Profile & Avatar Auto-Synchronization)
+- **Tự Động Đồng Bộ Hồ Sơ & Ảnh Đại Diện Ngầm (Background Profile Revalidation & Cache-Busting) ([`useAuthStore.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/stores/useAuthStore.ts), [`layout.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/layout.tsx), [`mobile-header.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/mobile-header.tsx)):**
+  - **Khắc phục triệt để lỗi avatar cũ trên điện thoại nhân viên sau khi Admin cập nhật:** Khi Admin thay đổi avatar hoặc quyền hạn của nhân viên từ trang quản trị, điện thoại nhân viên trước đây không nhận được do dữ liệu `user` bị đóng băng trong `localStorage` (`xt-auth`).
+  - **Tự động đồng bộ ngầm khi mở ứng dụng (`AppLayout`):** Ngay sau khi xác thực token thành công, tự động gọi ngầm `getUser(currentUserId)` từ backend để lấy thông tin mới nhất và cập nhật vào `useAuthStore` mà không làm gián đoạn hay làm chậm giao diện của nhân viên.
+  - **Bổ sung phương thức `updateUser` & `setUser` trong `useAuthStore`:** Cho phép cập nhật linh hoạt các trường hồ sơ (avatar, roles, positions, fullName) và đồng bộ tức thì vào cookie `xt-auth` cũng như `localStorage`.
+  - **Tích hợp đồng bộ hồ sơ vào nút Refresh của `MobileHeader`:** Khi nhân viên chạm nút Làm mới dữ liệu trên dashboard di động, app đồng thời kéo lại thông tin cá nhân mới nhất từ server.
+  - **Cơ chế Cache-Busting cho Avatar:** Bổ sung query string `?v=${user.updatedAt}` vào URL ảnh avatar trên `MobileHeader`, `HeaderProfile` và `ProfileCard`, đảm bảo trình duyệt mobile và PWA Webview luôn tải phiên bản ảnh mới nhất, tránh bị dính cache ảnh cũ.
+
+### Added & Enhanced (Page Loader & Transition System)
+- **Nâng Cấp Tiến Trình Nạp Trang 0 - 100% & Khử Hiện Tượng Chớp Nháy Khung Hình ([`page-loader.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/page-loader/page-loader.tsx), [`PageTransitionProvider.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/contexts/PageTransitionProvider.tsx)):**
+  - **Chuyển đổi từ thanh shimmer vô tận sang thanh tiến trình thực tế:** Hiển thị thanh nạp fill theo phần trăm thực tế (`0%` -> `100%`) kèm nhãn số phần trăm sắc nét (`tabular-nums`) và màu thương hiệu XTTech (`#045863` -> `#088395` -> `#0A97B0`).
+  - **Mô phỏng tiến trình thông minh (Smart Simulated Progress):** Tăng nhanh phản hồi tức thì lên 15-30% ngay khi chạm, tăng dần đều mượt mà lên ~90% trong lúc nạp, và tự động hoàn thành 100% khi trang đã sẵn sàng.
+  - **Thời gian hiển thị tối thiểu 1 giây (Minimum 1000ms Duration):** Đo lường `startTimeRef` và tự động bù trừ thời gian chênh lệch (`Math.max(0, 1000 - elapsed)`) đối với các trang nạp từ cache quá nhanh (50ms - 100ms), triệt tiêu hoàn toàn hiện tượng nhấp nháy (flicker) gây mỏi mắt người dùng.
+  - **Giới hạn hiển thị độc quyền trên thiết bị Mobile (< 768px):** Tích hợp kiểm tra `isMobileScreen()` trong [`PageTransitionProvider.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/contexts/PageTransitionProvider.tsx) và class CSS `md:hidden` tại [`page-loader.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/page-loader/page-loader.tsx), tắt hoàn toàn màn hình loader trên Desktop để người dùng PC chuyển trang tức thì không bị che khuất tầm nhìn, đồng thời giữ nguyên trải nghiệm Super App mượt mà trên Mobile & App iOS/Android.
+  - **Hiệu ứng sóng nước dâng theo tiến trình & 1 ngọn sóng cuộn trào đồng nhất màu chủ đạo XTTech:**
+    - **Chiều cao dâng nước:** Mực nước dâng tỉ lệ thuận với `currentProgress` từ 10% cơ sở và đạt đỉnh chạm ngưỡng tối đa đúng **50% chiều cao màn hình** (`50vh`) khi nạp đạt 100% (`transition: height 300ms ease-out`).
+    - **1 ngọn sóng duy nhất chuẩn màu XTTech (#045863):** Loại bỏ hoàn toàn lớp sóng mờ phụ phía sau, chỉ giữ lại 1 ngọn sóng chính sắc nét cuộn dập dềnh (`wave-flow` 2.8s) liền mạch với thân nước bên dưới tạo thành một khối nước màu chủ đạo `#045863` thống nhất, rõ ràng và sang trọng.
+  - **Tinh chỉnh bố cục tối giản chuẩn Mobile UX:**
+    - Thu nhỏ khung icon xuống `h-14 w-14` (56px) và biểu tượng `size={24}` thanh thoát.
+    - Lược bỏ hoàn toàn nhãn chữ "Tiến trình nạp" và số phần trăm `%`, nâng cấp thanh Progress Bar lên độ dày vừa vặn `h-2.5` (10px) giúp dải chuyển màu thương hiệu hiển thị rõ ràng và bắt mắt.
+    - Đẩy cụm thông tin lên vị trí 1/3 phía trên màn hình (`pt-[10vh]`), tạo khoảng thở thị giác rộng rãi và thoáng đãng, tuyệt đối không bị ngọn sóng 50vh che khuất.
+
+### Fixed (Page Transition Lifecycle & Route Duplication)
+- **Khắc phục triệt để lỗi kẹt loading 7 giây khi bấm lại vào chính trang đang đứng:**
+  - Bổ sung Guard Clause `isSameRoute(targetUrl)` so sánh chính xác cả `pathname` và `searchParams` chuẩn hóa (loại trừ trailing slash).
+  - Bỏ qua ngay lập tức và không kích hoạt `isTransitioning = true` trong `startTransition`, `navigateTo`, `handleGlobalClick`, và `window.history.pushState` khi người dùng bấm lại vào cùng trang hiện tại, giải quyết nguyên nhân Next.js không đổi route khiến effect tắt loader không chạy và bị kẹt chờ timer 7 giây.
+- **Khắc phục triệt để lỗi Race Condition khiến loader bị đơ cứng ở 34%:**
+  - Bổ sung `fromPathRef` lưu lại URL ban đầu khi bắt đầu transition.
+  - Ngăn chặn `useEffect` chạy sớm khi `pathname` vẫn là trang cũ, chỉ kích hoạt giai đoạn hoàn tất 100% khi Next.js thực sự chuyển sang URL mới (`currentUrl !== fromPathRef`).
+  - Loại bỏ hoàn toàn lỗi hàm cleanup của React hủy ngang `finishInterval` giữa chừng khi Next.js cập nhật route.
+- **Khắc phục triệt để hiện tượng nháy nhẹ khi bấm vào icon chuyển trang:**
+  - Loại bỏ hoàn toàn hiệu ứng mờ dần lúc mở (`transition-all duration-300`), chuyển sang cơ chế **Instant Snap-In 0ms**: khi người dùng chạm vào icon, màn hình loading lập tức phủ trắng 100% che đậy hoàn toàn trang cũ, triệt tiêu 100% cảm giác màn hình bị chớp mờ nửa trong suốt.
+  - Tách biệt cơ chế fade-out mượt mà (`transition-opacity duration-200`) chỉ áp dụng khi giai đoạn nạp đã hoàn tất 100% để hiển thị trang mới êm dịu.
+  - Bọc `setTimeout(0)` trong `window.history.pushState` và `replaceState` để tuân thủ nghiêm ngặt chuẩn React 19 (ngăn chặn lỗi `useInsertionEffect must not schedule updates`), đồng thời giữ cơ chế bắt sự kiện click DOM (`handleGlobalClick`) trực tiếp 0ms tức thì khi người dùng chạm vào icon.
+- **Đồng bộ hóa 100% màu sắc và triệt tiêu toàn bộ ranh giới, đường kẻ trên sóng nước:**
+  - Tách riêng thẻ `<path>` tô màu (`stroke="none"`) và `<path>` kẻ viền đỉnh sóng (`stroke="#045863"`), loại bỏ hoàn toàn các cạnh khép góc thẳng đứng ở 2 đầu SVG (`x=0` và `x=1200`), xóa sổ vệt kẻ dọc giữa ngọn sóng.
+  - Đồng bộ hóa toàn bộ thân sóng SVG và khối thân nước bên dưới về chung duy nhất một mã màu phẳng Solid chuẩn thương hiệu XTTech (`#5A949C`), loại bỏ hoàn toàn hiện tượng lệch tông màu do dải gradient không đồng đều.
+  - Chuẩn hóa chuyển động cuộn sóng thuần ngang (`0%` -> `-50%` trục X) kết hợp kéo dài đáy SVG xuống `y=160` và tăng gối đè an toàn `-mt-3` (12px), biến toàn bộ mặt nước thành một khối liền lạc, mịn màng và không một vết gãy khúc.
+- **Khắc phục cảnh báo gọi `setState` đồng bộ trong `useEffect` gây cascading render ([`page-loader.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/page-loader/page-loader.tsx)):**
+  - Chuyển `currentProgress` sang mô hình Trạng thái suy luận (Derived State): khi `!isVisible` tự động trả về `0`, loại bỏ hoàn toàn lệnh `setInternalProgress(0)` chạy đồng bộ trên luồng chính của `useEffect`.
+  - Khởi tạo tiến trình mượt mà bên trong callback `setInterval` bất đồng bộ và dọn dẹp biến đếm ở hàm `cleanup`, tuân thủ 100% nguyên tắc chuẩn của React 19 và React Compiler.
+- **Triệt tiêu hiện tượng nháy đổi icon (từ Loader2 sang icon tính năng thật):**
+  - Vô hiệu hóa `PageLoader` trùng lặp trong Next.js native Suspense fallback ([`(sidebar)/loading.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/loading.tsx) và [`app/loading.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/loading.tsx)).
+  - Trao quyền duy nhất cho `PageTransitionProvider` quản lý màn hình loading, đảm bảo icon chính xác của trang đích được hiển thị ngay lập tức từ mili-giây đầu tiên, xóa bỏ hoàn toàn hiện tượng 2 loader tranh chấp gây chớp đổi icon.
+
+## [Unreleased] - 2026-09-17
+
+### Added & Enhanced (Page Transition Loader)
+- **Triển khai Màn hình Loading Chuyển Trang Tức Thì (Zero-Delay Page Transition Loader) Chuẩn Super-App ([`src/components/page-loader`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/page-loader), [`src/contexts/PageTransitionProvider.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/contexts/PageTransitionProvider.tsx)):**
+  - **Khắc phục triệt để hiện tượng trễ (delay) khi bấm chuyển trang trên Mobile/iOS:** Giải quyết điểm nghẽn do Next.js chờ tải JS chunks & server API bằng kiến trúc App Shell Pre-loaded Loader.
+  - **Phản hồi tương tác tức thì 0ms:** Màn hình loading nằm sẵn trong bộ nhớ RAM của Shell Layout, được kích hoạt ngay khi chạm ngón tay vào link hoặc gọi chuyển trang mà không cần chờ nạp script qua mạng.
+  - **Thiết kế thương hiệu XTTech chuẩn mực ([`page-loader.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/page-loader/page-loader.tsx)):**
+    - Header đầy đủ nút Quay lại (Back), tiêu đề trang đích, và nút Trang chủ (Home).
+    - Khung Icon nổi bật kèm hiệu ứng nhịp thở (`pulse`) và tên tính năng cụ thể tương ứng với từng đường dẫn route đích ([`route-metadata.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/utils/route-metadata.ts)).
+    - Thanh tiến trình Progress bar gradient màu chủ đạo XTTech (`#045863` sang `#088395`) chuyển động liên tục (`shimmer`).
+    - Nền sóng uốn lượn (SVG Wave) phía chân trang với tone màu pastel XTTech dịu mắt và sang trọng.
+  - **Tích hợp toàn diện & Tương thích React 19 / Next.js 16:** Bổ sung `PageTransitionProvider` tại [`AppLayout`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/layout.tsx), kết hợp bắt sự kiện click link nội bộ toàn cục; tối ưu hóa lịch biểu `startTransition` qua `setTimeout(..., 0)` để tương thích tuyệt đối với `useInsertionEffect` trong React 19; đồng thời hỗ trợ native Next.js Suspense fallback tại [`(sidebar)/loading.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/loading.tsx).
+
+### Added & Enhanced (Auto Timekeeping Camera Compatibility)
+- **Tối ưu hóa Khả năng Tương thích Camera Chấm công trên iOS/Android ([`auto-timekeeping-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/auto-timekeeping-modal/auto-timekeeping-modal.tsx)):**
+  - **Cơ chế Fallback 3 tầng:** Tự động chuyển cấp độ ràng buộc từ HD (`1280x720`) -> Camera trước chuẩn (`facingMode: 'user'`) -> Bất kỳ camera nào khả dụng (`video: true`) nhằm khắc phục triệt để lỗi `OverconstrainedError` trên các dòng iPhone kén tỷ lệ khung hình.
+  - **Tích hợp Cơ chế Chụp ảnh Bằng Camera Gốc (HTML5 Native Camera Fallback - `capture="user"`):** Bổ sung giải pháp cứu cánh tối thượng khi gặp các thiết bị iPhone bị Apple khóa WebRTC Live Stream (như chế độ PWA hoặc lỗi WebKit). Tự động hiển thị nút "Mở Camera máy" kích hoạt ứng dụng Camera gốc của iPhone ở chế độ Selfie, đảm bảo 100% người dùng chấm công thành công mà không bị chặn bởi bất kỳ rào cản bảo mật nào.
+
+### Fixed (Route Playback Modal)
+- **Khắc phục lỗi bản đồ tự động reset zoom / thu nhỏ khi đang xem lộ trình ([`src/components/map-modal/route-playback-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/map-modal/route-playback-modal.tsx)):**
+  - **Khống chế số lần tự động căn chỉnh (`hasFittedBoundsRef`):** Chỉ tự động gọi `fitBounds()` 1 lần duy nhất khi dữ liệu lộ trình vừa được nạp lần đầu hoặc khi đổi ngày / nhân viên. Không tự động gọi lại làm giật màn hình khi thuật toán nắn đường OSRM chạy xong hoặc khi component re-render.
+  - **Ghi nhớ tham chiếu mảng tọa độ (`useMemo`):** Bọc `points`, `polylineCoords`, và `displayedCoords` bằng `useMemo` để tránh sinh mảng mới ở mỗi vòng render gây trigger `useEffect` thừa.
+  - **Bổ sung nút Căn vừa lộ trình (`Focus` button):** Thêm nút bấm căn vừa toàn cảnh lộ trình chủ động ở góc dưới bên phải cạnh nút phóng to toàn màn hình.
+
+## [Unreleased] - 2026-09-16
+
+### Fixed & Enhanced (iOS Background Geolocation)
+- **Tái Cấu Trúc Toàn Diện Định Vị Ngầm iOS Theo Kiến Trúc Chuẩn Doanh Nghiệp (Zalo / Life360):**
+  - **Khắc phục triệt để lỗi mất biểu tượng định vị sau 1-2 phút khi ra nền / khóa màn hình ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift)):**
+    - Loại bỏ hoàn toàn lỗi xung đột luồng: chuyển toàn bộ các lệnh gọi UIKit (`UIApplication.shared.beginBackgroundTask` và `UIDevice.current`) về Main Thread (`DispatchQueue.main.async`), triệt tiêu hoàn toàn lỗi Crash âm thầm và lỗi Watchdog Termination `0x8badf00d`.
+    - Gỡ bỏ `startUpdatingHeading()` (cảm biến la bàn): triệt tiêu lỗi `kCLErrorHeadingFailure` bị hệ điều hành ngắt phiên khi ứng dụng chuyển sang trạng thái chạy nền.
+    - Chuẩn hóa cấu hình `CoreLocation`: đổi sang `kCLLocationAccuracyBest` và `CLActivityType.other` để tránh cơ chế `locationd` tự động dừng nhận diện khi người dùng đứng yên trong phòng.
+    - Loại bỏ mẹo âm thanh ảo `AVAudioPlayer` gây lỗi bị daemon `mediaserverd` của iOS 16/17/18 đình chỉ, đồng thời dọn sạch thẻ `<string>audio</string>` trong [`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist).
+  - **Tích Hợp Cơ Chế Vùng Neo Tròn Khi Đứng Yên (Stationary Region Geofence):**
+    - Tự động dựng `CLCircularRegion` bán kính 50m quanh vị trí nhân viên khi ngồi làm việc trong phòng; khi nhân viên bước ra ngoài, iOS tự động bắn sự kiện `didExitRegion` đánh thức định vị tần số cao ngay lập tức.
+    - Đảm bảo gửi nhịp tim Heartbeat đều đặn mỗi 60 giây khi đứng yên, giúp nhân viên không bao giờ bị hiển thị Offline trên hệ thống quản lý.
+  - **Cơ Chế Hồi Sinh Khi Ứng Dụng Bị Thu Hồi RAM (Significant Location Changes):**
+    - Đăng ký `startMonitoringSignificantLocationChanges()` và tự động tái khởi tạo theo dõi vị trí trong `AppDelegate` & `load()` nếu ca làm việc trước đó đang diễn ra.
+
+### Changed & Assets
+- **Đồng Bộ App Icon iOS Khớp Nhận Diện Thương Hiệu Android ([`AppIcon-512@2x.png`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png)):**
+  - Thay thế toàn diện icon mặc định màu xanh dương của Capacitor bằng logo XTTech chính thức xuất từ file vector gốc [`logo-xttech.svg`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/public/image-xttech/logo-xttech.svg).
+  - Tối ưu kích thước hiển thị chuẩn Apple HIG: canvas 1024x1024 px, tỷ lệ logo căn giữa 56% trên nền trắng thuần `#FFFFFF`, loại bỏ hoàn toàn kênh Alpha (RGB 24-bit) để tránh lỗi từ chối của App Store hoặc lỗi nền đen khi bo góc.
+  - Đồng bộ giao diện biểu tượng ứng dụng hoàn toàn thống nhất giữa hai nền tảng Android và iOS.
+
+## [Unreleased] - 2026-09-15
+
+### Changed & Configured
+- **Cấu hình Ứng dụng Di động Tràn viền Toàn màn hình trên iOS ([`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist)):**
+  - Bổ sung `<key>UIStatusBarHidden</key><true/>` và chuyển `<key>UIViewControllerBasedStatusBarAppearance</key><false/>`.
+  - Ẩn hoàn toàn thanh trạng thái hệ thống (Status Bar gồm giờ, pin, cột sóng, wifi) trên iPhone, giúp giao diện ứng dụng hiển thị tràn viền toàn màn hình (True Fullscreen) liền mạch, tối ưu diện tích hiển thị cho nhân viên.
+
+## [Unreleased] - 2026-09-14
+
+### Fixed
+- **Khắc phục Triệt để Lỗi SSR "window is not defined" do Leaflet:**
+  - Chuyển toàn bộ `import L from 'leaflet'` sang `import type L from 'leaflet'` trong [`route-playback-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/map-modal/route-playback-modal.tsx), đảm bảo mã Leaflet không bao giờ bị thực thi trên môi trường Server (Node.js).
+  - Khởi tạo icon tùy chỉnh và `fitBounds` hoàn toàn qua dynamic runtime `leaflet` được nạp an toàn trên Client (`useEffect`).
+
+### Changed & Optimized
+- **Tối ưu Barrel Export & Cô lập Bản đồ:**
+  - Gỡ bỏ `export * from './map-modal'` khỏi [`src/components/index.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/index.ts) để giải phóng toàn bộ `AdminLayout` và các trang vệ tinh khỏi việc nạp mã Leaflet nặng trên Server.
+  - Áp dụng `dynamic(() => import('./_components/live-map').then((mod) => mod.LiveMap), { ssr: false })` cho trang [`live-map/page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/live-map/page.tsx).
+- **Render Động Tiện Ích Doanh Nghiệp Theo Phân Quyền Vai Trò (Role-based RBAC):**
+  - Tái cấu trúc [`QuickActionsGrid`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/quick-actions-grid.tsx) trên Dashboard di động: tích hợp trực tiếp với ma trận phân quyền `isRouteAllowedForRole` từ [`src/config/sidebar.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/config/sidebar.ts) và `useAuthStore`.
+  - Tự động ẩn/hiện các tính năng theo đúng vai trò thực tế của người dùng (`admin`, `hr`, `sale`, `technician`, `accountant`, `employee`), triệt tiêu lỗi 403 Forbidden khi nhân viên bấm vào tính năng quản trị.
+  - Cập nhật số lượng tính năng hiển thị linh hoạt `{visibleActions.length} tính năng` thay vì viết cứng.
+- **Phân Quyền Khối Lịch Sử Dashboard & Bảo Vệ Nhật Ký Hệ Thống (Audit Logs):**
+  - Tạo mới component [`PersonalAttendanceHistory`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/personal-attendance-history.tsx) hiển thị 5 ngày chấm công gần nhất của chính nhân viên (ngày, ca, giờ check-in/out, badge đúng giờ/muộn).
+  - Ẩn hoàn toàn [`SystemHistory`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/system-history.tsx) (Audit Log nhạy cảm) đối với các vai trò `employee`, `technician`, `sale`, `accountant` và thay thế bằng `PersonalAttendanceHistory`.
+  - Giữ lại `SystemHistory` chỉ cho `admin` và `hr`.
+- **Chuẩn Hóa Màu Sắc Tối Giản & Đồng Bộ Màu Thương Hiệu (Design System Alignment):**
+  - **Khối Yêu cầu chờ phê duyệt ([`PendingApprovalsCard`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/pending-approvals-card.tsx)):**
+    - Loại bỏ hoàn toàn các viền vàng chói, nền vàng và các nút màu cam/xanh rời rạc.
+    - Chuẩn hóa theo phong cách Corporate Minimalist: viền xám nhẹ `border-gray-100`, icon tiêu đề & badge số lượng đồng bộ màu nhận diện thương hiệu `bg-primary/10 text-primary` (`#045863`).
+    - 2 Thẻ hành động nhanh ("Đơn nghỉ phép" & "Giải trình công") chuyển sang dạng thẻ trung tính hiện đại: nền xám nhạt `bg-gray-50/80` viền mảnh, icon màu thương hiệu tinh tế.
+  - **Biểu đồ Chuyên cần 7 ngày ([`WeeklyAttendanceChart`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/weekly-attendance-chart.tsx)):**
+    - Cột **"Có mặt"**: Chuyển từ màu xanh neon `#10b981` sang màu nhận diện thương hiệu XTTech **`#045863` (Teal)**.
+    - Cột **"Đi muộn"**: Chuyển từ màu cam chói `#f59e0b` sang tone trung tính nhẹ **`#94a3b8` (Slate-400)** dịu mắt, không gây rối mắt cho người quản lý.
+    - Hiệu ứng hover chuột: Dùng dải mờ nhẹ `rgba(0, 0, 0, 0.03)` thay cho khối xám đặc.
+
+### Removed
+- **Dọn dẹp Mã nguồn Trùng lặp (DRY):**
+  - Xóa bỏ file trùng lặp `src/app/(auth)/app/(sidebar)/attendances/_components/route-playback-modal.tsx`.
+  - Tái sử dụng thống nhất [`RoutePlaybackModal`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/map-modal/route-playback-modal.tsx) trên cả 2 trang Chấm công (`attendances`) và Bản đồ trực tiếp (`live-map`).
+
+## [Unreleased] - 2026-09-12
+
+### Added & Redesigned
+- **Thiết kế lại Trang Dashboard Doanh Nghiệp Thời Gian Thực & Bộ Tiện Ích Di Động Super-App ([`dashboard/`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard)):**
+  - **Loại bỏ triệt để dữ liệu mockup ảo:** Thay thế toàn bộ các chỉ số thống kê giả lập, tài liệu ảo, lịch đào tạo ảo và biểu đồ tĩnh bằng 100% dữ liệu sống từ hệ thống (Nhân sự, Chấm công hôm nay, Đơn xin nghỉ phép đang chờ duyệt, Giải trình công, Dự án và GPS Live Map).
+  - **Trải nghiệm Mobile Chuẩn Super-App Doanh nghiệp (Lark Suite / Base.vn style):**
+    - [`MobileHeader`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/mobile-header.tsx): Lời chào cá nhân hóa thông minh theo thời gian trong ngày, Avatar, Chức vụ, Thứ/Ngày/Tháng tiếng Việt kèm nút làm mới tức thì.
+    - **Tối ưu hóa Toàn diện UI/UX Modal Chấm Công Tự Động ([`src/components/auto-timekeeping-modal/`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/auto-timekeeping-modal)):**
+      - **Tối ưu Layout & Xóa bỏ khoảng trắng thừa:** Chuyển layout sang dạng Sticky Footer cố định ở chân trang với dải nền phân cách nổi bật; khu vực nội dung bên trên co giãn linh hoạt và cuộn mượt mà trên thiết bị di động.
+      - **Thiết kế lại Nút hành động chính (CTA):** Thay thế nút tròn cũ bằng nút chữ nhật bo góc rộng toàn mép (full-width) màu xanh ngọc chủ đạo (Teal/Primary) với nhãn hành động rõ ràng: `📸 Chụp ảnh chấm công` ở bước chụp và `Xác nhận Check-in / Check-out` ở bước xác nhận.
+      - **Đồng nhất Màu sắc & Cấu trúc Badge:** Thay các badge màu chói bằng badge nền đen bán trong suốt (`rgba(0,0,0,0.6)` + `backdrop-blur-md`) viền kính tinh tế; camera trực tiếp sử dụng dấu chấm đỏ nhấp nháy (pulsating red dot) kèm nhãn "Trực tiếp" sang trọng.
+      - **Gom nhóm thông tin dạng Card UI:** Đặt cụm [Toạ độ + Bản đồ GPS] và [Ghi chú chấm công] vào các Card nền xám nhạt (`bg-slate-50 border border-slate-200/80 rounded-xl`), tạo phân cấp khối thông tin trực quan, ngăn nắp.
+      - **Tinh chỉnh Typography & Icon:** Hạ cỡ chữ tiêu đề xuống mức chuẩn 18px-20px, đồng bộ phong cách và kích thước icon thống nhất trên toàn modal.
+
+    - [`QuickActionsGrid`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/quick-actions-grid.tsx): Lưới 8 tiện ích doanh nghiệp di động chuẩn 4 cột với icon bo góc mềm mại, phối màu hiện đại và badge đếm đơn từ chờ duyệt: Bản đồ Live, Xin nghỉ phép, Giải trình, Bảng công, Dự án, Danh bạ, Góp ý, Báo cáo.
+    - [`PendingApprovalsCard`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/pending-approvals-card.tsx): Thẻ cảnh báo và xử lý nhanh các đơn xin nghỉ phép và khiếu nại công dành riêng cho HR / Admin / Ban giám đốc.
+  - **Trải nghiệm Desktop Bảng Điều Hành Trung Tâm (Command Center):**
+    - 4 Thẻ KPI chính xác theo thời gian thực (Tổng nhân sự, Chuyên cần hôm nay, Hồ sơ chờ duyệt, Dự án đang chạy).
+    - [`WeeklyAttendanceChart`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/weekly-attendance-chart.tsx): Biểu đồ Recharts cột đôi thể hiện số lượng nhân sự có mặt và đi muộn trong 7 ngày gần nhất.
+    - [`LiveStaffWidget`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/live-staff-widget.tsx): Widget theo dõi danh sách kỹ thuật viên/nhân sự đang trực tuyến định vị GPS ngoài thực địa theo thời gian thực.
+  - **Tích hợp API Backend & Cơ chế Fallback Không Gián Đoạn ([`src/actions/dashboard/index.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/actions/dashboard/index.ts)):**
+    - Xây dựng action `getDashboardSummary()` ưu tiên gọi endpoint tổng hợp tối ưu từ backend, đồng thời trang bị cơ chế tự động fallback tổng hợp dữ liệu song song client-side từ các API sẵn có, đảm bảo hoạt động trơn tru 100% không gián đoạn trên cả môi trường local và production.
+
+### Refactored & Enhanced
+- **Tái cấu trúc & Nâng cấp Trải nghiệm Sidebar Quản trị ([`src/config/sidebar.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/config/sidebar.ts), [`src/components/sidebar/sidebar.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/components/sidebar/sidebar.tsx)):**
+  - **Cặp Biểu Tượng Ghim / Hủy Ghim Thông Minh (Pin / PinOff):** Chuẩn hóa hoàn toàn nút điều khiển ở Header chỉ với 2 trạng thái: **Ghim 📌 (`Pin`)** khi đang mở tạm thời do rê chuột (hover) để cố định thanh menu mở rộng, và **Hủy ghim 📍✕ (`PinOff`)** khi đang mở cố định để chuyển sang chế độ tự động thu nhỏ khi rời chuột, loại bỏ hoàn toàn biểu tượng thu nhỏ rườm rà.
+  - **Tính năng Hover-to-Expand thông minh & Chống giật vỡ chữ (Text Wrapping):** Khi Sidebar ở trạng thái thu nhỏ (`isCollapsed = true`), rê chuột vào sidebar sẽ tự động mở rộng mượt mà (`w-72`) kèm bóng nổi (`shadow-2xl z-30`). Áp dụng `whitespace-nowrap`, `truncate` và `overflow-hidden` trên toàn bộ nhãn, tiêu đề và menu con, triệt tiêu hoàn toàn hiện tượng chữ bị rớt thành 2 dòng rồi co lại thành 1 dòng trong quá trình co giãn chiều rộng.
+  - **Tối ưu hóa Phân nhóm (Section):** Gom 5 nhóm rời rạc thành 4 nhóm cân đối, liền mạch: `Điều hành`, `Nhân sự & Chấm công`, `Dự án & Đối tác`, `Tiện ích & Hệ thống`.
+  - **Đặt lại vị trí Bản đồ trực tiếp (Live Map):** Chuyển từ nhóm Nhân sự lên nhóm `Điều hành` cạnh `Tổng quan` đúng ngữ cảnh giám sát hiện trường thời gian thực.
+  - **Hợp nhất và phân loại rõ ràng:** Tích hợp `Ca làm việc` vào hệ sinh thái Chấm công; đổi tên `Dự án` thành `Dự án & Đối tác` bao quát cả Khách hàng và Nhà cung cấp; gộp Góp ý và Quản trị thành `Tiện ích & Hệ thống`.
+  - **Đồng bộ hóa Icon ngữ nghĩa:** Thay thế các icon trùng lặp bằng bộ icon trực quan của Lucide (`LayoutDashboard`, `Compass`, `Users`, `FolderKanban`, `Building2`, `ClockAlert`, `MessageSquarePlus`, `Sliders`).
+
+- **Chuẩn hóa Đường dẫn Hình ảnh & Tệp tin ([`src/utils/string.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/utils/string.ts)):**
+  - Xây dựng hàm tiện ích tập trung `getFileUrl(path, fallback)` xử lý toàn diện các trường hợp ngoại lệ: `undefined`/`null`, tự động chuẩn hóa dấu gạch chéo `/`, hỗ trợ link tuyệt đối (`http://`, `https://`, `blob:`, `data:`), loại bỏ triệt để hiện tượng URL rác hoặc double slash.
+### Removed
+- **Dọn dẹp các Component Mockup Thừa Không Sử Dụng:**
+  - Xóa bỏ `src/app/(auth)/app/(sidebar)/dashboard/_components/document.tsx` (danh sách tài liệu mockup cũ).
+  - Xóa bỏ `src/app/(auth)/app/(sidebar)/dashboard/_components/schedule.tsx` (lịch họp/đào tạo mockup cũ).
+  - Xóa bỏ `src/app/(auth)/app/(sidebar)/dashboard/_components/analytics-chart.tsx` (biểu đồ mockup cũ đã được thay bằng `WeeklyAttendanceChart`).
+  - Xóa bỏ `src/app/(auth)/app/(sidebar)/attendances/_components/auto-timekeeping-modal.tsx` (file re-export trung gian cũ sau khi đã chuẩn hóa vị trí tại `src/components/auto-timekeeping-modal/`).
+
+### Fixed & Enhanced
+- **Khắc phục Triệt để Lỗi "Maximum update depth exceeded" do Resize Loop của Recharts ([`WeeklyAttendanceChart`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/dashboard/_components/weekly-attendance-chart.tsx)):**
+  - **Loại bỏ vòng lặp `setContainerSize`:** Gỡ bỏ state `barSize` và sự kiện resize thủ công `window.addEventListener('resize')` gây xung đột với `SizeDetectorContainer` của Recharts. Chuyển sang cơ chế tự co giãn tự nhiên qua `maxBarSize={32}` và `barCategoryGap="20%"`.
+  - **Trang bị cơ chế Debounce & Mount an toàn:** Thêm `debounce={50}`, `minWidth={0}`, `minHeight={260}` và kiểm tra `mounted` trước khi render `ResponsiveContainer` trên client.
+  - **Chống tràn lưới CSS Grid:** Bổ sung thuộc tính `min-w-0` vào các cột lưới `col-span-8` và `col-span-4` trên tất cả 6 trang Dashboard role (`admin`, `hr`, `employee`, `sale`, `technician`, `accountant`), triệt tiêu hoàn toàn hiện tượng layout co giãn không điểm dừng.
+- **Tối ưu hóa Cơ chế Định vị Chạy Ngầm Native trên iOS ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift), [`NativeTrackingPlugin.m`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.m), [`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist)):**
+  - **Khắc phục triệt để lỗi khóa màn hình bị ngắt kết nối (Offline):**
+    - Loại bỏ mẹo "Silent Audio Keep-Alive" và chế độ `audio` ngầm (dễ bị iOS 15+ phát hiện tạm dừng và vi phạm Apple App Store Review Guideline 2.5.4).
+    - Tự động kiểm tra và yêu cầu cấp quyền "Luôn luôn" (`authorizedAlways`) thay vì chỉ dừng ở "Khi dùng ứng dụng" (`authorizedWhenInUse`).
+    - Bổ sung 2 native method `checkPermission` và `openSettings` hỗ trợ kiểm tra và điều hướng người dùng mở Cài đặt iPhone để nâng cấp quyền lên "Luôn luôn" và bật "Vị trí chính xác".
+  - **Sửa lỗi biên dịch Xcode Build trên CI/CD (`NativeTrackingPlugin.swift`):**
+    - Khắc phục lỗi `value of type 'CAPPluginCall' has no member 'reject'` bằng cách chuẩn hóa kết quả trả về `call.resolve(["success": false])` trong phương thức `openSettings`, đảm bảo tương thích hoàn toàn với kiến trúc SPM / Objective-C bridge của Capacitor và đồng bộ với interface `Promise<{ success: boolean }>` phía Frontend.
+  - **Tận dụng Chu kỳ Đánh thức của CoreLocation khi ở trong phòng kín:**
+    - Thay vì drop hoàn toàn các mốc vị trí có sai số $> 50\text{m}$ (do tường che khuất GPS trong phòng làm việc), hệ thống tận dụng các chu kỳ đánh thức của phần cứng để gửi gói tin Heartbeat duy trì kết nối với Điểm neo chuẩn xác cuối cùng (`lastAccurateLocation`) nếu đã quá 2 phút chưa gửi ping.
+    - Đảm bảo nhân viên ngồi làm việc trong phòng khóa màn hình đút túi suốt ca làm vẫn duy trì trạng thái Trực tuyến (Đứng yên) và không bao giờ bị Backend chuyển sang Offline sau 10 phút.
+- **Đồng bộ hóa Interface tại Web Frontend ([`useLocationTracker.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/hooks/useLocationTracker.ts)):**
+  - Cập nhật interface `NativeTrackingPlugin` nhận diện `checkPermission` và `openSettings`.
+  - Tự động kiểm tra quyền vị trí trên iOS sau khi bắt đầu tracking và phát cảnh báo nếu chưa được cấp quyền `Always`.
+
+## [Unreleased] - 2026-09-11
+
+- **Giải pháp Toàn diện Giữ Nhịp Chạy Ngầm & Chống Nhảy Bản Đồ trên iOS ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift) & [`Info.plist`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/Info.plist)):**
+  - **Tích hợp Silent Audio Keep-Alive chuẩn Enterprise:** Bổ sung quyền `audio` vào `UIBackgroundModes`, tự động khởi tạo luồng âm thanh tĩnh vô thanh trong bộ nhớ (in-memory 8kHz mono PCM WAV, volume = 0, loop vô hạn) kèm cấu hình `AVAudioSession` chế độ `.playback` và option `.mixWithOthers`. Giúp ngăn chặn 100% việc iOS đóng băng (suspend) tiến trình CPU và các Timer khi người dùng khóa màn hình hoặc chuyển sang ứng dụng khác mà không làm ảnh hưởng đến âm nhạc, cuộc gọi của người dùng.
+  - **Cơ chế Neo Tọa Độ & Chống Nhảy Map (Anchor Point & Anti-Drift Filter):**
+    - Thiết lập bộ lọc khắt khe: Chỉ cập nhật vị trí bản đồ khi độ chính xác thực tế $\le 50\text{m}$.
+    - Khi nhân viên ở trong phòng kín/văn phòng (mất GPS, chỉ có sóng BTS/Wi-Fi sai số lớn), hệ thống tự động từ chối cập nhật tọa độ hiển thị để triệt tiêu hiện tượng "nhảy dù" (GPS drift/jitter) trên Live Map.
+    - Timer Heartbeat định kỳ 2 phút sử dụng lại chính Điểm neo chuẩn xác cuối cùng (`lastAccurateLocation`) để gửi gói tin duy trì trạng thái lên máy chủ, đảm bảo nhân viên luôn hiển thị Online (Đứng yên) và không bao giờ bị Backend đánh dấu Offline sau thời gian nghỉ.
+  - **Cấu hình `activityType = .otherNavigation`:** Tối ưu hóa bộ quản lý CoreLocation để báo hiệu cho iOS ưu tiên duy trì luồng định vị liên tục, tránh bị hệ điều hành giảm tần suất.
+
+- **Nâng cấp Cơ chế Định vị Chạy Ngầm & Đánh thức Ứng dụng trên iOS ([`NativeTrackingPlugin.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/NativeTrackingPlugin.swift) & [`AppDelegate.swift`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/ios/App/App/AppDelegate.swift)):**
+  - **Đăng ký `startMonitoringSignificantLocationChanges()` song song:** Cho phép hệ điều hành iOS tự động đánh thức (wake up / relaunch in background) ứng dụng khi nhân viên di chuyển đổi trạm phát sóng di động (Cell Tower / Wi-Fi), kể cả khi ứng dụng bị tạm đóng băng hoặc bị giải phóng bộ nhớ RAM.
+  - **Xử lý `handleLocationWakeUp()` trong `AppDelegate`:** Bắt sự kiện `launchOptions[UIApplication.LaunchOptionsKey.location]` để tiếp tục quy trình định vị và gửi ping tọa độ dưới nền ngay khi được hệ điều hành kích hoạt.
+  - **Thay thế Foundation `Timer` bằng `DispatchSourceTimer` trên Background Queue:** Chạy độc lập trên hàng đợi ngầm `com.xttech.ios.heartbeat`.
+
+- **Hàm Tiện ích Xử lý Lỗi Toàn cục ([`error.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/utils/error.ts)):**
+  - Xây dựng `getErrorMessage(err, fallback)` và `showErrorToast(err, fallback)` tự động bóc tách thông báo lỗi thông minh và an toàn kiểu (Type-safe) từ mọi định dạng phản hồi của server: FastAPI (`detail` dạng chuỗi hoặc mảng validation Pydantic), Backend Chấm công (`details.message`), Chuẩn Enterprise (`error.message`), NestJS/Express (`message` chuỗi hoặc mảng), và JavaScript/Axios Network Error.
+  - Tích hợp và re-export tập trung qua [`src/utils/index.ts`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/utils/index.ts).
+
+### Changed / Refactored
+- **Chuẩn hóa Xử lý Lỗi Toàn cục (DRY Error Handling) trên toàn hệ thống:**
+  - **Module Chấm công (`attendances`):**
+    - [`auto-timekeeping-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/_components/auto-timekeeping-modal.tsx): Rút gọn khối `catch` chấm công tự động sang `showErrorToast`.
+    - [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/page.tsx): Khối `handleDeleteConfirm` dùng `showErrorToast`.
+    - [`overtime-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/_components/overtime-modal.tsx): Thay thế toàn bộ 6 dòng bóc tách lỗi thủ công trong `catch` bằng `showErrorToast`.
+    - [`adjustments/_components/add-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/adjustments/_components/add-modal.tsx): Loại bỏ hàm `handleCreateError` thủ công hơn 25 dòng, chuẩn hóa qua `showErrorToast`.
+    - [`adjustments/_components/edit-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/adjustments/_components/edit-modal.tsx): Bắt lỗi qua `showErrorToast`.
+    - [`adjustments/page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/adjustments/page.tsx): Xử lý lỗi duyệt và xóa khiếu nại bằng `showErrorToast`.
+    - [`reports/_components/action-bar.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/reports/_components/action-bar.tsx): Xuất Excel bắt lỗi chi tiết qua `getErrorMessage`.
+    - [`live-map/page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/live-map/page.tsx): Bắt lỗi fetch vị trí qua `showErrorToast`.
+    - [`edit-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/_components/edit-modal.tsx) & [`add-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/_components/add-modal.tsx): Đồng bộ callback `onError` sử dụng `showErrorToast`.
+  - **Module Phiên bản Ứng dụng (`app-versions`):**
+    - [`release-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/app-versions/_components/release-modal.tsx): Đồng bộ `setErrorMsg` và `showErrorToast` cùng hiển thị message chi tiết từ server.
+    - [`table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/app-versions/_components/table.tsx): Chuẩn hóa `fetcher` `catch (err)` dùng `showErrorToast`.
+  - **Module Nghỉ phép (`leave-requests`):**
+    - [`leave-request-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/leave-requests/_components/leave-request-modal.tsx): Thay thế toàn bộ 4 hàm `onError` của mutations (`create`, `update`, `delete`, `review`) sang `showErrorToast`.
+  - **Module Ca làm việc (`shifts`):**
+    - [`form-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/shifts/_components/form-modal.tsx): Đồng bộ 2 callbacks `onError` (`createMutation`, `updateMutation`) sang `showErrorToast`.
+    - [`table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/shifts/_components/table.tsx): Bắt lỗi `deleteMutation.onError` bằng `showErrorToast`.
+  - **Module Vai trò & Phân quyền (`roles`):**
+    - [`role-table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/roles/_components/role-table.tsx): Chuẩn hóa `fetcher` và `handleDeleteRole.onError` sang `showErrorToast`.
+    - [`role-form-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/roles/_components/role-form-modal.tsx): `onError` lưu vai trò dùng `showErrorToast`.
+  - **Module Đề xuất & Góp ý (`suggestions`):**
+    - [`suggestion-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/suggestions/_components/suggestion-modal.tsx): Cập nhật 4 callbacks `onError` (gửi, cập nhật, xóa, duyệt đề xuất) sang `showErrorToast`.
+    - [`suggestion-table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/suggestions/_components/suggestion-table.tsx): `fetcher` bắt lỗi bằng `showErrorToast`.
+  - **Module Dự án & Cấu hình Dự án (`projects` & `projects/configuration`):**
+    - [`table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/_components/table.tsx): Bọc `fetcher` với try/catch gọi `showErrorToast`.
+    - [`modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/_components/modals.tsx): Cập nhật `createMutation.onError` và `updateMutation.onError` sang `showErrorToast`.
+    - [`quotation-modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/_components/quotation-modals.tsx): Cập nhật tạo và cập nhật báo giá `onError` sang `showErrorToast`.
+    - [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/page.tsx): Cập nhật `deleteProjectMutation.onError` sang `showErrorToast`.
+    - [`[id]/page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/[id]/page.tsx): Chuẩn hóa `deleteProjectMutation.onError` và `changeQuotationStatus.onError` sang `showErrorToast`.
+    - **Cấu hình Vật liệu (`materials`):** [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/materials/page.tsx) & [`modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/materials/_components/modals.tsx): Đồng bộ toàn bộ `onError` của xóa, tạo, sửa vật tư sang `showErrorToast`.
+    - **Cấu hình Cửa (`doors`):** [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/doors/page.tsx) & [`modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/doors/_components/modals.tsx): Đồng bộ toàn bộ `onError` của xóa, tạo, sửa hệ cửa sang `showErrorToast`.
+    - **Cấu hình Phụ kiện (`accessories`):** [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/accessories/page.tsx) & [`modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/projects/configuration/accessories/_components/modals.tsx): Đồng bộ toàn bộ `onError` của xóa, tạo, sửa phụ kiện sang `showErrorToast`.
+  - **Module Khách hàng (`customers`):**
+    - [`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/customers/page.tsx): Cập nhật `deleteCustomerMutation.onError` sang `showErrorToast`.
+    - [`modals.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/customers/_components/modals.tsx): Cập nhật `createMutation.onError` và `updateMutation.onError` sang `showErrorToast`.
+  - **Module Phòng ban (`departments`):**
+    - [`table.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/departments/_components/table.tsx): Chuẩn hóa `deleteDepartment.onError` sang `showErrorToast`.
+    - [`form-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/departments/_components/form-modal.tsx): Đồng bộ `createDepartment.onError` và `updateDepartment.onError` sang `showErrorToast`.
+
 ## [Unreleased] - 2026-09-10
 
 ### Added
+- **Nâng cấp & Chuẩn hóa Modal Lộ trình Di chuyển theo chuẩn Google Maps ([`route-playback-modal.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/attendances/_components/route-playback-modal.tsx)):**
+  - **Nút Thumbnail Chuyển đổi Vệ tinh / Bản đồ (Góc dưới bên trái):**
+    - Thiết kế ô thumbnail vuông bo góc `w-14 h-14` chuẩn Google Maps với viền trắng nổi và nhãn chữ mờ dưới đáy.
+    - Hiển thị ảnh chụp vệ tinh thực tế thu nhỏ khi ở chế độ đường phố (Giao thông) và ảnh bản đồ khi ở chế độ Vệ tinh; click hoán đổi linh hoạt giữa Bản đồ và Vệ tinh Hybrid.
+  - **Nút Tròn Phóng to Toàn màn hình chuẩn Google Maps (Góc dưới bên phải):**
+    - Tích hợp nút tròn màu trắng có icon 4 góc phóng to kinh điển của Google Maps ở góc dưới bên phải bản đồ.
+    - Hỗ trợ phím tắt `Escape` để thu nhỏ nhanh.
+  - **Khắc phục Triệt để Lỗi Phóng to (True 100vw x 100vh Fullscreen):**
+    - Sử dụng `rootClassName="route-playback-fullscreen-root"` ghi đè toàn bộ padding/margin của Ant Design Modal, mở rộng modal tràn viền `100vw x 100vh`.
+    - Khóa chiều cao khung bản đồ bằng CSS calc (`calc(100vh - 185px)`), triệt tiêu hoàn toàn lỗi suy biến chiều cao về `0px`.
+    - Duy trì thẻ `<MapContainer>` luôn luôn được mount cố định; hiển thị banner nổi tinh gọn khi chưa có điểm GPS thay vì unmount bản đồ.
+    - Bổ sung `fitBounds` tự động căn chỉnh góc nhìn bao quát toàn bộ hành trình khi tải xong điểm GPS.
+
 - **Module Quản lý Nhà cung cấp (Customer Providers) & Tích hợp Quick-Create vào Khách hàng:**
   - **Trang Quản trị Danh mục Nhà cung cấp ([`page.tsx`](file:///e:/hoc_ve_fullstash/xttech/xttech-web-v2/src/app/(auth)/app/(sidebar)/customers/providers/page.tsx)):**
     - Đường dẫn chuẩn: `/app/customers/providers` (sub-route bên trong module Khách hàng).

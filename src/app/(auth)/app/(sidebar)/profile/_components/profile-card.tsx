@@ -8,7 +8,7 @@ import { User, Camera } from 'lucide-react';
 // Components dùng chung cho toàn bộ trang
 import { Input, Button } from '@/components';
 import { useAuthStore } from '@/stores';
-import { BASE_MINIO_URL } from '@/config';
+import { getFileUrl } from '@/utils';
 import { useMutation } from '@tanstack/react-query';
 import { updateEmployee } from '@/actions/employee';
 import toast from 'react-hot-toast';
@@ -26,7 +26,7 @@ const ProfileCard = () => {
   });
 
   const avatarUrl = user?.avatar
-    ? (user.avatar.startsWith('http') ? user.avatar : `${BASE_MINIO_URL}${user.avatar}`)
+    ? `${getFileUrl(user.avatar)}${user.updatedAt ? `?v=${encodeURIComponent(user.updatedAt)}` : ''}`
     : null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

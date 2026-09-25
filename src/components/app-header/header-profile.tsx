@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { Bell, User, Lock, LogOut, Download } from 'lucide-react';
 import { Avatar, Dropdown } from '@/components';
 import { useAuthStore } from '@/stores';
-import { BASE_MINIO_URL, UserRole } from '@/config';
+import { UserRole } from '@/config';
+import { getFileUrl } from '@/utils';
 import { ProfileModal } from './profile-modal';
 import { PasswordModal } from './password-modal';
 
@@ -71,18 +72,13 @@ export function HeaderProfile({ userRole }: HeaderProfileProps) {
     }
   };
 
-  const avatarUrl = user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `${BASE_MINIO_URL}${user.avatar}`) : null;
+  const avatarUrl = user?.avatar
+    ? `${getFileUrl(user.avatar)}${user.updatedAt ? `?v=${encodeURIComponent(user.updatedAt)}` : ''}`
+    : null;
 
   return (
     <div className="flex items-center gap-4 md:gap-6">
-      <button
-        type="button"
-        aria-label="Thông báo"
-        className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-      >
-        <Bell size={20} />
-        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-      </button>
+
 
       <div className="h-8 w-px bg-slate-200 hidden md:block"></div>
 

@@ -6,10 +6,10 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
+import { getFileUrl, showErrorToast } from '@/utils';
 import { Pencil, Trash2, Eye, Clock, FileEdit, Calendar, UserCheck, Users, UserCheck2, Plus, MessageSquareWarning, Route } from 'lucide-react';
 
 import { Button, TableData, TableAction, Badge, Heading, ITableColumn, ITableFilterProps, Avatar, Modal } from '@/components';
-import { BASE_MINIO_URL } from '@/config';
 import { useQueryParam } from '@/hooks';
 import { deleteAttendance, getAttendances, getDepartments, getAdjustmentRequests } from '@/actions';
 import { Attendance, AttendanceStatus, getAttendanceStatusLabel, getAttendanceStatusVariant } from '@/types';
@@ -19,7 +19,7 @@ import AddAttendanceModal from '@/app/(auth)/app/(sidebar)/attendances/_componen
 import EditAttendanceModal from '@/app/(auth)/app/(sidebar)/attendances/_components/edit-modal';
 import AttendanceDetailModal from '@/app/(auth)/app/(sidebar)/attendances/_components/attendance-modal';
 import AddAdjustmentModal from './adjustments/_components/add-modal';
-import { RoutePlaybackModal } from './_components/route-playback-modal';
+import { RoutePlaybackModal } from '@/components/map-modal';
 type FilterOption = {
   value: string | undefined;
   label: string;
@@ -30,6 +30,8 @@ export default function AttendancesPage() {
 
   // Search & Filter states
   const [searchQuery, setSearchQuery] = useQueryParam('search', '');
+  const [startDate, setStartDate] = useQueryParam('startDate', '');
+  const [endDate, setEndDate] = useQueryParam('endDate', '');
   // Filter states
   const [filterDepartment, setFilterDepartment] = useState<string | undefined>();
   const [filterStatus, setFilterStatus] = useState<AttendanceStatus | undefined>();
@@ -161,6 +163,17 @@ export default function AttendancesPage() {
   // Cấu hình filters cho TableData
   const tableFilters: ITableFilterProps[] = [
     {
+      type: 'date-range',
+      label: 'Thời gian',
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+      icon: <Calendar className="w-4 h-4" />,
+      onDateRangeChange: (start, end) => {
+        setStartDate(start || '');
+        setEndDate(end || '');
+      },
+    },
+    {
       label: 'Phòng ban',
       value: filterDepartment,
       options: departmentOptions,
@@ -183,6 +196,8 @@ export default function AttendancesPage() {
       offset,
       limit,
       search: searchQuery || undefined,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
       departmentId: filterDepartment ? Number(filterDepartment) : undefined,
       status: filterStatus || undefined,
     });
@@ -212,8 +227,8 @@ export default function AttendancesPage() {
       queryClient.invalidateQueries({ queryKey: ['attendances-stats'] });
       toast.success('Đã xóa chấm công thành công');
       setShowDeleteModal(false);
-    } catch {
-      toast.error('Có lỗi xảy ra khi xóa bản ghi chấm công');
+    } catch (err) {
+      showErrorToast(err, 'Có lỗi xảy ra khi xóa bản ghi chấm công');
     } finally {
       setIsDeleting(false);
     }
@@ -233,7 +248,7 @@ export default function AttendancesPage() {
       minWidth: '180px',
       cell: (row) => {
         const avatar = row.user?.avatar;
-        const avatarSrc = avatar ? (avatar.startsWith('http') ? avatar : `${BASE_MINIO_URL}${avatar}`) : undefined;
+        const avatarSrc = getFileUrl(avatar);
         return (
           <div className="flex items-center gap-2.5 min-w-0">
             <Avatar src={avatarSrc} name={row.user?.fullName || 'NV'} size="sm" />
@@ -248,7 +263,7 @@ export default function AttendancesPage() {
       minWidth: '130px',
       cell: (row) => {
         const imgPath = row.imgCheckinPath;
-        const imgSrc = imgPath ? (imgPath.startsWith('http') ? imgPath : `${BASE_MINIO_URL}${imgPath}`) : null;
+        const imgSrc = getFileUrl(imgPath);
 
         return (
           <div className="flex items-center gap-2">
@@ -275,7 +290,7 @@ export default function AttendancesPage() {
       minWidth: '130px',
       cell: (row) => {
         const imgPath = row.imgCheckoutPath;
-        const imgSrc = imgPath ? (imgPath.startsWith('http') ? imgPath : `${BASE_MINIO_URL}${imgPath}`) : null;
+        const imgSrc = getFileUrl(imgPath);
 
         return (
           <div className="flex items-center gap-2">
@@ -412,7 +427,7 @@ export default function AttendancesPage() {
         <div className="flex items-center justify-between gap-3 pb-2 border-b border-gray-100/50">
           <div className="flex items-center gap-3">
             <Avatar
-              src={row.user?.avatar ? (row.user.avatar.startsWith('http') ? row.user.avatar : `${BASE_MINIO_URL}${row.user.avatar}`) : undefined}
+              src={getFileUrl(row.user?.avatar)}
               name={row.user?.fullName || 'NV'}
               size="md"
             />
@@ -564,7 +579,7 @@ export default function AttendancesPage() {
         </div>
 
         <TableData<Attendance>
-          queryKey={['attendances', searchQuery, filterDepartment, filterStatus]}
+          queryKey={['attendances', searchQuery, filterDepartment, filterStatus, startDate, endDate]}
           fetcher={fetcher}
           columns={columns}
           search={{

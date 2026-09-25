@@ -3,9 +3,9 @@
 import { useMemo, useState } from 'react';
 import { TableAction, Button, TableData, Badge, ITableColumn, ITableFilterProps, Heading, Alert, Avatar } from '@/components';
 import { toast } from 'react-hot-toast';
+import { getFileUrl, showErrorToast } from '@/utils';
 import { Plus, Pencil, Trash2, Eye, CheckCircle2, FileEdit, Clock, AlertCircle, Info, FileCheck, Calendar, SquareCheck, Check } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { BASE_MINIO_URL } from '@/config';
 import { getRequestTypeLabel } from '@/types';
 import type { AttendanceAdjustmentRequest, AdjustmentStatus, RequestType } from '@/types';
 import AddAdjustmentModal from './_components/add-modal';
@@ -201,8 +201,8 @@ export default function AdjustmentsSidebarPage() {
       setReviewModalState({ open: false, data: null, action: null });
       setShowDetailModal(false);
       refreshData();
-    } catch {
-      toast.error('Có lỗi xảy ra khi xử lý khiếu nại');
+    } catch (err) {
+      showErrorToast(err, 'Có lỗi xảy ra khi xử lý khiếu nại');
     } finally {
       setIsReviewing(false);
     }
@@ -216,6 +216,8 @@ export default function AdjustmentsSidebarPage() {
       setShowDeleteModal(false);
       setDeletingId(null);
       refreshData();
+    } catch (err) {
+      showErrorToast(err, 'Có lỗi xảy ra khi xóa khiếu nại');
     } finally {
       setIsDeleting(false);
     }
@@ -369,11 +371,7 @@ export default function AdjustmentsSidebarPage() {
       label: 'Nhân sự',
       minWidth: '180px',
       cell: (row) => {
-        const avatarSrc = row.user?.avatar
-          ? row.user.avatar.startsWith('http')
-            ? row.user.avatar
-            : `${BASE_MINIO_URL}${row.user.avatar}`
-          : undefined;
+        const avatarSrc = getFileUrl(row.user?.avatar)
 
         return (
           <div className="flex items-center gap-3">

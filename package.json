@@ -1,13 +1,15 @@
 {
   "name": "XTTech-ERM",
-  "version": "1.0.1",
+  "version": "2.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync": "git push -u gh dev && git push -u gl dev"
+    "sync": "git push -u gh dev && git push -u gl dev",
+    "build:apk": "npx cap sync android && .\\android\\gradlew.bat -p android assembleRelease",
+    "build:apk-debug": "npx cap sync android && .\\android\\gradlew.bat -p android assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.1",

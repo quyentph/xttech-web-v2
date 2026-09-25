@@ -3,16 +3,16 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Modal, Input, Select, Textarea, Button, Avatar, Badge } from '@/components';
-import { FileText, Upload, X, CheckCircle2, XCircle, Pencil, Trash2, Download, Eye } from 'lucide-react';
+import { Modal, Input, Select, Textarea, Button } from '@/components';
+import { Upload, X, Trash2, Eye } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLeaveRequestStore, useAuthStore } from '@/stores';
 import { createLeaveRequest, updateLeaveRequest, deleteLeaveRequest, reviewLeaveRequest } from '@/actions/leave-request';
 import { getUsers } from '@/actions/user';
 import { getWorkShifts } from '@/actions/work-shift';
 import { LeaveType, DurationType, LeaveRequestStatus } from '@/types';
-import { BASE_MINIO_URL } from '@/config';
 import toast from 'react-hot-toast';
+import { showErrorToast, getFileUrl } from '@/utils';
 import LeaveRequestReviewModal from './leave-request-review-modal';
 
 export const leaveTypeOptions = [
@@ -97,7 +97,6 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
     setFormExistingAttachmentUrl,
     setFormErrors,
     resetForm,
-    initEditForm,
   } = useLeaveRequestStore();
 
   const [reviewType, setReviewType] = useState<'approved' | 'rejected'>('approved');
@@ -138,7 +137,6 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
     }
     return null;
   }, [formUserId, currentUserId, selectedLeaveRequest, usersList, currentUser]);
-
   // Lấy departmentId dạng number từ position đầu tiên của targetUser
   const userDepartmentId = useMemo<number | undefined>(() => {
     if (!targetUser || !Array.isArray(targetUser.positions) || targetUser.positions.length === 0) {
@@ -296,9 +294,7 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       };
     }
     if (formExistingAttachmentUrl) {
-      const cleanBaseUrl = BASE_MINIO_URL.endsWith('/') ? BASE_MINIO_URL.slice(0, -1) : BASE_MINIO_URL;
-      const cleanPath = formExistingAttachmentUrl.startsWith('/') ? formExistingAttachmentUrl : `/${formExistingAttachmentUrl}`;
-      const fullUrl = formExistingAttachmentUrl.startsWith('http') ? formExistingAttachmentUrl : `${cleanBaseUrl}${cleanPath}`;
+      const fullUrl = getFileUrl(formExistingAttachmentUrl);
       const isImg = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fullUrl);
       const fileName = fullUrl.split('/').pop() || 'Tài liệu đính kèm';
       const ext = fileName.split('.').pop()?.toUpperCase() || 'FILE';
@@ -317,11 +313,7 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
   // Compute attachment for detail view
   const detailAttachment = useMemo(() => {
     if (!selectedLeaveRequest?.attachmentPath) return null;
-    const cleanBaseUrl = BASE_MINIO_URL.endsWith('/') ? BASE_MINIO_URL.slice(0, -1) : BASE_MINIO_URL;
-    const cleanPath = selectedLeaveRequest.attachmentPath.startsWith('/')
-      ? selectedLeaveRequest.attachmentPath
-      : `/${selectedLeaveRequest.attachmentPath}`;
-    const fullUrl = selectedLeaveRequest.attachmentPath.startsWith('http') ? selectedLeaveRequest.attachmentPath : `${cleanBaseUrl}${cleanPath}`;
+    const fullUrl = getFileUrl(selectedLeaveRequest.attachmentPath);
     const isImg = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fullUrl);
     const fileName = fullUrl.split('/').pop() || 'document.pdf';
     const ext = fileName.split('.').pop()?.toUpperCase() || 'FILE';
@@ -359,8 +351,8 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       setCreateModalOpen(false);
       resetForm();
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || err.message || 'Không thể tạo đơn xin nghỉ phép.');
+    onError: (err) => {
+      showErrorToast(err, 'Không thể tạo đơn xin nghỉ phép.');
     },
   });
 
@@ -392,8 +384,8 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       setDetailModalOpen(false);
       resetForm();
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || err.message || 'Không thể cập nhật đơn xin nghỉ phép.');
+    onError: (err) => {
+      showErrorToast(err, 'Không thể cập nhật đơn xin nghỉ phép.');
     },
   });
 
@@ -409,8 +401,8 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       setIsDeleteConfirmOpen(false);
       setDetailModalOpen(false);
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || err.message || 'Không thể xóa đơn nghỉ phép.');
+    onError: (err) => {
+      showErrorToast(err, 'Không thể xóa đơn nghỉ phép.');
     },
   });
 
@@ -428,9 +420,10 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       queryClient.invalidateQueries({ queryKey: ['leave-requests-stats'] });
       setReviewModalOpen(false);
       setDetailModalOpen(false);
+      resetForm();
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || err.message || 'Lỗi khi duyệt đơn.');
+    onError: (err) => {
+      showErrorToast(err, 'Lỗi khi duyệt đơn.');
     },
   });
 
@@ -543,11 +536,6 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
 
   const isFormLoading = createMutation.isPending || updateMutation.isPending;
 
-  const isOwner = selectedLeaveRequest?.userId === currentUserId;
-  const canEdit = (isOwner || isManager) && selectedLeaveRequest?.status === LeaveRequestStatus.PENDING;
-  const canDelete =
-    (isOwner || isManager) &&
-    (selectedLeaveRequest?.status === LeaveRequestStatus.PENDING || selectedLeaveRequest?.status === LeaveRequestStatus.CANCELLED);
   const canReview = isManager && selectedLeaveRequest?.status === LeaveRequestStatus.PENDING;
 
   const mode = isCreateModalOpen ? 'create' : isEditing ? 'edit' : 'view';
@@ -559,7 +547,7 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
       'CHỈNH SỬA ĐƠN XIN NGHỈ PHÉP'
     ) : (
       <div className="flex items-center gap-2.5">
-        <span>CHI TIẾT ĐƠN XIN NGHỈ PHÉP</span>
+        <span>ĐƠN XIN NGHỈ PHÉP</span>
         {selectedLeaveRequest && (
           <span
             className={`inline-block px-2.5 py-0.5 rounded-full text-[12px] font-bold select-none border ${
@@ -573,24 +561,10 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
     );
 
   const footer = (
-    <div className="flex items-center justify-between w-full">
-      {/* Nút hủy / xóa bên trái khi ở view mode */}
-      <div>
-        {mode === 'view' && canDelete && (
-          <Button
-            variant="outline"
-            className="text-rose-600 border-rose-200 hover:bg-rose-50"
-            onClick={() => setIsDeleteConfirmOpen(true)}
-            disabled={isFormLoading}
-            leftIcon={<Trash2 className="w-4 h-4" />}
-          >
-            Xóa
-          </Button>
-        )}
-      </div>
+    <div className="flex items-center justify-end w-full">
 
       {/* Nhóm nút hành động bên phải */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-2">
         {mode === 'create' && (
           <>
             <Button variant="outline" onClick={handleClose} disabled={isFormLoading}>
@@ -615,14 +589,6 @@ export default function LeaveRequestModal({ isManager, currentUserId }: LeaveReq
 
         {mode === 'view' && (
           <>
-            <Button variant="outline" onClick={handleClose} disabled={isFormLoading}>
-              Đóng
-            </Button>
-            {canEdit && (
-              <Button variant="primary" onClick={() => setIsEditing(true)} disabled={isFormLoading}>
-                Sửa đơn
-              </Button>
-            )}
             {canReview && (
               <>
                 <Button

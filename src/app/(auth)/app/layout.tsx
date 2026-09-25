@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores';
+import { getUser } from '@/actions/user';
 import queryClient from '@/utils/query';
-import { SidebarProvider } from '@/contexts/SidebarProvider';
+import { SidebarProvider, PageTransitionProvider } from '@/contexts';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -12,15 +13,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const isAuthenticated = useAuthStore.getState().isAuthenticated;
-      const accessToken = useAuthStore.getState().accessToken;
+    const checkAuth = async () => {
+      const state = useAuthStore.getState();
+      const isAuthenticated = state.isAuthenticated;
+      const accessToken = state.accessToken;
 
       if (!isAuthenticated || !accessToken) {
         document.cookie = 'xt-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
         router.replace('/signin');
       } else {
         setIsLoading(false);
+
+        // Đồng bộ ngầm profile mới nhất từ backend (avatar, quyền, chức vụ, họ tên)
+        const currentUserId = state.user?.id;
+        if (currentUserId) {
+          try {
+            const latestUser = await getUser(currentUserId);
+            if (latestUser) {
+              useAuthStore.getState().updateUser(latestUser as any);
+            }
+          } catch {
+            // Không chặn giao diện nếu mạng yếu
+          }
+        }
       }
     };
     checkAuth();
@@ -41,7 +56,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <QueryClientProvider client={queryClient}>
         <SidebarProvider>
-          <div>{children}</div>
+          <PageTransitionProvider>
+            <div>{children}</div>
+          </PageTransitionProvider>
         </SidebarProvider>
       </QueryClientProvider>
     </>

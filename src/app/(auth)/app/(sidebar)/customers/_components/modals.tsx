@@ -16,11 +16,10 @@ import { useForm } from 'react-hook-form';
 import { createCustomer, updateCustomer, getUsers, exportCustomersExcel, getCustomerProviders } from '@/actions';
 import CustomerProviderFormModal from './provider-form-modal';
 
-
-import { BASE_MINIO_URL } from '@/config/app';
 import { CUSTOMER_TYPE_OPTIONS } from '../config';
 
 import toast from 'react-hot-toast';
+import { getFileUrl, showErrorToast } from '@/utils';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -199,7 +198,7 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
       reset();
     },
     onError: (error) => {
-      toast.error(error.message);
+      showErrorToast(error, 'Thêm khách hàng thất bại');
     },
   });
 
@@ -213,7 +212,7 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
       reset();
     },
     onError: (error) => {
-      toast.error(error.message);
+      showErrorToast(error, 'Cập nhật khách hàng thất bại');
     },
   });
 
@@ -235,14 +234,10 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
        
       setSelectedImages([]);
 
-      const getFullImageUrl = (path: string) => {
-        if (!path) return undefined;
-        return `${BASE_MINIO_URL}${path}`;
-      };
 
       const mappedImages = (initialData?.images || []).map((img, index) => {
         const imgPath = img.imagePath;
-        const fullUrl = getFullImageUrl(imgPath);
+        const fullUrl = getFileUrl(imgPath);
         return {
           id: img.id || `img-obj-${index}`,
           url: fullUrl,
