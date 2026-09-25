@@ -166,7 +166,7 @@ export const PersonalAttendanceHistory: React.FC = () => {
 
       {/* Footer Link */}
       <Link
-        href="/app/attendances"
+        href="/app/attendances/payroll"
         className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition py-2 bg-primary/5 hover:bg-primary/10 rounded-xl mt-0.5 active:scale-98 cursor-pointer"
       >
         <span>Xem toàn bộ lịch sử chấm công</span>
