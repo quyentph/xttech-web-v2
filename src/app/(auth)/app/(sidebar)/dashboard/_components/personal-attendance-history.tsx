@@ -8,14 +8,7 @@ import 'dayjs/locale/vi';
 import { getAttendances } from '@/actions';
 import { useAuthStore } from '@/stores';
 import { getAttendanceStatusInfo, Attendance } from '@/types';
-import {
-  CalendarCheck2,
-  Clock,
-  ArrowRight,
-  RotateCw,
-  CalendarX,
-  AlertTriangle,
-} from 'lucide-react';
+import { CalendarCheck2, Clock, ArrowRight, RotateCw, CalendarX, AlertTriangle } from 'lucide-react';
 
 export const PersonalAttendanceHistory: React.FC = () => {
   const user = useAuthStore((state) => state.user);
@@ -63,9 +56,7 @@ export const PersonalAttendanceHistory: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <h3 className="text-sm font-bold text-gray-900">Chấm công gần đây</h3>
-            <span className="text-[11px] text-gray-500 font-medium">
-              Lịch sử vào ca / ra ca của bạn
-            </span>
+            <span className="text-[11px] text-gray-500 font-medium">Lịch sử vào ca / ra ca của bạn</span>
           </div>
         </div>
 
@@ -84,19 +75,14 @@ export const PersonalAttendanceHistory: React.FC = () => {
       {isLoading ? (
         <div className="flex flex-col gap-2 py-2">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-14 rounded-xl bg-gray-50 animate-pulse border border-gray-100"
-            />
+            <div key={i} className="h-14 rounded-xl bg-gray-50 animate-pulse border border-gray-100" />
           ))}
         </div>
       ) : attendances.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-6 text-center text-gray-400 gap-1.5 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
           <CalendarX size={24} className="text-gray-300" />
           <span className="text-xs font-medium text-gray-600">Chưa có lịch sử chấm công</span>
-          <span className="text-[10px] text-gray-400">
-            Dữ liệu sẽ xuất hiện sau khi bạn check-in ca làm
-          </span>
+          <span className="text-[10px] text-gray-400">Dữ liệu sẽ xuất hiện sau khi bạn check-in ca làm</span>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
@@ -113,19 +99,13 @@ export const PersonalAttendanceHistory: React.FC = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white border border-gray-200/60 shadow-2xs flex flex-col items-center justify-center shrink-0">
-                    <span className="text-[9px] text-gray-400 font-semibold uppercase leading-none">
-                      {dayjs(item.workDate).format('MM')}
-                    </span>
-                    <span className="text-sm font-bold text-gray-800 leading-tight">
-                      {dayjs(item.workDate).format('DD')}
-                    </span>
+                    <span className="text-[9px] text-gray-400 font-semibold uppercase leading-none">{dayjs(item.workDate).format('MM')}</span>
+                    <span className="text-sm font-bold text-gray-800 leading-tight">{dayjs(item.workDate).format('DD')}</span>
                   </div>
 
                   <div className="flex flex-col">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-gray-800 capitalize">
-                        {formattedDate}
-                      </span>
+                      <span className="text-xs font-bold text-gray-800 capitalize">{formattedDate}</span>
                       {item.isLate && (
                         <span className="text-[10px] text-amber-600 font-medium flex items-center gap-0.5">
                           <AlertTriangle size={10} /> +{item.lateMinutes || 0}p
@@ -137,25 +117,17 @@ export const PersonalAttendanceHistory: React.FC = () => {
                         <Clock size={11} /> {inTime}
                       </span>
                       <span>-</span>
-                      <span className="flex items-center gap-0.5 text-gray-600">
-                        {outTime}
-                      </span>
+                      <span className="flex items-center gap-0.5 text-gray-600">{outTime}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                  <span
-                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${getStatusBadgeClass(
-                      statusInfo.variant
-                    )}`}
-                  >
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${getStatusBadgeClass(statusInfo.variant)}`}>
                     {statusInfo.label}
                   </span>
                   {typeof item.totalHours === 'number' && item.totalHours > 0 && (
-                    <span className="text-[10px] text-gray-400 font-medium">
-                      {item.totalHours.toFixed(1)}h công
-                    </span>
+                    <span className="text-[10px] text-gray-400 font-medium">{item.totalHours.toFixed(1)}h công</span>
                   )}
                 </div>
               </div>
@@ -166,7 +138,7 @@ export const PersonalAttendanceHistory: React.FC = () => {
 
       {/* Footer Link */}
       <Link
-        href="/app/attendances"
+        href="/app/attendances/payroll"
         className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition py-2 bg-primary/5 hover:bg-primary/10 rounded-xl mt-0.5 active:scale-98 cursor-pointer"
       >
         <span>Xem toàn bộ lịch sử chấm công</span>
