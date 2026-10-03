@@ -164,6 +164,7 @@ const Page = () => {
                 staffId: selectedCustomer.staffId,
                 type: selectedCustomer.type,
                 providerId: selectedCustomer.providerId || selectedCustomer.provider?.id || null,
+                receivedDate: selectedCustomer.receivedDate,
                 images: selectedCustomer.images,
               }
             : undefined

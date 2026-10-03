@@ -23,6 +23,7 @@ export interface Customer {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  receivedDate: Date | null;
 }
 
 export interface CustomerCreate {
@@ -35,6 +36,7 @@ export interface CustomerCreate {
   phone?: string;
   staffId?: string;
   providerId?: number | null;
+  receivedDate?: Date | null;
 }
 
 export interface CustomerUpdate {
@@ -48,6 +50,7 @@ export interface CustomerUpdate {
   staffId?: string;
   type?: string;
   providerId?: number | null;
+  receivedDate?: Date | null;
 }
 
 export interface CustomerQueryParams {

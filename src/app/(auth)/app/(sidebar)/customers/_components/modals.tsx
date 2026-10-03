@@ -46,6 +46,7 @@ interface CustomerFormModalProps {
     staffId?: string | null;
     type?: string | null;
     providerId?: number | null;
+    receivedDate?: Date | null;
     images?: any[];
   };
 }
@@ -230,6 +231,7 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
         staffId: initialData?.staffId || (!canAssignStaff && user ? user.id : ''),
         type: initialData?.type || '',
         providerId: initialData?.providerId ?? null,
+        receivedDate: initialData?.receivedDate ? new Date(initialData.receivedDate).toISOString().split('T')[0] as any : null,
       });
        
       setSelectedImages([]);
@@ -251,7 +253,7 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
       setShowAllImages(false);
       setShowAllExistingImages(false);
     } else {
-      reset({ name: '', address: '', latitude: null, longitude: null, identifyCode: '', email: '', phone: '', staffId: '', type: '', providerId: null });
+      reset({ name: '', address: '', latitude: null, longitude: null, identifyCode: '', email: '', phone: '', staffId: '', type: '', providerId: null, receivedDate: null });
       setSelectedImages((prev) => {
         prev.forEach((img) => URL.revokeObjectURL(img.preview));
         return [];
@@ -294,6 +296,15 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
       payload.providerId = Number(data.providerId);
     } else if (data.providerId === null || (data.providerId as any) === '') {
       payload.providerId = null;
+    }
+    if (data.receivedDate) {
+      if (data.receivedDate instanceof Date) {
+        payload.receivedDate = data.receivedDate.toISOString().split('T')[0];
+      } else {
+        payload.receivedDate = data.receivedDate;
+      }
+    } else if (data.receivedDate === null || (data.receivedDate as any) === '') {
+      payload.receivedDate = null;
     }
 
     if (initialData) {
@@ -433,12 +444,30 @@ export function CustomerFormModal({ isOpen, onClose, title, submitText = 'Xác n
               options={CUSTOMER_TYPE_OPTIONS}
               placeholder="Chọn loại khách hàng"
               fullWidth
-              disabled={updateIsPending}
+              disabled={updateIsPending} 
               value={watch('type') || ''}
               {...register('type')}
               error={errors.type?.message}
             />
           )}
+          <Input
+            label="Ngày tiếp nhận"
+            type="date"
+            placeholder="Chọn ngày tiếp nhận"
+            fullWidth
+            max={new Date().toISOString().split('T')[0]}
+            {...register('receivedDate', {
+              validate: (value) => {
+                if (!value) return true;
+                const selected = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selected > today) return 'Ngày tiếp nhận không được lớn hơn ngày hiện tại';
+                return true;
+              }
+            })}
+            error={errors.receivedDate?.message}
+          />
           <div className="flex flex-col gap-1.5">
             <span className="text-xs font-semibold text-gray-700 select-none">Nhà cung cấp / Đối tác</span>
             <div className="flex items-start gap-2">

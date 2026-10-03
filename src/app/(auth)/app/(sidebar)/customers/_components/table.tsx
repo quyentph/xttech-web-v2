@@ -210,19 +210,17 @@ const Table = ({ onEditClick, onDeleteClick, onAddClick, onExportClick }: TableP
       },
     },
     {
-      key: 'createdAt',
-      label: 'Ngày tạo',
+      key: 'receivedDate',
+      label: 'Ngày tiếp nhận',
       minWidth: '150px',
       cell: (row: Customer) => {
-        if (!row.createdAt) return <span className="text-gray-400 text-xs">—</span>;
+        if (!row.receivedDate) return <span className="text-gray-400 text-xs">—</span>;
         return (
           <span className="text-gray-600 text-sm">
-            {new Date(row.createdAt).toLocaleDateString('vi-VN', {
-              year: 'numeric',
-              month: '2-digit',
+            {new Date(row.receivedDate).toLocaleDateString('vi-VN', {
               day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
             })}
           </span>
         );
@@ -271,9 +269,18 @@ const Table = ({ onEditClick, onDeleteClick, onAddClick, onExportClick }: TableP
                 • NCC: {row.provider.name}
               </span>
             )}
-            {row.createdAt && (
+            {row.receivedDate && (
               <span className="text-xs text-gray-400 font-medium ml-1">
-                • Tạo: {new Date(row.createdAt).toLocaleDateString('vi-VN', {
+                • Tiếp nhận: {new Date(row.receivedDate).toLocaleDateString('vi-VN', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })}
+              </span>
+            )}
+            {row.receivedDate && (
+              <span className="text-xs text-gray-400 font-medium ml-1">
+                • Tiếp nhận: {new Date(row.receivedDate).toLocaleDateString('vi-VN', {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',

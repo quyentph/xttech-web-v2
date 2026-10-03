@@ -142,6 +142,17 @@ export const CustomerInfo = ({ customer }: CustomerInfoProps) => {
                 )}
               </span>
             </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold text-gray-400 ">Ngày tiếp nhận</span>
+              <span className="text-base font-semibold text-gray-900">
+                {customer.receivedDate ? new Date(customer.receivedDate).toLocaleDateString('vi-VN', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                }) : '—'}
+              </span>
+            </div>
           </div>
 
           {/* Hiển thị ảnh đã đính kèm */}
