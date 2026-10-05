@@ -11,6 +11,7 @@ import {
   Sliders,
   SlidersHorizontal,
   ClockAlert,
+  Folder,
 } from 'lucide-react';
 import { SidebarItemProps as SidebarItemType, SidebarSectionProps as SidebarSectionType } from '@/components';
 
@@ -53,6 +54,9 @@ export const acceptedSections = [
   'live-map',
   'app-versions',
   'leave-request',
+  'documents-root',
+  'document-categories',
+  'documents-list',
 ];
 
 export interface SidebarItemWithRoles extends Omit<SidebarItemType, 'subItems'> {
@@ -255,6 +259,13 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
   {
     title: 'Hệ thống',
     items: [
+      {
+        id: 'documents-root',
+        label: 'Cơ chế & Tài liệu',
+        icon: React.createElement(Folder, { size: 18 }),
+        href: '/app/documents',
+        roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+      },
       {
         id: 'app-versions',
         label: 'Quản trị hệ thống',

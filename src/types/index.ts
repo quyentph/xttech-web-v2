@@ -1,4 +1,4 @@
-// Users
+﻿// Users
 export * from './user';
 
 // Roles
@@ -85,3 +85,4 @@ export * from './gasket';
 export * from './accessory-combo';
 
 
+export * from './document';
