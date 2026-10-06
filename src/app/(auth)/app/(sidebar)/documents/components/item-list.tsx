@@ -6,9 +6,9 @@ import type { Document } from '@/types/document';
 import { Empty, Spin } from 'antd';
 
 interface ItemListProps {
-  items: Document[];
+  items: any[];
   loading?: boolean;
-  onItemClick?: (item: Document) => void;
+  onItemClick?: (item: any) => void;
 }
 
 const ItemList = ({ items, loading, onItemClick }: ItemListProps) => {

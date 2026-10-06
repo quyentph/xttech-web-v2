@@ -7,8 +7,8 @@ import type { MenuProps } from 'antd';
 import type { Document } from '@/types/document';
 
 interface ItemProps {
-  data: Document;
-  onClick?: (data: Document) => void;
+  data: any;
+  onClick?: (data: any) => void;
 }
 
 const Item = ({ data, onClick }: ItemProps) => {
@@ -26,8 +26,8 @@ const Item = ({ data, onClick }: ItemProps) => {
     >
       <div className="flex items-center gap-3 overflow-hidden flex-1 mr-2">
         <Folder size={18} className="text-gray-700 flex-shrink-0" fill="currentColor" />
-        <span className="font-medium text-sm text-gray-800 truncate" title={data.title || data.code}>
-          {data.title || data.code}
+        <span className="font-medium text-sm text-gray-800 truncate" title={data.name || data.title || data.code}>
+          {data.name || data.title || data.code}
         </span>
       </div>
       <Dropdown menu={{ items }} trigger={['click']}>

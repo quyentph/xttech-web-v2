@@ -265,6 +265,32 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
         icon: React.createElement(Folder, { size: 18 }),
         href: '/app/documents',
         roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+        subItems: [
+          {
+            id: 'documents-my',
+            label: 'Tài liệu của tôi',
+            href: '/app/documents',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+          {
+            id: 'documents-shared',
+            label: 'Được chia sẻ',
+            href: '/app/documents?shared=true',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+          {
+            id: 'documents-inbox',
+            label: 'Hộp thư đến',
+            href: '/app/documents/inbox',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+          {
+            id: 'documents-company',
+            label: 'Văn bản công ty',
+            href: '/app/documents?status=published&shareScope=all',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+        ],
       },
       {
         id: 'app-versions',
