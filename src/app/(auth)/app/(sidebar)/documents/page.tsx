@@ -77,12 +77,12 @@ export default function DocumentsPage() {
 
     const res = await getDocuments(params);
     return {
-      items: res.data || [],
+      items: res.items || [],
       meta: {
-        total: res.total || 0,
+        total: res.meta?.total || 0,
         offset,
         limit,
-        next: (offset + limit) < (res.total || 0),
+        next: res.meta?.next || (offset + limit) < (res.meta?.total || 0),
       }
     };
   };
