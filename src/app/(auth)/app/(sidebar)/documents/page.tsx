@@ -2,12 +2,16 @@
 
 import React, { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { getDocuments, getDocumentCategoriesTree } from '@/actions/document';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getDocuments, getDocumentCategoriesTree, deleteDocumentCategory } from '@/actions/document';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import StatCards from './components/stat-cards';
 import CreateCategoryModal from './components/create-document-modal';
-import { FileText, Eye, MoreVertical, Plus, Folder as FolderIcon } from 'lucide-react';
-import { Button, TableData } from '@/components';
+import UpdateCategoryModal from './components/update-category-modal';
+import ShareCategoryModal from './components/share-category-modal';
+import DeleteCategoryModal from './components/delete-category-modal';
+import { FileText, Eye, MoreVertical, Plus, Folder as FolderIcon, Edit2, Share2, Trash2 } from 'lucide-react';
+import { Button, TableData, Dropdown } from '@/components';
+import toast from 'react-hot-toast';
 import { useQueryParam } from '@/hooks';
 
 export default function DocumentsPage() {
@@ -21,6 +25,15 @@ export default function DocumentsPage() {
   const [search, setSearch] = useQueryParam('search');
   const [status, setStatus] = useQueryParam('status');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  
+  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  
+  const [sharingCategory, setSharingCategory] = useState<any>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  
+  const [deletingCategory, setDeletingCategory] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const isRootMyDocuments = !categoryId && !shared && !routeStatus && !shareScope;
 
@@ -186,19 +199,51 @@ export default function DocumentsPage() {
               onClick={() => router.push(`/app/documents?categoryId=${folder.id}`)}
               className="group flex items-center justify-between p-3.5 bg-slate-100/70 hover:bg-slate-200/60 border border-slate-200/80 rounded-xl cursor-pointer transition-colors"
             >
-              <div className="flex items-center gap-3 overflow-hidden">
+              <div className="flex-1 min-w-0 flex items-center gap-3 overflow-hidden">
                 <FolderIcon className="text-slate-600 shrink-0 fill-slate-500/20" size={20} />
                 <span className="font-medium text-sm text-slate-700 truncate">{folder.name}</span>
               </div>
-              <button 
-                className="p-1 text-slate-400 hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Menu hành động thư mục (sửa/xoá)
-                }}
-              >
-                <MoreVertical size={16} />
-              </button>
+              <div onClick={(e) => e.stopPropagation()} className="shrink-0 ml-2">
+                <Dropdown
+                  align="right"
+                  menuClassName="mt-3.5 -right-3.5"
+                  trigger={
+                    <button className="p-1 text-slate-400 hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <MoreVertical size={16} />
+                    </button>
+                  }
+                  items={[
+                    {
+                      label: 'Đổi tên',
+                      icon: <Edit2 size={14} />,
+                      onClick: (e: any) => {
+                        e?.stopPropagation();
+                        setEditingCategory(folder);
+                        setIsUpdateModalOpen(true);
+                      }
+                    },
+                    {
+                      label: 'Chia sẻ',
+                      icon: <Share2 size={14} />,
+                      onClick: (e: any) => {
+                        e?.stopPropagation();
+                        setSharingCategory(folder);
+                        setIsShareModalOpen(true);
+                      }
+                    },
+                    {
+                      label: 'Xóa thư mục',
+                      icon: <Trash2 size={14} />,
+                      danger: true,
+                      onClick: (e: any) => {
+                        e?.stopPropagation();
+                        setDeletingCategory(folder);
+                        setIsDeleteModalOpen(true);
+                      }
+                    }
+                  ]}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -242,6 +287,40 @@ export default function DocumentsPage() {
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['document-categories'] });
         }}
+        parentId={categoryId ? Number(categoryId) : null}
+      />
+
+      <UpdateCategoryModal 
+        isOpen={isUpdateModalOpen}
+        onClose={() => {
+          setIsUpdateModalOpen(false);
+          setEditingCategory(null);
+        }}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+        }}
+        category={editingCategory}
+      />
+
+      <ShareCategoryModal 
+        isOpen={isShareModalOpen}
+        onClose={() => {
+          setIsShareModalOpen(false);
+          setSharingCategory(null);
+        }}
+        category={sharingCategory}
+      />
+
+      <DeleteCategoryModal 
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeletingCategory(null);
+        }}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+        }}
+        category={deletingCategory}
       />
     </div>
   );
