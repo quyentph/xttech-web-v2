@@ -8,13 +8,19 @@ export interface DocumentUser {
 
 export interface DocumentVersion {
   id: number;
+  documentId: number;
   versionNumber: string;
   fileName: string;
+  filePath: string;
   fileSize: number;
-  fileType: string;
-  downloadUrl: string;
+  mimeType: string;
+  fileType?: string;
+  downloadUrl?: string;
   changeSummary?: string;
+  isCurrent: boolean;
   createdAt: string;
+  createdById: string;
+  createdBy?: DocumentUser;
 }
 
 export interface Document {
