@@ -57,6 +57,8 @@ export const acceptedSections = [
   'documents-root',
   'document-categories',
   'documents-list',
+  'documents-my',
+  'documents-shared',
 ];
 
 export interface SidebarItemWithRoles extends Omit<SidebarItemType, 'subItems'> {
@@ -275,19 +277,7 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
           {
             id: 'documents-shared',
             label: 'Được chia sẻ',
-            href: '/app/documents?shared=true',
-            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
-          },
-          {
-            id: 'documents-inbox',
-            label: 'Hộp thư đến',
-            href: '/app/documents/inbox',
-            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
-          },
-          {
-            id: 'documents-company',
-            label: 'Văn bản công ty',
-            href: '/app/documents?status=published&shareScope=all',
+            href: '/app/inbox',
             roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
         ],

@@ -1,0 +1,200 @@
+'use client';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Folder, MoreVertical, Edit2, Trash2, FolderOpen, User } from 'lucide-react';
+import type { DocumentCategory } from '@/types';
+import { cn } from '@/utils';
+
+interface FolderCardProps {
+  folder: DocumentCategory;
+  locationName?: string;
+  onOpen: (folder: DocumentCategory) => void;
+  onEdit: (folder: DocumentCategory) => void;
+  onDelete: (folder: DocumentCategory) => void;
+}
+
+export const FolderCard: React.FC<FolderCardProps> = ({
+  folder,
+  locationName,
+  onOpen,
+  onEdit,
+  onDelete,
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearCloseTimeout = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+
+  const handleButtonPointerEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return;
+    clearCloseTimeout();
+    setIsMenuOpen(true);
+  };
+
+  const handleMenuPointerEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return;
+    clearCloseTimeout();
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return;
+    clearCloseTimeout();
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 200);
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    clearCloseTimeout();
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        clearCloseTimeout();
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    return () => {
+      clearCloseTimeout();
+    };
+  }, []);
+
+  const isShared = (folder.sharedWithCount && folder.sharedWithCount > 0) || folder.permission === 'view';
+  const canEdit = folder.permission !== 'view';
+
+  const menuItems: {
+    label: string;
+    icon: React.ReactNode;
+    onClick: () => void;
+    danger?: boolean;
+    disabled?: boolean;
+  }[] = [
+    {
+      label: 'Mở thư mục',
+      icon: <FolderOpen size={15} className="text-slate-500" />,
+      onClick: () => onOpen(folder),
+    },
+    ...(canEdit
+      ? [
+          {
+            label: 'Đổi tên / Sửa',
+            icon: <Edit2 size={15} className="text-blue-500" />,
+            onClick: () => onEdit(folder),
+          },
+          {
+            label: 'Xóa thư mục',
+            icon: <Trash2 size={15} className="text-rose-500" />,
+            danger: true,
+            onClick: () => onDelete(folder),
+          },
+        ]
+      : []),
+  ];
+
+  return (
+    <div
+      onClick={() => onOpen(folder)}
+      className={cn(
+        'group relative flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer select-none transition-all duration-150',
+        'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+        isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
+      )}
+      title={`${folder.name} (${folder.code})`}
+    >
+      {/* Icon bên trái */}
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="relative shrink-0 text-slate-700">
+          <Folder size={22} className="fill-slate-600/90 text-slate-700" />
+          {isShared && (
+            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-2xs">
+              <User size={10} className="text-primary fill-primary" />
+            </div>
+          )}
+        </div>
+
+        {/* Tên thư mục & Đường dẫn vị trí */}
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="truncate text-sm font-medium text-slate-800 group-hover:text-primary transition-colors leading-tight">
+            {folder.name}
+          </span>
+          <span className="text-[11px] text-slate-500 truncate mt-0.5">
+            {locationName ? `trong ${locationName}` : folder.description || 'Thư mục'}
+          </span>
+        </div>
+      </div>
+
+      {/* Nút 3 chấm thao tác */}
+      <div
+        className="shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <button
+          type="button"
+          onPointerEnter={handleButtonPointerEnter}
+          onPointerLeave={handlePointerLeave}
+          onClick={handleButtonClick}
+          className={cn(
+            'w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-200/80 transition-colors cursor-pointer',
+            isMenuOpen && 'bg-slate-200/80 text-slate-800',
+          )}
+          title="Thao tác"
+        >
+          <MoreVertical size={16} />
+        </button>
+      </div>
+
+      {/* Menu con tách hẳn xuống dưới và căn thẳng hàng với bên phải card, bo góc rounded-lg */}
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          onClick={(e) => e.stopPropagation()}
+          onPointerEnter={handleMenuPointerEnter}
+          onPointerLeave={handlePointerLeave}
+          className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg bg-white shadow-xl ring-1 ring-black/5 divide-y divide-gray-100 overflow-hidden border border-slate-200/80 py-1 animate-in fade-in zoom-in-95 duration-100 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
+        >
+          {menuItems.map((item, idx) => (
+            <button
+              key={idx}
+              type="button"
+              disabled={item.disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                clearCloseTimeout();
+                setIsMenuOpen(false);
+                item.onClick?.();
+              }}
+              className={cn(
+                'flex w-full items-center gap-2.5 px-3.5 py-2 text-xs transition-colors duration-150 text-left cursor-pointer font-medium',
+                item.danger
+                  ? 'text-rose-600 hover:bg-rose-50'
+                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900',
+              )}
+            >
+              {item.icon && <span className="shrink-0">{item.icon}</span>}
+              <span className="truncate">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
