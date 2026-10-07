@@ -153,7 +153,7 @@ const DocumentDetailModal = ({ document, isOpen, onClose }: DocumentDetailModalP
           <span className="font-bold text-slate-800 text-base truncate">{document.title}</span>
         </div>
       }
-      styles={{
+      styles={{ 
         body: { padding: '16px 24px 24px', maxHeight: '75vh', overflowY: 'auto' },
         header: { borderBottom: '1px solid #f1f5f9', paddingBottom: 12 },
       }}
