@@ -120,10 +120,16 @@ export const FolderTable: React.FC<FolderTableProps> = ({
       {/* Danh sách hàng thư mục phẳng chuẩn Google Drive */}
       <div>
         {folders.map((folder) => {
-          const isOwner = folder.createdById === user?.id;
-          const ownerName = isOwner ? 'tôi' : (folder as any).createdByName || 'Thành viên';
-          const isShared = (folder.sharedWithCount && folder.sharedWithCount > 0) || folder.permission === 'view';
-          const canEdit = folder.permission !== 'view';
+          const isOwner = folder.isOwner ?? (folder.createdById ? folder.createdById === user?.id : true);
+          const ownerName = isOwner ? 'tôi' : folder.createdByName || 'Thành viên';
+          const isShared = Boolean(
+            folder.isShared ||
+            (folder.sharedWithCount && folder.sharedWithCount > 0) ||
+            folder.isOwner === false ||
+            folder.permission === 'view'
+          );
+          const canEdit = folder.isOwner !== false && folder.permission !== 'view';
+          const canShare = Boolean(onShare && folder.isOwner !== false);
           const parentName = locationName || 'Drive của tôi';
           const isMenuOpen = openMenuFolderId === folder.id;
 
@@ -138,7 +144,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
               icon: <FolderOpen size={15} className="text-slate-500" />,
               onClick: () => onOpen(folder),
             },
-            ...(onShare
+            ...(canShare && onShare
               ? [
                   {
                     label: 'Chia sẻ',

@@ -5,8 +5,12 @@ export interface DocumentCategory {
   description?: string | null;
   parentId?: number | null;
   createdById?: string;
+  createdByName?: string | null;
+  isOwner?: boolean;
   permission?: 'view' | 'edit';
+  shareCount?: number;
   sharedWithCount?: number;
+  isShared?: boolean;
   children?: DocumentCategory[];
   createdAt?: string;
   updatedAt?: string;
@@ -78,6 +82,8 @@ export interface DocumentItem {
   approvalNote?: string | null;
   approvedAt?: string | null;
   supersededById?: number | null;
+  isRead?: boolean | null;
+  readAt?: string | null;
   createdAt: string;
   updatedAt?: string;
 }
@@ -95,6 +101,17 @@ export interface GetDocumentsParams {
   offset?: number;
   limit?: number;
   isRead?: boolean;
+}
+
+export interface GetInboxDocumentsParams {
+  search?: string;
+  isRead?: boolean;
+  documentType?: string;
+  categoryId?: number;
+  offset?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 export interface GetDocumentsResponse {
@@ -169,6 +186,7 @@ export interface FolderShare {
   id: number | string;
   categoryId: number;
   userId?: string | null;
+  userName?: string | null;
   user?: {
     id: string;
     fullName?: string;
@@ -177,6 +195,7 @@ export interface FolderShare {
     phone?: string;
   } | null;
   departmentId?: number | null;
+  departmentName?: string | null;
   department?: {
     id: number;
     name: string;
@@ -184,6 +203,8 @@ export interface FolderShare {
   } | null;
   permission: 'view' | 'edit';
   createdAt?: string;
+  createdById?: string;
+  createdByName?: string | null;
   updatedAt?: string;
 }
 

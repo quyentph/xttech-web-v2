@@ -80,8 +80,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({
     };
   }, []);
 
-  const isShared = (folder.sharedWithCount && folder.sharedWithCount > 0) || folder.permission === 'view';
-  const canEdit = folder.permission !== 'view';
+  const isShared = Boolean(
+    folder.isShared ||
+    (folder.sharedWithCount && folder.sharedWithCount > 0) ||
+    folder.isOwner === false ||
+    folder.permission === 'view'
+  );
+  const canEdit = folder.isOwner !== false && folder.permission !== 'view';
+  const canShare = Boolean(onShare && folder.isOwner !== false);
 
   const menuItems: {
     label: string;
@@ -95,7 +101,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       icon: <FolderOpen size={15} className="text-slate-500" />,
       onClick: () => onOpen(folder),
     },
-    ...(onShare
+    ...(canShare && onShare
       ? [
           {
             label: 'Chia sẻ',

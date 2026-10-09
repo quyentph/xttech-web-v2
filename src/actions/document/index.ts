@@ -5,6 +5,7 @@ import type {
   UpdateDocumentCategoryPayload,
   DocumentItem,
   GetDocumentsParams,
+  GetInboxDocumentsParams,
   GetDocumentsResponse,
   FolderShare,
   ShareFolderPayload,
@@ -48,15 +49,35 @@ export const getDocumentCategoryTree = async (): Promise<DocumentCategory[]> => 
     if (Array.isArray(raw?.data)) return raw.data;
     if (Array.isArray(raw?.items)) return raw.items;
 
-    // Backend FastAPI trả về: { myFolders: [...], sharedFolders: [...] }
+    // Backend FastAPI có thể trả về camelCase ({ myFolders, sharedFolders })
+    // hoặc snake_case ({ my_folders, shared_folders })
     const treeObj = raw?.data ?? raw;
-    if (treeObj && (treeObj.myFolders || treeObj.sharedFolders)) {
-      const my = Array.isArray(treeObj.myFolders) ? treeObj.myFolders : [];
-      const shared = Array.isArray(treeObj.sharedFolders) ? treeObj.sharedFolders : [];
-      return [...my, ...shared];
-    }
+    const my = Array.isArray(treeObj?.myFolders)
+      ? treeObj.myFolders
+      : Array.isArray(treeObj?.my_folders)
+      ? treeObj.my_folders
+      : [];
+    const shared = Array.isArray(treeObj?.sharedFolders)
+      ? treeObj.sharedFolders
+      : Array.isArray(treeObj?.shared_folders)
+      ? treeObj.shared_folders
+      : [];
 
-    return [];
+    const markedMy = my.map((item: DocumentCategory) => ({
+      ...item,
+      isOwner: item.isOwner ?? true,
+      permission: item.permission || 'edit',
+      isShared: false,
+    }));
+
+    const markedShared = shared.map((item: DocumentCategory) => ({
+      ...item,
+      isOwner: item.isOwner ?? false,
+      permission: item.permission || 'view',
+      isShared: true,
+    }));
+
+    return [...markedMy, ...markedShared];
   } catch (error: any) {
     console.warn('Lỗi getDocumentCategoryTree:', error);
     return [];
@@ -271,5 +292,35 @@ export const publishDocument = async (documentId: number): Promise<DocumentItem>
     return res.data?.data ?? res.data;
   } catch (error: any) {
     throw new Error(extractErrorMessage(error, 'Không thể ban hành tài liệu'));
+  }
+};
+
+// ==========================================
+// 5. Hộp thư đến (Inbox) & Đánh dấu đã đọc
+// ==========================================
+
+// 6.1. Lấy danh sách văn bản trong Hộp thư đến (Inbox): GET /api/v1/documents/inbox
+export const getInboxDocuments = async (
+  params?: GetInboxDocumentsParams,
+): Promise<GetDocumentsResponse> => {
+  try {
+    const res = await api.get('/api/v1/documents/inbox', { params });
+    const rawData = res.data?.data ?? res.data;
+    if (Array.isArray(rawData)) {
+      return {
+        items: rawData,
+        total: rawData.length,
+        offset: params?.offset || 0,
+        limit: params?.limit || 10,
+      };
+    }
+    return {
+      items: rawData?.items || [],
+      total: rawData?.total || 0,
+      offset: rawData?.offset || 0,
+      limit: rawData?.limit || 10,
+    };
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể tải danh sách hộp thư đến'));
   }
 };

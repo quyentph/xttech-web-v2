@@ -147,6 +147,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
 
       // Refetch
       refetchShares();
+      queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
       queryClient.invalidateQueries({ queryKey: ['document-categories'] });
       onSuccess?.();
     } catch (error: any) {
@@ -164,6 +165,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
       await revokeDocumentCategoryShare(folder.id, shareId);
       toast.success(`Đã hủy quyền chia sẻ của "${name}"`);
       refetchShares();
+      queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
       queryClient.invalidateQueries({ queryKey: ['document-categories'] });
       onSuccess?.();
     } catch (error: any) {
@@ -338,13 +340,13 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
                 </div>
               ) : (
                 shares.map((share) => {
-                  const isDept = Boolean(share.departmentId || share.department);
+                  const isDept = Boolean(share.departmentId || share.department || share.departmentName);
                   const displayName = isDept
-                    ? share.department?.name || `Phòng ban #${share.departmentId}`
-                    : share.user?.fullName || share.user?.email || `Nhân sự #${share.userId}`;
+                    ? share.departmentName || share.department?.name || `Phòng ban #${share.departmentId}`
+                    : share.userName || share.user?.fullName || share.user?.email || `Nhân sự #${share.userId}`;
                   const subText = isDept
                     ? 'Toàn bộ nhân viên trong phòng ban'
-                    : share.user?.email || 'Nhân sự chỉ định';
+                    : share.user?.email || (share.createdByName ? `Được chia sẻ bởi ${share.createdByName}` : 'Nhân sự chỉ định');
                   const isEditing = share.permission === 'edit';
 
                   return (

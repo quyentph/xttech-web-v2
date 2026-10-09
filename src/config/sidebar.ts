@@ -278,13 +278,13 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
           {
             id: 'documents-my',
             label: 'Tài liệu của tôi',
-            href: '/app/documents',
+            href: '/app/documents?tab=my',
             roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
           {
             id: 'documents-shared',
-            label: 'Được chia sẻ',
-            href: '/app/inbox',
+            label: 'Được chia sẻ',
+            href: '/app/documents?tab=shared',
             roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
         ],

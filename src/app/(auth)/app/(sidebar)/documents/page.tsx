@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks';
 import {
@@ -39,9 +40,17 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function MyDocumentsPage() {
+function MyDocumentsContent() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get('tab');
+  
   // Navigation & View States
   const [currentFolderId, setCurrentFolderId] = useState<number | null>(null);
+
+  // If the URL changes to a different tab, reset currentFolderId to null
+  useEffect(() => {
+    setCurrentFolderId(null);
+  }, [tab]);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Search & Filter States
@@ -139,16 +148,20 @@ export default function MyDocumentsPage() {
   }, [categoryTree]);
 
   // Helper: Find current folder, its direct parent, and subfolders recursively
-  const { currentFolder, parentFolder, subFolders } = useMemo<{
+  const { currentFolder, parentFolder, subFolders, myFolders, sharedFolders } = useMemo<{
     currentFolder: DocumentCategory | null;
     parentFolder: DocumentCategory | null;
     subFolders: DocumentCategory[];
+    myFolders: DocumentCategory[];
+    sharedFolders: DocumentCategory[];
   }>(() => {
     if (currentFolderId === null) {
       return {
         currentFolder: null,
         parentFolder: null,
         subFolders: safeCategoryTree,
+        myFolders: safeCategoryTree.filter((f) => !f.isShared),
+        sharedFolders: safeCategoryTree.filter((f) => f.isShared),
       };
     }
 
@@ -175,11 +188,15 @@ export default function MyDocumentsPage() {
     };
 
     findFolderRecursive(safeCategoryTree, null);
+    
+    const children = targetFolder ? (targetFolder as DocumentCategory).children || [] : [];
 
     return {
       currentFolder: targetFolder,
       parentFolder: directParent,
-      subFolders: targetFolder ? (targetFolder as DocumentCategory).children || [] : [],
+      subFolders: children,
+      myFolders: children,
+      sharedFolders: [],
     };
   }, [safeCategoryTree, currentFolderId]);
 
@@ -381,24 +398,24 @@ export default function MyDocumentsPage() {
           </div>
         </div>
 
-        {/* SECTION 1: THƯ MỤC CON TRONG FOLDER HIỆN TẠI (NẾU CÓ) */}
-        {hasSubFolders && (
+        {/* SECTION 1: THƯ MỤC CÁ NHÂN (NẾU CÓ) */}
+        {(tab === 'my' || tab === null) && myFolders.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Folder size={16} className="text-slate-600" />
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Thư mục
+                  {currentFolderId === null ? 'Thư mục của tôi' : 'Thư mục'}
                 </h3>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
-                  {subFolders.length}
+                  {myFolders.length}
                 </span>
               </div>
             </div>
 
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {subFolders.map((folder) => (
+                {myFolders.map((folder) => (
                   <FolderCard
                     key={folder.id}
                     folder={folder}
@@ -426,8 +443,79 @@ export default function MyDocumentsPage() {
               </div>
             ) : (
               <FolderTable
-                folders={subFolders}
+                folders={myFolders}
                 locationName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
+                showHeader={true}
+                onOpen={(f) => setCurrentFolderId(f.id)}
+                onEdit={(f) => {
+                  setEditingFolder(f);
+                  setEditFolderOpen(true);
+                }}
+                onShare={(f) => {
+                  setSharingFolder(f);
+                  setShareFolderOpen(true);
+                }}
+                onDelete={(f) => {
+                  setDeleteModal({
+                    isOpen: true,
+                    type: 'folder',
+                    id: f.id,
+                    name: f.name,
+                    loading: false,
+                  });
+                }}
+              />
+            )}
+          </div>
+        )}
+
+        {/* SECTION 1.5: THƯ MỤC ĐƯỢC CHIA SẺ (CHỈ HIỂN THỊ Ở ROOT) */}
+        {(tab === 'shared' || tab === null) && sharedFolders.length > 0 && (
+          <div className="space-y-3 mt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FolderOpen size={16} className="text-slate-600" />
+                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  Được chia sẻ với tôi
+                </h3>
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
+                  {sharedFolders.length}
+                </span>
+              </div>
+            </div>
+
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {sharedFolders.map((folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    folder={folder}
+                    locationName="Được chia sẻ với tôi"
+                    onOpen={(f) => setCurrentFolderId(f.id)}
+                    onEdit={(f) => {
+                      setEditingFolder(f);
+                      setEditFolderOpen(true);
+                    }}
+                    onShare={(f) => {
+                      setSharingFolder(f);
+                      setShareFolderOpen(true);
+                    }}
+                    onDelete={(f) => {
+                      setDeleteModal({
+                        isOpen: true,
+                        type: 'folder',
+                        id: f.id,
+                        name: f.name,
+                        loading: false,
+                      });
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <FolderTable
+                folders={sharedFolders}
+                locationName="Được chia sẻ với tôi"
                 showHeader={true}
                 onOpen={(f) => setCurrentFolderId(f.id)}
                 onEdit={(f) => {
@@ -637,5 +725,19 @@ export default function MyDocumentsPage() {
         }}
       />
     </div>
+  );
+}
+
+export default function MyDocumentsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full flex flex-col min-w-0 h-full overflow-hidden bg-white select-none items-center justify-center text-slate-500 text-xs">
+          Đang tải dữ liệu...
+        </div>
+      }
+    >
+      <MyDocumentsContent />
+    </Suspense>
   );
 }
