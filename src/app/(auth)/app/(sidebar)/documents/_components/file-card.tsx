@@ -136,7 +136,7 @@ export const FileCard: React.FC<FileCardProps> = ({
     <div
       onClick={() => onView(doc)}
       className={cn(
-        'group relative flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer select-none transition-all duration-150',
+        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
         'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}

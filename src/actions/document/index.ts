@@ -6,6 +6,8 @@ import type {
   DocumentItem,
   GetDocumentsParams,
   GetDocumentsResponse,
+  FolderShare,
+  ShareFolderPayload,
 } from '@/types';
 
 // ==========================================
@@ -185,3 +187,51 @@ export const removeDocumentFromFolder = async (documentId: number, categoryId: n
     throw new Error(msg);
   }
 };
+
+// ==========================================
+// 3. Phân quyền chia sẻ thư mục (Folder Sharing)
+// ==========================================
+
+// 4.1. Phân quyền chia sẻ thư mục: POST /api/v1/document-categories/{id}/shares
+export const shareDocumentCategory = async (
+  categoryId: number,
+  payload: ShareFolderPayload,
+): Promise<FolderShare> => {
+  try {
+    const res = await api.post(`/api/v1/document-categories/${categoryId}/shares`, payload);
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể chia sẻ thư mục';
+    throw new Error(msg);
+  }
+};
+
+// 4.2. Xem danh sách những người đang được chia sẻ thư mục: GET /api/v1/document-categories/{id}/shares
+export const getDocumentCategoryShares = async (
+  categoryId: number,
+): Promise<FolderShare[]> => {
+  try {
+    const res = await api.get(`/api/v1/document-categories/${categoryId}/shares`);
+    const raw = res.data?.data ?? res.data;
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw?.items)) return raw.items;
+    return [];
+  } catch (error: any) {
+    console.warn('Lỗi getDocumentCategoryShares:', error);
+    return [];
+  }
+};
+
+// 4.3. Thu hồi quyền chia sẻ: DELETE /api/v1/document-categories/{id}/shares/{shareId}
+export const revokeDocumentCategoryShare = async (
+  categoryId: number,
+  shareId: number | string,
+): Promise<void> => {
+  try {
+    await api.delete(`/api/v1/document-categories/${categoryId}/shares/${shareId}`);
+  } catch (error: any) {
+    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể thu hồi quyền chia sẻ';
+    throw new Error(msg);
+  }
+};
+

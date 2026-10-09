@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Folder, MoreVertical, Edit2, Trash2, FolderOpen, Users } from 'lucide-react';
+import { Folder, MoreVertical, Edit2, Trash2, FolderOpen, Users, Share2 } from 'lucide-react';
 import type { DocumentCategory } from '@/types';
 import { useAuthStore } from '@/stores';
 import { cn } from '@/utils';
@@ -14,6 +14,7 @@ interface FolderTableProps {
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onDelete: (folder: DocumentCategory) => void;
+  onShare?: (folder: DocumentCategory) => void;
 }
 
 const AVATAR_COLORS = [
@@ -42,6 +43,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   onOpen,
   onEdit,
   onDelete,
+  onShare,
 }) => {
   const { user } = useAuthStore();
   const [openMenuFolderId, setOpenMenuFolderId] = useState<number | null>(null);
@@ -134,6 +136,15 @@ export const FolderTable: React.FC<FolderTableProps> = ({
               icon: <FolderOpen size={15} className="text-slate-500" />,
               onClick: () => onOpen(folder),
             },
+            ...(onShare
+              ? [
+                  {
+                    label: 'Chia sẻ',
+                    icon: <Share2 size={15} className="text-emerald-600" />,
+                    onClick: () => onShare(folder),
+                  },
+                ]
+              : []),
             ...(canEdit
               ? [
                   {

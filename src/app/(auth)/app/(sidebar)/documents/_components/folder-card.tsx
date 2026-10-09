@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Folder, MoreVertical, Edit2, Trash2, FolderOpen, User } from 'lucide-react';
+import { Folder, MoreVertical, Edit2, Trash2, FolderOpen, User, Share2 } from 'lucide-react';
 import type { DocumentCategory } from '@/types';
 import { cn } from '@/utils';
 
@@ -11,6 +11,7 @@ interface FolderCardProps {
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onDelete: (folder: DocumentCategory) => void;
+  onShare?: (folder: DocumentCategory) => void;
 }
 
 export const FolderCard: React.FC<FolderCardProps> = ({
@@ -19,6 +20,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   onOpen,
   onEdit,
   onDelete,
+  onShare,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -91,6 +93,15 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       icon: <FolderOpen size={15} className="text-slate-500" />,
       onClick: () => onOpen(folder),
     },
+    ...(onShare
+      ? [
+          {
+            label: 'Chia sẻ',
+            icon: <Share2 size={15} className="text-emerald-600" />,
+            onClick: () => onShare(folder),
+          },
+        ]
+      : []),
     ...(canEdit
       ? [
           {
@@ -112,7 +123,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
     <div
       onClick={() => onOpen(folder)}
       className={cn(
-        'group relative flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer select-none transition-all duration-150',
+        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
         'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}

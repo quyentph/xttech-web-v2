@@ -18,11 +18,13 @@ import { FolderTable } from './_components/folder-table';
 import { FileCard } from './_components/file-card';
 import { FileTable } from './_components/file-table';
 import { BreadcrumbBar } from './_components/breadcrumb-bar';
+import { StatCard, MOCK_DOCUMENT_STATS } from './_components/stat-card';
 import { CreateFolderModal } from './_components/create-folder-modal';
 import { EditFolderModal } from './_components/edit-folder-modal';
 import { CreateDocumentModal } from './_components/create-document-modal';
 import { DocumentDetailModal } from './_components/document-detail-modal';
 import { DeleteConfirmModal } from './_components/delete-confirm-modal';
+import { ShareFolderModal } from './_components/share-folder-modal';
 import { Button, Select, TableSearch } from '@/components';
 
 // Icons
@@ -74,6 +76,8 @@ export default function MyDocumentsPage() {
   const [createFolderOpen, setCreateFolderOpen] = useState(false);
   const [editFolderOpen, setEditFolderOpen] = useState(false);
   const [editingFolder, setEditingFolder] = useState<DocumentCategory | null>(null);
+  const [shareFolderOpen, setShareFolderOpen] = useState(false);
+  const [sharingFolder, setSharingFolder] = useState<DocumentCategory | null>(null);
 
   const [createDocOpen, setCreateDocOpen] = useState(false);
   const [detailDocOpen, setDetailDocOpen] = useState(false);
@@ -218,9 +222,23 @@ export default function MyDocumentsPage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white select-none">
       {/* Top Header & Navigation Bar */}
-      <div className="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 shrink-0 shadow-2xs">
-        {/* Row 1: Title & Primary Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white border-b border-slate-200/80 p-4 shrink-0 shadow-2xs space-y-4">
+        {/* Row 1: THỐNG KÊ (STAT CARDS) - 4 THẺ TÀI LIỆU CỦA TÔI Ở TRÊN CÙNG */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {MOCK_DOCUMENT_STATS.map((stat, index) => (
+            <StatCard
+              key={index}
+              title={stat.title}
+              value={stat.value}
+              icon={stat.icon}
+              trend={stat.trend}
+              trendDirection={stat.trendDirection}
+            />
+          ))}
+        </div>
+
+        {/* Row 2: Title & Primary Actions (NẰM DƯỚI STAT CARDS) */}
+        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-tight">
               Tài liệu của tôi
@@ -231,13 +249,13 @@ export default function MyDocumentsPage() {
           </div>
 
           {/* Action buttons: Tạo thư mục mới & Tải lên tài liệu */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCreateFolderOpen(true)}
               leftIcon={<FolderPlus size={16} />}
-              className="rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 font-medium h-9 px-3.5 shadow-2xs transition-all"
+              className="rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 font-medium h-9 px-4 shadow-2xs transition-all"
             >
               Thư mục mới
             </Button>
@@ -254,8 +272,8 @@ export default function MyDocumentsPage() {
           </div>
         </div>
 
-        {/* Row 2: Breadcrumb Trail & Filters & View Switcher */}
-        <div className="mt-3 pt-3 border-t border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        {/* Row 3: Breadcrumb Trail & Filters & View Switcher */}
+        <div className="pt-4 border-t border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Breadcrumb Path on Left */}
           <div className="min-w-0">
             <BreadcrumbBar
@@ -266,7 +284,7 @@ export default function MyDocumentsPage() {
           </div>
 
           {/* Search, Filter & View Controls on Right */}
-          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+          <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap shrink-0">
             {/* Search Input using existing TableSearch component */}
             <div className="w-full sm:w-52 lg:w-64">
               <TableSearch
@@ -353,9 +371,9 @@ export default function MyDocumentsPage() {
       </div>
 
       {/* Scrollable Main Views */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* SECTION 1: THƯ MỤC (FOLDERS) - Hiển thị thẻ gọn gàng phong cách Drive */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Folder size={17} className="text-slate-600" />
@@ -372,7 +390,7 @@ export default function MyDocumentsPage() {
 
           {hasSubFolders ? (
             viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {subFolders.map((folder) => (
                   <FolderCard
                     key={folder.id}
@@ -382,6 +400,10 @@ export default function MyDocumentsPage() {
                     onEdit={(f) => {
                       setEditingFolder(f);
                       setEditFolderOpen(true);
+                    }}
+                    onShare={(f) => {
+                      setSharingFolder(f);
+                      setShareFolderOpen(true);
                     }}
                     onDelete={(f) => {
                       setDeleteModal({
@@ -404,6 +426,10 @@ export default function MyDocumentsPage() {
                 onEdit={(f) => {
                   setEditingFolder(f);
                   setEditFolderOpen(true);
+                }}
+                onShare={(f) => {
+                  setSharingFolder(f);
+                  setShareFolderOpen(true);
                 }}
                 onDelete={(f) => {
                   setDeleteModal({
@@ -429,7 +455,7 @@ export default function MyDocumentsPage() {
 
         {/* SECTION 2: TÀI LIỆU & TỆP TIN (FILES) */}
         {(hasDocuments || (!hasSubFolders && !isEmptyState)) && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText size={17} className="text-slate-600" />
@@ -443,7 +469,7 @@ export default function MyDocumentsPage() {
             </div>
 
             {isLoadingDocuments ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
@@ -457,7 +483,7 @@ export default function MyDocumentsPage() {
               </div>
             ) : viewMode === 'grid' ? (
               /* Option 1: Dạng Thư mục & Thẻ lưới */
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {documents.map((doc) => (
                   <FileCard
                     key={doc.id}
@@ -599,6 +625,19 @@ export default function MyDocumentsPage() {
         }
         onConfirm={handleConfirmDelete}
         loading={deleteModal.loading}
+      />
+
+      {/* 6. Share Folder Modal */}
+      <ShareFolderModal
+        isOpen={shareFolderOpen}
+        onClose={() => {
+          setShareFolderOpen(false);
+          setSharingFolder(null);
+        }}
+        folder={sharingFolder}
+        onSuccess={() => {
+          refetchCategories();
+        }}
       />
     </div>
   );

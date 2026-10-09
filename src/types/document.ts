@@ -164,3 +164,32 @@ export const FOLDER_PERMISSION_MAP: Record<string, string> = {
   view: 'Chỉ xem và tải file',
   edit: 'Xem, tải và chỉnh sửa',
 };
+
+export interface FolderShare {
+  id: number | string;
+  categoryId: number;
+  userId?: string | null;
+  user?: {
+    id: string;
+    fullName?: string;
+    email?: string;
+    avatar?: string;
+    phone?: string;
+  } | null;
+  departmentId?: number | null;
+  department?: {
+    id: number;
+    name: string;
+    code?: string;
+  } | null;
+  permission: 'view' | 'edit';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ShareFolderPayload {
+  userId?: string | null;
+  departmentId?: number | null;
+  permission: 'view' | 'edit';
+}
+
