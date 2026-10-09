@@ -10,6 +10,9 @@ import toast from 'react-hot-toast';
 import { Upload, FileUp, X } from 'lucide-react';
 import type { DocumentCategory } from '@/types';
 import { useQuery } from '@tanstack/react-query';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 interface CreateDocumentModalProps {
   isOpen: boolean;
@@ -20,6 +23,21 @@ interface CreateDocumentModalProps {
   onSuccess: () => void;
 }
 
+// Validation schema dùng Zod theo chuẩn form-modal
+const documentSchema = z.object({
+  title: z.string().min(1, { message: 'Tiêu đề tài liệu không được để trống' }),
+  documentType: z.string().min(1, { message: 'Vui lòng chọn loại văn bản' }),
+  code: z.string().optional(),
+  categoryId: z.union([z.number(), z.string()]).optional(),
+  summary: z.string().optional(),
+  shareScope: z.string().optional(),
+  approverId: z.string().optional(),
+  effectiveDate: z.string().optional(),
+  expirationDate: z.string().optional(),
+});
+
+type DocumentFormValues = z.infer<typeof documentSchema>;
+
 export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   isOpen,
   onClose,
@@ -29,18 +47,32 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   onSuccess,
 }) => {
   const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState('');
-  const [code, setCode] = useState('');
-  const [documentType, setDocumentType] = useState('work_report');
-  const [categoryId, setCategoryId] = useState<number | ''>(currentFolderId || '');
-  const [summary, setSummary] = useState('');
-  const [shareScope, setShareScope] = useState('private');
-  const [approverId, setApproverId] = useState('');
-  const [effectiveDate, setEffectiveDate] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
+  const [fileError, setFileError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<DocumentFormValues>({
+    resolver: zodResolver(documentSchema),
+    defaultValues: {
+      title: '',
+      documentType: 'work_report',
+      code: '',
+      categoryId: currentFolderId || '',
+      summary: '',
+      shareScope: 'private',
+      approverId: '',
+      effectiveDate: '',
+      expirationDate: '',
+    },
+  });
 
   // Fetch employees for approver selection
   const { data: employeesData } = useQuery({
@@ -52,27 +84,43 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   const employees = employeesData?.items || [];
 
   useEffect(() => {
+    register('title');
+    register('documentType');
+    register('code');
+    register('categoryId');
+    register('summary');
+    register('shareScope');
+    register('approverId');
+    register('effectiveDate');
+    register('expirationDate');
+  }, [register]);
+
+  useEffect(() => {
     if (isOpen) {
       setFile(null);
-      setTitle('');
-      setCode('');
-      setDocumentType('work_report');
-      setCategoryId(currentFolderId || '');
-      setSummary('');
-      setShareScope('private');
-      setApproverId('');
-      setEffectiveDate('');
-      setExpirationDate('');
+      setFileError(null);
+      reset({
+        title: '',
+        documentType: 'work_report',
+        code: '',
+        categoryId: currentFolderId || '',
+        summary: '',
+        shareScope: 'private',
+        approverId: '',
+        effectiveDate: '',
+        expirationDate: '',
+      });
     }
-  }, [isOpen, currentFolderId]);
+  }, [isOpen, currentFolderId, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected) {
       setFile(selected);
-      if (!title.trim()) {
+      setFileError(null);
+      if (!watch('title')?.trim()) {
         const nameWithoutExt = selected.name.replace(/\.[^/.]+$/, '');
-        setTitle(nameWithoutExt);
+        setValue('title', nameWithoutExt, { shouldValidate: true });
       }
     }
   };
@@ -82,21 +130,17 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     const dropped = e.dataTransfer.files?.[0];
     if (dropped) {
       setFile(dropped);
-      if (!title.trim()) {
+      setFileError(null);
+      if (!watch('title')?.trim()) {
         const nameWithoutExt = dropped.name.replace(/\.[^/.]+$/, '');
-        setTitle(nameWithoutExt);
+        setValue('title', nameWithoutExt, { shouldValidate: true });
       }
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFormSubmit = async (data: DocumentFormValues) => {
     if (!file) {
-      toast.error('Vui lòng chọn hoặc tải lên tệp tin');
-      return;
-    }
-    if (!title.trim()) {
-      toast.error('Vui lòng nhập tiêu đề văn bản');
+      setFileError('Vui lòng chọn hoặc tải lên tệp tin');
       return;
     }
 
@@ -104,29 +148,66 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
       setLoading(true);
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('title', title.trim());
-      formData.append('documentType', documentType);
 
-      if (code.trim()) {
-        formData.append('code', code.trim().toUpperCase());
+      // Backend FastAPI yêu cầu dữ liệu thông tin tài liệu nằm trong trường 'document_data' (dạng JSON string)
+      const documentData: Record<string, any> = {
+        title: data.title.trim(),
+        documentType: data.documentType,
+        document_type: data.documentType,
+        shareScope: data.shareScope || 'all',
+        share_scope: data.shareScope || 'all',
+      };
+
+      if (data.code?.trim()) {
+        documentData.code = data.code.trim().toUpperCase();
       }
-      if (categoryId) {
-        formData.append('categoryId', String(categoryId));
+      if (data.categoryId) {
+        documentData.category_id = Number(data.categoryId);
+        documentData.categoryId = Number(data.categoryId);
       }
-      if (summary.trim()) {
-        formData.append('summary', summary.trim());
+      if (data.summary?.trim()) {
+        documentData.summary = data.summary.trim();
       }
-      if (shareScope) {
-        formData.append('shareScope', shareScope);
+      if (data.approverId && data.approverId.trim() !== '') {
+        documentData.approver_id = data.approverId.trim();
+        documentData.approverId = data.approverId.trim();
       }
-      if (approverId) {
-        formData.append('approverId', approverId);
+      if (data.effectiveDate && data.effectiveDate.trim() !== '') {
+        documentData.effective_date = data.effectiveDate.trim();
+        documentData.effectiveDate = data.effectiveDate.trim();
       }
-      if (effectiveDate) {
-        formData.append('effectiveDate', effectiveDate);
+      if (data.expirationDate && data.expirationDate.trim() !== '') {
+        documentData.expiration_date = data.expirationDate.trim();
+        documentData.expirationDate = data.expirationDate.trim();
       }
-      if (expirationDate) {
-        formData.append('expirationDate', expirationDate);
+
+      formData.append('document_data', JSON.stringify(documentData));
+
+      // Đồng thời bổ sung các trường riêng lẻ để tương thích đa dạng API
+      formData.append('title', data.title.trim());
+      formData.append('document_type', data.documentType);
+      formData.append('documentType', data.documentType);
+      if (data.code?.trim()) formData.append('code', data.code.trim().toUpperCase());
+      if (data.categoryId) {
+        formData.append('category_id', String(data.categoryId));
+        formData.append('categoryId', String(data.categoryId));
+      }
+      if (data.summary?.trim()) formData.append('summary', data.summary.trim());
+      if (data.shareScope) {
+        formData.append('share_scope', data.shareScope);
+        formData.append('shareScope', data.shareScope);
+      }
+      if (data.approverId) {
+        formData.append('approver_id', data.approverId);
+        formData.append('approverId', data.approverId);
+      }
+      if (data.effectiveDate) {
+        formData.append('effective_date', data.effectiveDate);
+        formData.append('effectiveDate', data.effectiveDate);
+      }
+      if (data.expirationDate) {
+        formData.append('expiration_date', data.expirationDate);
+        formData.append('expirationDate', data.expirationDate);
       }
 
       await createDocument(formData);
@@ -192,6 +273,16 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     [employees],
   );
 
+  const titleVal = watch('title');
+  const codeVal = watch('code');
+  const documentTypeVal = watch('documentType');
+  const categoryIdVal = watch('categoryId');
+  const shareScopeVal = watch('shareScope');
+  const approverIdVal = watch('approverId');
+  const effectiveDateVal = watch('effectiveDate');
+  const expirationDateVal = watch('expirationDate');
+  const summaryVal = watch('summary');
+
   return (
     <Modal
       isOpen={isOpen}
@@ -203,18 +294,9 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
           <span>Tải lên & Tạo tài liệu mới</span>
         </div>
       }
-      footer={
-        <div className="flex items-center justify-end gap-2 w-full">
-          <Button variant="ghost" onClick={onClose} disabled={loading}>
-            Hủy
-          </Button>
-          <Button variant="primary" onClick={handleSubmit} loading={loading}>
-            Tải lên tài liệu
-          </Button>
-        </div>
-      }
+      className="m-2 max-w-2xl w-full"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4 text-xs">
         {/* Upload Dropzone */}
         <div>
           <label className="text-xs font-semibold text-gray-700 select-none block mb-1.5">
@@ -232,7 +314,9 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
-              className="border-2 border-dashed border-slate-300 hover:border-primary/60 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-slate-50 flex flex-col items-center justify-center gap-2 group"
+              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-slate-50 flex flex-col items-center justify-center gap-2 group ${
+                fileError ? 'border-red-500 bg-red-50/10' : 'border-slate-300 hover:border-primary/60'
+              }`}
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 <FileUp size={24} />
@@ -267,6 +351,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
               </button>
             </div>
           )}
+          {fileError && <span className="text-xs text-red-500 mt-1 block">{fileError}</span>}
         </div>
 
         {/* Title & Code */}
@@ -274,11 +359,11 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
           <div className="sm:col-span-2">
             <Input
               label="Tiêu đề tài liệu *"
-              required
               fullWidth
               placeholder="Ví dụ: Quy chế công tác phí 2026..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={titleVal}
+              onChange={(e) => setValue('title', e.target.value, { shouldValidate: true })}
+              error={errors.title?.message}
             />
           </div>
 
@@ -287,8 +372,9 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
               label="Mã văn bản (Tùy chọn)"
               fullWidth
               placeholder="Tự động nếu để trống"
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              value={codeVal}
+              onChange={(e) => setValue('code', e.target.value.toUpperCase())}
+              error={errors.code?.message}
               className="font-mono uppercase"
             />
           </div>
@@ -300,9 +386,10 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             <Select
               label="Phân loại văn bản *"
               fullWidth
-              value={documentType}
-              onChange={(e) => setDocumentType(e.target.value)}
+              value={documentTypeVal}
+              onChange={(e) => setValue('documentType', e.target.value, { shouldValidate: true })}
               options={docTypeOptions}
+              error={errors.documentType?.message}
             />
           </div>
 
@@ -310,8 +397,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             <Select
               label="Lưu vào Thư mục"
               fullWidth
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : '')}
+              value={categoryIdVal}
+              onChange={(e) => setValue('categoryId', e.target.value ? Number(e.target.value) : '')}
               options={folderOptions}
             />
           </div>
@@ -323,8 +410,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             <Select
               label="Phạm vi chia sẻ"
               fullWidth
-              value={shareScope}
-              onChange={(e) => setShareScope(e.target.value)}
+              value={shareScopeVal}
+              onChange={(e) => setValue('shareScope', e.target.value)}
               options={shareScopeOptions}
             />
           </div>
@@ -333,8 +420,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             <Select
               label="Người phê duyệt (Nếu cần trình duyệt)"
               fullWidth
-              value={approverId}
-              onChange={(e) => setApproverId(e.target.value)}
+              value={approverIdVal}
+              onChange={(e) => setValue('approverId', e.target.value)}
               options={approverOptions}
             />
           </div>
@@ -347,8 +434,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
               type="date"
               label="Ngày bắt đầu hiệu lực (Tùy chọn)"
               fullWidth
-              value={effectiveDate}
-              onChange={(e) => setEffectiveDate(e.target.value)}
+              value={effectiveDateVal}
+              onChange={(e) => setValue('effectiveDate', e.target.value)}
             />
           </div>
 
@@ -357,8 +444,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
               type="date"
               label="Ngày hết hiệu lực (Tùy chọn)"
               fullWidth
-              value={expirationDate}
-              onChange={(e) => setExpirationDate(e.target.value)}
+              value={expirationDateVal}
+              onChange={(e) => setValue('expirationDate', e.target.value)}
             />
           </div>
         </div>
@@ -370,9 +457,19 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             fullWidth
             rows={2}
             placeholder="Tóm tắt ngắn gọn nội dung tài liệu..."
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
+            value={summaryVal}
+            onChange={(e) => setValue('summary', e.target.value)}
           />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 justify-end w-full mt-4">
+          <Button variant="outline" size="sm" onClick={onClose} disabled={loading}>
+            Hủy
+          </Button>
+          <Button variant="primary" size="sm" type="submit" disabled={loading} loading={loading}>
+            Tải lên tài liệu
+          </Button>
         </div>
       </form>
     </Modal>

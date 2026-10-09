@@ -10,6 +10,31 @@ import type {
   ShareFolderPayload,
 } from '@/types';
 
+// Helper trích xuất thông báo lỗi chi tiết từ backend FastAPI / validator
+export const extractErrorMessage = (error: any, fallbackMessage: string): string => {
+  const data = error?.response?.data;
+  if (!data) return error?.message || fallbackMessage;
+
+  const details = data.details;
+  let detailMsg = '';
+  if (Array.isArray(details) && details.length > 0) {
+    detailMsg = details
+      .map((d: any) => {
+        if (typeof d === 'string') return d;
+        return d.message || d.msg || JSON.stringify(d);
+      })
+      .filter(Boolean)
+      .join(', ');
+  } else if (typeof details === 'object' && details !== null) {
+    detailMsg = details.message || details.msg || '';
+  }
+
+  if (detailMsg) {
+    return detailMsg;
+  }
+  return data.message || fallbackMessage;
+};
+
 // ==========================================
 // 1. Quản lý Thư mục (Document Categories)
 // ==========================================
@@ -51,8 +76,7 @@ export const createDocumentCategory = async (payload: CreateDocumentCategoryPayl
     const res = await api.post('/api/v1/document-categories', cleanPayload);
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể tạo thư mục';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể tạo thư mục'));
   }
 };
 
@@ -65,8 +89,7 @@ export const updateDocumentCategory = async (
     const res = await api.put(`/api/v1/document-categories/${id}`, payload);
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể cập nhật thư mục';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể cập nhật thư mục'));
   }
 };
 
@@ -75,11 +98,12 @@ export const deleteDocumentCategory = async (id: number): Promise<void> => {
   try {
     await api.delete(`/api/v1/document-categories/${id}`);
   } catch (error: any) {
-    const msg =
-      error.response?.data?.message ||
-      error.response?.data?.details?.message ||
-      'Không thể xóa thư mục. Hãy chắc chắn thư mục không còn tài liệu hoặc thư mục con.';
-    throw new Error(msg);
+    throw new Error(
+      extractErrorMessage(
+        error,
+        'Không thể xóa thư mục. Hãy chắc chắn thư mục không còn tài liệu hoặc thư mục con.',
+      ),
+    );
   }
 };
 
@@ -107,8 +131,7 @@ export const getDocuments = async (params?: GetDocumentsParams): Promise<GetDocu
       limit: rawData?.limit || 10,
     };
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể tải danh sách tài liệu';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể tải danh sách tài liệu'));
   }
 };
 
@@ -118,8 +141,7 @@ export const getDocumentById = async (id: number): Promise<DocumentItem> => {
     const res = await api.get(`/api/v1/documents/${id}`);
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể xem chi tiết tài liệu';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể xem chi tiết tài liệu'));
   }
 };
 
@@ -133,8 +155,7 @@ export const createDocument = async (formData: FormData): Promise<DocumentItem> 
     });
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể tạo mới tài liệu';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể tạo mới tài liệu'));
   }
 };
 
@@ -144,8 +165,7 @@ export const updateDocument = async (id: number, data: Partial<DocumentItem>): P
     const res = await api.put(`/api/v1/documents/${id}`, data);
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể cập nhật tài liệu';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể cập nhật tài liệu'));
   }
 };
 
@@ -154,8 +174,7 @@ export const deleteDocument = async (id: number): Promise<void> => {
   try {
     await api.delete(`/api/v1/documents/${id}`);
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể xóa tài liệu';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể xóa tài liệu'));
   }
 };
 
@@ -173,8 +192,7 @@ export const saveDocumentToFolder = async (documentId: number, categoryId: numbe
   try {
     await api.post(`/api/v1/documents/${documentId}/save-to-folder`, { categoryId });
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể lưu vào thư mục';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể lưu vào thư mục'));
   }
 };
 
@@ -183,8 +201,7 @@ export const removeDocumentFromFolder = async (documentId: number, categoryId: n
   try {
     await api.delete(`/api/v1/documents/${documentId}/remove-from-folder/${categoryId}`);
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể gỡ khỏi thư mục';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể gỡ khỏi thư mục'));
   }
 };
 
@@ -201,8 +218,7 @@ export const shareDocumentCategory = async (
     const res = await api.post(`/api/v1/document-categories/${categoryId}/shares`, payload);
     return res.data?.data ?? res.data;
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể chia sẻ thư mục';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể chia sẻ thư mục'));
   }
 };
 
@@ -230,8 +246,7 @@ export const revokeDocumentCategoryShare = async (
   try {
     await api.delete(`/api/v1/document-categories/${categoryId}/shares/${shareId}`);
   } catch (error: any) {
-    const msg = error.response?.data?.message || error.response?.data?.details?.message || 'Không thể thu hồi quyền chia sẻ';
-    throw new Error(msg);
+    throw new Error(extractErrorMessage(error, 'Không thể thu hồi quyền chia sẻ'));
   }
 };
 

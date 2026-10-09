@@ -17,8 +17,6 @@ import { FolderCard } from './_components/folder-card';
 import { FolderTable } from './_components/folder-table';
 import { FileCard } from './_components/file-card';
 import { FileTable } from './_components/file-table';
-import { BreadcrumbBar } from './_components/breadcrumb-bar';
-import { StatCard, MOCK_DOCUMENT_STATS } from './_components/stat-card';
 import { CreateFolderModal } from './_components/create-folder-modal';
 import { EditFolderModal } from './_components/edit-folder-modal';
 import { CreateDocumentModal } from './_components/create-document-modal';
@@ -34,8 +32,10 @@ import {
   LayoutGrid,
   List,
   Folder,
+  FolderOpen,
   FileText,
   RotateCcw,
+  ArrowLeft,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -138,33 +138,35 @@ export default function MyDocumentsPage() {
     return [];
   }, [categoryTree]);
 
-  // Helper: Find folder node and its breadcrumbs path recursively
-  const { currentFolder, breadcrumbs, subFolders } = useMemo<{
+  // Helper: Find current folder, its direct parent, and subfolders recursively
+  const { currentFolder, parentFolder, subFolders } = useMemo<{
     currentFolder: DocumentCategory | null;
-    breadcrumbs: DocumentCategory[];
+    parentFolder: DocumentCategory | null;
     subFolders: DocumentCategory[];
   }>(() => {
     if (currentFolderId === null) {
       return {
         currentFolder: null,
-        breadcrumbs: [],
+        parentFolder: null,
         subFolders: safeCategoryTree,
       };
     }
 
-    const trail: DocumentCategory[] = [];
     let targetFolder: DocumentCategory | null = null;
+    let directParent: DocumentCategory | null = null;
 
-    const findFolderRecursive = (nodes: DocumentCategory[], currentTrail: DocumentCategory[]): boolean => {
+    const findFolderRecursive = (
+      nodes: DocumentCategory[],
+      parent: DocumentCategory | null
+    ): boolean => {
       for (const node of nodes) {
-        const nextTrail = [...currentTrail, node];
         if (node.id === currentFolderId) {
           targetFolder = node;
-          trail.push(...nextTrail);
+          directParent = parent;
           return true;
         }
         if (node.children && node.children.length > 0) {
-          if (findFolderRecursive(node.children, nextTrail)) {
+          if (findFolderRecursive(node.children, node)) {
             return true;
           }
         }
@@ -172,22 +174,21 @@ export default function MyDocumentsPage() {
       return false;
     };
 
-    findFolderRecursive(safeCategoryTree, []);
+    findFolderRecursive(safeCategoryTree, null);
 
     return {
       currentFolder: targetFolder,
-      breadcrumbs: trail,
+      parentFolder: directParent,
       subFolders: targetFolder ? (targetFolder as DocumentCategory).children || [] : [],
     };
   }, [safeCategoryTree, currentFolderId]);
 
-  // Handle go back 1 level
+  // Handle go back 1 level (như nút Back trên máy tính)
   const handleGoBack = () => {
-    if (breadcrumbs.length <= 1) {
-      setCurrentFolderId(null);
+    if (parentFolder) {
+      setCurrentFolderId(parentFolder.id);
     } else {
-      const parent = breadcrumbs[breadcrumbs.length - 2];
-      setCurrentFolderId(parent ? parent.id : null);
+      setCurrentFolderId(null);
     }
   };
 
@@ -216,75 +217,17 @@ export default function MyDocumentsPage() {
 
   const hasSubFolders = subFolders.length > 0;
   const hasDocuments = documents.length > 0;
-  const isEmptyState = !hasSubFolders && !hasDocuments && !isLoadingCategories && !isLoadingDocuments;
+  const isEmptyState =
+    !hasSubFolders && !hasDocuments && !isLoadingCategories && !isLoadingDocuments;
   const hasActiveFilters = Boolean(search || documentType || status);
 
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white select-none">
       {/* Top Header & Navigation Bar */}
-      <div className="bg-white border-b border-slate-200/80 p-4 shrink-0 shadow-2xs space-y-4">
-        {/* Row 1: THỐNG KÊ (STAT CARDS) - 4 THẺ TÀI LIỆU CỦA TÔI Ở TRÊN CÙNG */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {MOCK_DOCUMENT_STATS.map((stat, index) => (
-            <StatCard
-              key={index}
-              title={stat.title}
-              value={stat.value}
-              icon={stat.icon}
-              trend={stat.trend}
-              trendDirection={stat.trendDirection}
-            />
-          ))}
-        </div>
-
-        {/* Row 2: Title & Primary Actions (NẰM DƯỚI STAT CARDS) */}
-        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-tight">
-              Tài liệu của tôi
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5 font-normal">
-              Quản lý thư mục, cơ chế, chính sách và tài liệu lưu trữ nội bộ
-            </p>
-          </div>
-
-          {/* Action buttons: Tạo thư mục mới & Tải lên tài liệu */}
-          <div className="flex items-center gap-4 shrink-0">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCreateFolderOpen(true)}
-              leftIcon={<FolderPlus size={16} />}
-              className="rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 font-medium h-9 px-4 shadow-2xs transition-all"
-            >
-              Thư mục mới
-            </Button>
-
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setCreateDocOpen(true)}
-              leftIcon={<Upload size={16} />}
-              className="rounded-xl font-medium h-9 px-4 shadow-xs transition-all"
-            >
-              Tải lên tài liệu
-            </Button>
-          </div>
-        </div>
-
-        {/* Row 3: Breadcrumb Trail & Filters & View Switcher */}
-        <div className="pt-4 border-t border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Breadcrumb Path on Left */}
-          <div className="min-w-0">
-            <BreadcrumbBar
-              breadcrumbs={breadcrumbs}
-              onNavigate={(id) => setCurrentFolderId(id)}
-              onGoBack={handleGoBack}
-            />
-          </div>
-
-          {/* Search, Filter & View Controls on Right */}
-          <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap shrink-0">
+      <div className="bg-white border-b border-slate-200/80 p-4 shrink-0 shadow-2xs">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+          {/* Left: Search, Filters & View Controls (Ảnh 2) */}
+          <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap flex-1 min-w-0">
             {/* Search Input using existing TableSearch component */}
             <div className="w-full sm:w-52 lg:w-64">
               <TableSearch
@@ -367,29 +310,93 @@ export default function MyDocumentsPage() {
               </button>
             </div>
           </div>
+
+          {/* Right: Action buttons (Ảnh 3) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
+              onClick={() => setCreateFolderOpen(true)}
+              leftIcon={<FolderPlus className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+            >
+              Thư mục mới
+            </Button>
+
+            <Button
+              variant="primary"
+              size="sm"
+              className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
+              onClick={() => setCreateDocOpen(true)}
+              leftIcon={<Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+            >
+              Tải lên tài liệu
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Scrollable Main Views */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* SECTION 1: THƯ MỤC (FOLDERS) - Hiển thị thẻ gọn gàng phong cách Drive */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Folder size={17} className="text-slate-600" />
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                Thư mục
-              </h3>
-              {hasSubFolders && (
+        {/* Thanh tiêu đề vị trí thư mục & Nút quay lại (Kiểu folder máy tính) */}
+        <div className="flex items-center justify-between pb-2 border-b border-slate-200/70">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Nút Quay lại 1 cấp (chỉ hiện khi đang ở trong thư mục con) */}
+            {currentFolderId !== null && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleGoBack}
+                leftIcon={<ArrowLeft size={15} />}
+                className="h-8 px-2.5 rounded-lg text-xs font-medium text-slate-700 hover:text-slate-900 border-slate-200 bg-white hover:bg-slate-100 cursor-pointer shadow-2xs shrink-0"
+                title={parentFolder ? `Quay lại ${parentFolder.name}` : 'Quay lại Tài liệu của tôi'}
+              >
+                Quay lại
+              </Button>
+            )}
+
+            {/* Thông tin thư mục hiện tại */}
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                {currentFolderId !== null ? <FolderOpen size={18} /> : <Folder size={18} />}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-sm md:text-base font-bold text-slate-800 truncate leading-tight">
+                    {currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
+                  </h2>
+                  {currentFolder?.code && (
+                    <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
+                      {currentFolder.code}
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                  {currentFolder
+                    ? `${subFolders.length} thư mục con • ${documents.length} tài liệu`
+                    : `${subFolders.length} thư mục • ${documents.length} tài liệu`}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 1: THƯ MỤC CON TRONG FOLDER HIỆN TẠI (NẾU CÓ) */}
+        {hasSubFolders && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Folder size={16} className="text-slate-600" />
+                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  Thư mục
+                </h3>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
                   {subFolders.length}
                 </span>
-              )}
+              </div>
             </div>
-          </div>
 
-          {hasSubFolders ? (
-            viewMode === 'grid' ? (
+            {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {subFolders.map((folder) => (
                   <FolderCard
@@ -441,24 +448,16 @@ export default function MyDocumentsPage() {
                   });
                 }}
               />
-            )
-          ) : (
-            <div
-              onClick={() => setCreateFolderOpen(true)}
-              className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border-2 border-dashed border-slate-200 hover:border-primary/50 bg-slate-50/50 hover:bg-primary/5 text-slate-400 hover:text-primary transition-all cursor-pointer w-fit text-xs font-medium"
-            >
-              <FolderPlus size={16} />
-              <span>+ Thêm thư mục để sắp xếp tài liệu</span>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
-        {/* SECTION 2: TÀI LIỆU & TỆP TIN (FILES) */}
-        {(hasDocuments || (!hasSubFolders && !isEmptyState)) && (
-          <div className="space-y-4">
+        {/* SECTION 2: TÀI LIỆU & TỆP TIN TRONG FOLDER HIỆN TẠI (NẾU CÓ HOẶC KHI ĐANG TẢI) */}
+        {(hasDocuments || isLoadingDocuments) && (
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FileText size={17} className="text-slate-600" />
+                <FileText size={16} className="text-slate-600" />
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                   Tài liệu & Tệp tin
                 </h3>
@@ -471,18 +470,10 @@ export default function MyDocumentsPage() {
             {isLoadingDocuments ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="h-16 rounded-lg bg-slate-200/60 animate-pulse"
-                  />
+                  <div key={i} className="h-16 rounded-lg bg-slate-200/60 animate-pulse" />
                 ))}
               </div>
-            ) : documents.length === 0 ? (
-              <div className="py-8 text-center bg-white rounded-lg border border-slate-200/80 text-xs text-slate-400">
-                Chưa có tài liệu nào trong thư mục này.
-              </div>
             ) : viewMode === 'grid' ? (
-              /* Option 1: Dạng Thư mục & Thẻ lưới */
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {documents.map((doc) => (
                   <FileCard
@@ -506,7 +497,6 @@ export default function MyDocumentsPage() {
                 ))}
               </div>
             ) : (
-              /* Option 2: Dạng Danh sách phẳng phong cách Google Drive */
               <FileTable
                 documents={documents}
                 currentFolderName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
@@ -530,7 +520,7 @@ export default function MyDocumentsPage() {
           </div>
         )}
 
-        {/* EMPTY STATE TOÀN BỘ */}
+        {/* EMPTY STATE TOÀN BỘ (Khi folder hiện tại không có thư mục con và không có file con nào) */}
         {isEmptyState && (
           <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-dashed border-slate-300 rounded-3xl p-8 max-w-lg mx-auto my-8">
             <div className="w-16 h-16 rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
@@ -547,8 +537,7 @@ export default function MyDocumentsPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setCreateFolderOpen(true)}
-                leftIcon={<FolderPlus size={15} />}
-                className="rounded-xl border-slate-300 text-slate-700"
+                leftIcon={<FolderPlus className="w-3.5 h-3.5 md:w-4 md:h-4" />}
               >
                 Thư mục mới
               </Button>
@@ -556,8 +545,7 @@ export default function MyDocumentsPage() {
                 variant="primary"
                 size="sm"
                 onClick={() => setCreateDocOpen(true)}
-                leftIcon={<Upload size={15} />}
-                className="rounded-xl"
+                leftIcon={<Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />}
               >
                 Tải lên tài liệu
               </Button>
@@ -619,9 +607,17 @@ export default function MyDocumentsPage() {
         onClose={() => setDeleteModal((prev) => ({ ...prev, isOpen: false }))}
         title={deleteModal.type === 'folder' ? 'Xác nhận xóa thư mục' : 'Xác nhận xóa tài liệu'}
         description={
-          deleteModal.type === 'folder'
-            ? `Bạn có chắc chắn muốn xóa thư mục "${deleteModal.name}"? Chỉ có thể xóa khi thư mục không chứa tài liệu hoặc thư mục con.`
-            : `Bạn có chắc chắn muốn xóa tài liệu "${deleteModal.name}"? Tài liệu sẽ được chuyển vào mục lưu trữ / xóa mềm.`
+          deleteModal.type === 'folder' ? (
+            <>
+              Bạn có chắc chắn muốn xóa thư mục{' '}
+              <strong className="text-gray-900 font-semibold">{deleteModal.name}</strong>?
+            </>
+          ) : (
+            <>
+              Bạn có chắc chắn muốn xóa tài liệu{' '}
+              <strong className="text-gray-900 font-semibold">{deleteModal.name}</strong>?
+            </>
+          )
         }
         onConfirm={handleConfirmDelete}
         loading={deleteModal.loading}

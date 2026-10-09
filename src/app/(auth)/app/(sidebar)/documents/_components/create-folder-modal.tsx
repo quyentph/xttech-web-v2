@@ -7,6 +7,9 @@ import { generateSlugCode } from '../_utils/doc-helpers';
 import toast from 'react-hot-toast';
 import { FolderPlus } from 'lucide-react';
 import type { DocumentCategory } from '@/types';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 interface CreateFolderModalProps {
   isOpen: boolean;
@@ -16,6 +19,15 @@ interface CreateFolderModalProps {
   onSuccess: () => void;
 }
 
+// Validation schema dùng Zod theo chuẩn form-modal
+const folderSchema = z.object({
+  name: z.string().min(1, { message: 'Tên thư mục không được để trống' }),
+  code: z.string().min(1, { message: 'Mã định danh không được để trống' }),
+  description: z.string().optional(),
+});
+
+type FolderFormValues = z.infer<typeof folderSchema>;
+
 export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   isOpen,
   onClose,
@@ -23,43 +35,68 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   parentFolder = null,
   onSuccess,
 }) => {
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [description, setDescription] = useState('');
   const [isManualCode, setIsManualCode] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FolderFormValues>({
+    resolver: zodResolver(folderSchema),
+    defaultValues: {
+      name: '',
+      code: '',
+      description: '',
+    },
+  });
+
+  useEffect(() => {
+    register('name');
+    register('code');
+    register('description');
+  }, [register]);
+
   useEffect(() => {
     if (isOpen) {
-      setName('');
-      setCode('');
-      setDescription('');
+      reset({
+        name: '',
+        code: '',
+        description: '',
+      });
       setIsManualCode(false);
     }
-  }, [isOpen]);
+  }, [isOpen, reset]);
 
-  const handleNameChange = (val: string) => {
-    setName(val);
+  const nameVal = watch('name');
+  const codeVal = watch('code');
+  const descVal = watch('description');
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue('name', val, { shouldValidate: true });
     if (!isManualCode) {
-      setCode(generateSlugCode(val, 'DIR'));
+      setValue('code', generateSlugCode(val, 'DIR'), { shouldValidate: true });
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) {
-      toast.error('Vui lòng nhập tên thư mục');
-      return;
-    }
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue('code', e.target.value.toUpperCase(), { shouldValidate: true });
+    setIsManualCode(true);
+  };
 
-    const finalCode = (code.trim() || generateSlugCode(name, 'DIR')).toUpperCase();
+  const handleFormSubmit = async (data: FolderFormValues) => {
+    const finalCode = (data.code.trim() || generateSlugCode(data.name, 'DIR')).toUpperCase();
 
     try {
       setLoading(true);
       await createDocumentCategory({
-        name: name.trim(),
+        name: data.name.trim(),
         code: finalCode,
-        description: description.trim() || undefined,
+        description: data.description?.trim() || undefined,
         parentId: parentId || null,
       });
       toast.success('Đã tạo thư mục thành công!');
@@ -82,18 +119,9 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
           <span>Tạo thư mục mới</span>
         </div>
       }
-      footer={
-        <div className="flex items-center justify-end gap-2 w-full">
-          <Button variant="ghost" onClick={onClose} disabled={loading}>
-            Hủy
-          </Button>
-          <Button variant="primary" onClick={handleSubmit} loading={loading}>
-            Tạo thư mục
-          </Button>
-        </div>
-      }
+      className="m-2 max-w-md w-full"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4 text-xs">
         {parentFolder && (
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 flex items-center justify-between">
             <span>Vị trí lưu:</span>
@@ -101,27 +129,26 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
           </div>
         )}
 
-        <Input
-          label="Tên thư mục *"
-          required
-          fullWidth
-          placeholder="Ví dụ: Hồ sơ nghiệm thu 2026..."
-          value={name}
-          onChange={(e) => handleNameChange(e.target.value)}
-          autoFocus
-        />
+        <div>
+          <Input
+            label="Tên thư mục *"
+            placeholder="Ví dụ: Hồ sơ nghiệm thu 2026..."
+            fullWidth
+            value={nameVal}
+            onChange={handleNameChange}
+            error={errors.name?.message}
+            autoFocus
+          />
+        </div>
 
         <div>
           <Input
             label="Mã định danh (Code) *"
-            required
-            fullWidth
             placeholder="Ví dụ: HS_NT_2026"
-            value={code}
-            onChange={(e) => {
-              setCode(e.target.value.toUpperCase());
-              setIsManualCode(true);
-            }}
+            fullWidth
+            value={codeVal}
+            onChange={handleCodeChange}
+            error={errors.code?.message}
             className="font-mono uppercase"
           />
           <p className="text-[10px] text-slate-400 mt-1">
@@ -134,10 +161,21 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
           fullWidth
           rows={3}
           placeholder="Mô tả nội dung tài liệu lưu trong thư mục này..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={descVal}
+          onChange={(e) => setValue('description', e.target.value)}
+          error={errors.description?.message}
         />
+
+        <div className="flex gap-3 justify-end w-full mt-4">
+          <Button variant="outline" size="sm" onClick={onClose} disabled={loading}>
+            Hủy
+          </Button>
+          <Button variant="primary" size="sm" type="submit" disabled={loading} loading={loading}>
+            Tạo thư mục
+          </Button>
+        </div>
       </form>
     </Modal>
   );
 };
+

@@ -17,33 +17,33 @@ export const BreadcrumbBar: React.FC<BreadcrumbBarProps> = ({
 }) => {
   const isSubFolder = breadcrumbs.length > 0;
 
+  // Không hiển thị thanh breadcrumb khi đang ở thư mục gốc (Tài liệu của tôi)
+  if (!isSubFolder) {
+    return null;
+  }
+
   return (
     <div className="flex items-center gap-1.5 text-sm select-none overflow-x-auto scrollbar-none py-0.5">
       {/* Nút Quay lại 1 cấp khi đang trong thư mục con */}
-      {isSubFolder && (
-        <button
-          type="button"
-          onClick={onGoBack}
-          className="h-9 px-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 transition-all shrink-0 flex items-center gap-1.5 text-xs font-medium cursor-pointer shadow-2xs active:scale-95"
-          title="Quay lại thư mục trước"
-        >
-          <ChevronLeft size={15} />
-          <span className="hidden sm:inline">Quay lại</span>
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={onGoBack}
+        className="h-8 px-2.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 transition-all shrink-0 flex items-center gap-1.5 text-xs font-medium cursor-pointer"
+        title="Quay lại thư mục trước"
+      >
+        <ChevronLeft size={15} />
+        <span className="hidden sm:inline">Quay lại</span>
+      </button>
 
       <div className="flex items-center gap-1.5 flex-1 min-w-0">
         {/* Thư mục gốc: Tài liệu của tôi */}
         <button
           type="button"
           onClick={() => onNavigate(null)}
-          className={`h-9 px-3 rounded-xl text-xs font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
-            breadcrumbs.length === 0
-              ? 'bg-primary/10 text-primary font-semibold'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
+          className="h-8 px-2 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          title="Về thư mục gốc"
         >
-          <Home size={14} className={breadcrumbs.length === 0 ? 'text-primary' : 'text-slate-500'} />
+          <Home size={14} className="text-slate-500" />
           <span>Tài liệu của tôi</span>
         </button>
 
@@ -57,7 +57,7 @@ export const BreadcrumbBar: React.FC<BreadcrumbBarProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate(folder.id)}
-                className={`h-9 px-3 rounded-xl text-xs font-medium transition-all max-w-[200px] truncate shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                className={`h-8 px-2.5 rounded-md text-xs font-medium transition-all max-w-[200px] truncate shrink-0 cursor-pointer flex items-center gap-1.5 ${
                   isLast
                     ? 'bg-primary/10 text-primary font-semibold'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'

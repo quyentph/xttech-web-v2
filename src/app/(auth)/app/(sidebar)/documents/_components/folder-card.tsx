@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 interface FolderCardProps {
   folder: DocumentCategory;
   locationName?: string;
+  isActive?: boolean;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onDelete: (folder: DocumentCategory) => void;
@@ -17,6 +18,7 @@ interface FolderCardProps {
 export const FolderCard: React.FC<FolderCardProps> = ({
   folder,
   locationName,
+  isActive = false,
   onOpen,
   onEdit,
   onDelete,
@@ -124,7 +126,9 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       onClick={() => onOpen(folder)}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
-        'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+        isActive
+          ? 'bg-primary/10 border-primary shadow-xs ring-1 ring-primary/30'
+          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={`${folder.name} (${folder.code})`}
@@ -132,7 +136,11 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       {/* Icon bên trái */}
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div className="relative shrink-0 text-slate-700">
-          <Folder size={22} className="fill-slate-600/90 text-slate-700" />
+          {isActive ? (
+            <FolderOpen size={22} className="text-primary fill-primary/25" />
+          ) : (
+            <Folder size={22} className="fill-slate-600/90 text-slate-700" />
+          )}
           {isShared && (
             <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-2xs">
               <User size={10} className="text-primary fill-primary" />
@@ -142,9 +150,21 @@ export const FolderCard: React.FC<FolderCardProps> = ({
 
         {/* Tên thư mục & Đường dẫn vị trí */}
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="truncate text-sm font-medium text-slate-800 group-hover:text-primary transition-colors leading-tight">
-            {folder.name}
-          </span>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span
+              className={cn(
+                'truncate text-sm font-medium transition-colors leading-tight',
+                isActive ? 'text-primary font-semibold' : 'text-slate-800 group-hover:text-primary',
+              )}
+            >
+              {folder.name}
+            </span>
+            {isActive && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-medium shrink-0">
+                Đang mở
+              </span>
+            )}
+          </div>
           <span className="text-[11px] text-slate-500 truncate mt-0.5">
             {locationName ? `trong ${locationName}` : folder.description || 'Thư mục'}
           </span>

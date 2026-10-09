@@ -11,6 +11,7 @@ interface FolderTableProps {
   folders: DocumentCategory[];
   locationName?: string;
   showHeader?: boolean;
+  activeFolderId?: number | null;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onDelete: (folder: DocumentCategory) => void;
@@ -40,6 +41,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   folders,
   locationName,
   showHeader = false,
+  activeFolderId,
   onOpen,
   onEdit,
   onDelete,
@@ -162,21 +164,42 @@ export const FolderTable: React.FC<FolderTableProps> = ({
               : []),
           ];
 
+          const isActive = activeFolderId === folder.id;
+
           return (
             <div
               key={folder.id}
               onClick={() => onOpen(folder)}
               className={cn(
-                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800',
+                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 transition-colors cursor-pointer text-xs text-slate-800',
+                isActive
+                  ? 'bg-primary/10 border-l-2 border-primary text-primary'
+                  : 'hover:bg-[#f1f3f4]',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >
-              {/* Cột 1: Icon Folder đen đặc trưng Drive + Tên thư mục + Icon Shared */}
+              {/* Cột 1: Icon Folder + Tên thư mục + Icon Shared */}
               <div className="flex items-center gap-3.5 flex-1 min-w-[260px] pr-3">
-                <Folder size={18} className="text-slate-700 fill-slate-700 shrink-0" />
-                <span className="font-normal text-slate-900 group-hover:text-primary transition-colors truncate text-sm">
-                  {folder.name}
-                </span>
+                {isActive ? (
+                  <FolderOpen size={18} className="text-primary fill-primary/25 shrink-0" />
+                ) : (
+                  <Folder size={18} className="text-slate-700 fill-slate-700 shrink-0" />
+                )}
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    className={cn(
+                      'transition-colors truncate text-sm',
+                      isActive ? 'font-semibold text-primary' : 'font-normal text-slate-900 group-hover:text-primary'
+                    )}
+                  >
+                    {folder.name}
+                  </span>
+                  {isActive && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-medium shrink-0">
+                      Đang mở
+                    </span>
+                  )}
+                </div>
                 {isShared && (
                   <span title="Đã chia sẻ" className="shrink-0 flex items-center">
                     <Users size={14} className="text-slate-500" />
