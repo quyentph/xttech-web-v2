@@ -13,6 +13,7 @@ interface FileTableProps {
   documents: DocumentItem[];
   currentFolderName?: string;
   onView: (document: DocumentItem) => void;
+  onPreview?: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
   onNavigateFolder?: (folderId: number | null) => void;
   showHeader?: boolean;
@@ -42,6 +43,7 @@ export const FileTable: React.FC<FileTableProps> = ({
   currentFolderName,
   showHeader = true,
   onView,
+  onPreview,
   onDelete,
   onNavigateFolder,
 }) => {
@@ -167,7 +169,15 @@ export const FileTable: React.FC<FileTableProps> = ({
           return (
             <div
               key={doc.id}
-              onClick={() => onView(doc)}
+              onClick={() => {
+                if (onPreview) {
+                  onPreview(doc);
+                } else if (downloadUrl) {
+                  window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+                } else {
+                  onView(doc);
+                }
+              }}
               className={cn(
                 'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'

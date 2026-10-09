@@ -22,6 +22,7 @@ import { CreateFolderModal } from './_components/create-folder-modal';
 import { EditFolderModal } from './_components/edit-folder-modal';
 import { CreateDocumentModal } from './_components/create-document-modal';
 import { DocumentDetailModal } from './_components/document-detail-modal';
+import { DocumentPreviewModal } from './_components/document-preview-modal';
 import { DeleteConfirmModal } from './_components/delete-confirm-modal';
 import { ShareFolderModal } from './_components/share-folder-modal';
 import { Button, Select, TableSearch } from '@/components';
@@ -90,6 +91,7 @@ function MyDocumentsContent() {
 
   const [createDocOpen, setCreateDocOpen] = useState(false);
   const [detailDocOpen, setDetailDocOpen] = useState(false);
+  const [previewDocOpen, setPreviewDocOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
 
   const [deleteModal, setDeleteModal] = useState<{
@@ -199,6 +201,13 @@ function MyDocumentsContent() {
       sharedFolders: [],
     };
   }, [safeCategoryTree, currentFolderId]);
+
+  const foldersToDisplay = useMemo(() => {
+    if (currentFolderId !== null) return subFolders;
+    if (tab === 'shared') return sharedFolders;
+    return myFolders; // default for 'my' or null
+  }, [currentFolderId, tab, subFolders, sharedFolders, myFolders]);
+
 
   // Handle go back 1 level (như nút Back trên máy tính)
   const handleGoBack = () => {
@@ -398,163 +407,9 @@ function MyDocumentsContent() {
           </div>
         </div>
 
-        {/* SECTION 1: THƯ MỤC CÁ NHÂN (NẾU CÓ) */}
-        {(tab === 'my' || tab === null) && myFolders.length > 0 && (
+        {/* THƯ MỤC VÀ TÀI LIỆU (KHÔNG PHÂN CHIA) */}
+        {(foldersToDisplay.length > 0 || hasDocuments || isLoadingDocuments) && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Folder size={16} className="text-slate-600" />
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  {currentFolderId === null ? 'Thư mục của tôi' : 'Thư mục'}
-                </h3>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
-                  {myFolders.length}
-                </span>
-              </div>
-            </div>
-
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {myFolders.map((folder) => (
-                  <FolderCard
-                    key={folder.id}
-                    folder={folder}
-                    locationName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
-                    onOpen={(f) => setCurrentFolderId(f.id)}
-                    onEdit={(f) => {
-                      setEditingFolder(f);
-                      setEditFolderOpen(true);
-                    }}
-                    onShare={(f) => {
-                      setSharingFolder(f);
-                      setShareFolderOpen(true);
-                    }}
-                    onDelete={(f) => {
-                      setDeleteModal({
-                        isOpen: true,
-                        type: 'folder',
-                        id: f.id,
-                        name: f.name,
-                        loading: false,
-                      });
-                    }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <FolderTable
-                folders={myFolders}
-                locationName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
-                showHeader={true}
-                onOpen={(f) => setCurrentFolderId(f.id)}
-                onEdit={(f) => {
-                  setEditingFolder(f);
-                  setEditFolderOpen(true);
-                }}
-                onShare={(f) => {
-                  setSharingFolder(f);
-                  setShareFolderOpen(true);
-                }}
-                onDelete={(f) => {
-                  setDeleteModal({
-                    isOpen: true,
-                    type: 'folder',
-                    id: f.id,
-                    name: f.name,
-                    loading: false,
-                  });
-                }}
-              />
-            )}
-          </div>
-        )}
-
-        {/* SECTION 1.5: THƯ MỤC ĐƯỢC CHIA SẺ (CHỈ HIỂN THỊ Ở ROOT) */}
-        {(tab === 'shared' || tab === null) && sharedFolders.length > 0 && (
-          <div className="space-y-3 mt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FolderOpen size={16} className="text-slate-600" />
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Được chia sẻ với tôi
-                </h3>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
-                  {sharedFolders.length}
-                </span>
-              </div>
-            </div>
-
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {sharedFolders.map((folder) => (
-                  <FolderCard
-                    key={folder.id}
-                    folder={folder}
-                    locationName="Được chia sẻ với tôi"
-                    onOpen={(f) => setCurrentFolderId(f.id)}
-                    onEdit={(f) => {
-                      setEditingFolder(f);
-                      setEditFolderOpen(true);
-                    }}
-                    onShare={(f) => {
-                      setSharingFolder(f);
-                      setShareFolderOpen(true);
-                    }}
-                    onDelete={(f) => {
-                      setDeleteModal({
-                        isOpen: true,
-                        type: 'folder',
-                        id: f.id,
-                        name: f.name,
-                        loading: false,
-                      });
-                    }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <FolderTable
-                folders={sharedFolders}
-                locationName="Được chia sẻ với tôi"
-                showHeader={true}
-                onOpen={(f) => setCurrentFolderId(f.id)}
-                onEdit={(f) => {
-                  setEditingFolder(f);
-                  setEditFolderOpen(true);
-                }}
-                onShare={(f) => {
-                  setSharingFolder(f);
-                  setShareFolderOpen(true);
-                }}
-                onDelete={(f) => {
-                  setDeleteModal({
-                    isOpen: true,
-                    type: 'folder',
-                    id: f.id,
-                    name: f.name,
-                    loading: false,
-                  });
-                }}
-              />
-            )}
-          </div>
-        )}
-
-        {/* SECTION 2: TÀI LIỆU & TỆP TIN TRONG FOLDER HIỆN TẠI (NẾU CÓ HOẶC KHI ĐANG TẢI) */}
-        {(hasDocuments || isLoadingDocuments) && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText size={16} className="text-slate-600" />
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Tài liệu & Tệp tin
-                </h3>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">
-                  {documents.length}
-                </span>
-              </div>
-            </div>
-
             {isLoadingDocuments ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -563,11 +418,42 @@ function MyDocumentsContent() {
               </div>
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {/* 1. Render Folders */}
+                {foldersToDisplay.map((folder) => (
+                  <FolderCard
+                    key={`folder-${folder.id}`}
+                    folder={folder}
+                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
+                    onOpen={(f) => setCurrentFolderId(f.id)}
+                    onEdit={(f) => {
+                      setEditingFolder(f);
+                      setEditFolderOpen(true);
+                    }}
+                    onShare={(f) => {
+                      setSharingFolder(f);
+                      setShareFolderOpen(true);
+                    }}
+                    onDelete={(f) => {
+                      setDeleteModal({
+                        isOpen: true,
+                        type: 'folder',
+                        id: f.id,
+                        name: f.name,
+                        loading: false,
+                      });
+                    }}
+                  />
+                ))}
+                {/* 2. Render Documents */}
                 {documents.map((doc) => (
                   <FileCard
-                    key={doc.id}
+                    key={`doc-${doc.id}`}
                     document={doc}
                     locationName={currentFolder ? currentFolder.name : doc.category?.name || 'Tài liệu của tôi'}
+                    onPreview={(d) => {
+                      setSelectedDoc(d);
+                      setPreviewDocOpen(true);
+                    }}
                     onView={(d) => {
                       setSelectedDoc(d);
                       setDetailDocOpen(true);
@@ -585,25 +471,60 @@ function MyDocumentsContent() {
                 ))}
               </div>
             ) : (
-              <FileTable
-                documents={documents}
-                currentFolderName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
-                showHeader={!hasSubFolders}
-                onView={(d) => {
-                  setSelectedDoc(d);
-                  setDetailDocOpen(true);
-                }}
-                onDelete={(d) => {
-                  setDeleteModal({
-                    isOpen: true,
-                    type: 'document',
-                    id: d.id,
-                    name: d.title,
-                    loading: false,
-                  });
-                }}
-                onNavigateFolder={(id) => setCurrentFolderId(id)}
-              />
+              <div className="flex flex-col gap-0">
+                {/* 1. Render Folders */}
+                {foldersToDisplay.length > 0 && (
+                  <FolderTable
+                    folders={foldersToDisplay}
+                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
+                    showHeader={true}
+                    onOpen={(f) => setCurrentFolderId(f.id)}
+                    onEdit={(f) => {
+                      setEditingFolder(f);
+                      setEditFolderOpen(true);
+                    }}
+                    onShare={(f) => {
+                      setSharingFolder(f);
+                      setShareFolderOpen(true);
+                    }}
+                    onDelete={(f) => {
+                      setDeleteModal({
+                        isOpen: true,
+                        type: 'folder',
+                        id: f.id,
+                        name: f.name,
+                        loading: false,
+                      });
+                    }}
+                  />
+                )}
+                {/* 2. Render Documents */}
+                {documents.length > 0 && (
+                  <FileTable
+                    documents={documents}
+                    currentFolderName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
+                    showHeader={foldersToDisplay.length === 0}
+                    onPreview={(d) => {
+                      setSelectedDoc(d);
+                      setPreviewDocOpen(true);
+                    }}
+                    onView={(d) => {
+                      setSelectedDoc(d);
+                      setDetailDocOpen(true);
+                    }}
+                    onDelete={(d) => {
+                      setDeleteModal({
+                        isOpen: true,
+                        type: 'document',
+                        id: d.id,
+                        name: d.title,
+                        loading: false,
+                      });
+                    }}
+                    onNavigateFolder={(id) => setCurrentFolderId(id)}
+                  />
+                )}
+              </div>
             )}
           </div>
         )}
@@ -688,6 +609,16 @@ function MyDocumentsContent() {
         }}
         document={selectedDoc}
         onSuccess={refetchDocuments}
+      />
+
+      {/* 4.5 Document Preview Modal */}
+      <DocumentPreviewModal
+        isOpen={previewDocOpen}
+        onClose={() => {
+          setPreviewDocOpen(false);
+          setSelectedDoc(null);
+        }}
+        document={selectedDoc}
       />
 
       {/* 5. Delete Confirm Modal */}

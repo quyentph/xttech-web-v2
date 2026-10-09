@@ -11,6 +11,7 @@ import { cn } from '@/utils';
 interface FileCardProps {
   document: DocumentItem;
   locationName?: string;
+  onPreview?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
 }
@@ -18,6 +19,7 @@ interface FileCardProps {
 export const FileCard: React.FC<FileCardProps> = ({
   document: doc,
   locationName,
+  onPreview,
   onView,
   onDelete,
 }) => {
@@ -134,7 +136,15 @@ export const FileCard: React.FC<FileCardProps> = ({
 
   return (
     <div
-      onClick={() => onView(doc)}
+      onClick={() => {
+        if (onPreview) {
+          onPreview(doc);
+        } else if (downloadUrl) {
+          window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          onView(doc);
+        }
+      }}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
         'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
