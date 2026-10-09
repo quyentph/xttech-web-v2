@@ -60,10 +60,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
         </div>
       }
       footer={
-        <div className="flex items-center justify-between w-full">
-          <div className="text-xs text-slate-600">
-            {currentVersion?.fileSize ? `Dung lượng: ${formatBytes(currentVersion.fileSize)}` : ''}
-          </div>
+        <div className="flex items-center justify-end w-full">
           <div className="flex items-center gap-2">
             <Button variant="ghost" onClick={onClose}>
               Đóng
@@ -81,7 +78,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
         </div>
       }
     >
-      <div className="w-full h-[70vh] bg-slate-100 flex flex-col items-center justify-center rounded-xl overflow-hidden border border-slate-200">
+      <div className="w-full h-[70vh] bg-slate-100 flex flex-col items-center justify-center rounded-xl overflow-hidden">
         {!downloadUrl ? (
           <div className="text-slate-500 text-sm">Tài liệu này không có tệp đính kèm để xem trước.</div>
         ) : isImage ? (

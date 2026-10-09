@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Eye, MoreVertical, Trash2, Folder, Users } from 'lucide-react';
+import { Download, Eye, MoreVertical, Trash2, Folder, Users, FolderOpen } from 'lucide-react';
 import type { DocumentItem } from '@/types';
 import { DriveFileIcon } from '../_utils/doc-helpers';
 import { getFileUrl } from '@/utils/string';
@@ -14,6 +14,7 @@ interface FileTableProps {
   currentFolderName?: string;
   onView: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
+  onMove?: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
   onNavigateFolder?: (folderId: number | null) => void;
   showHeader?: boolean;
@@ -44,6 +45,7 @@ export const FileTable: React.FC<FileTableProps> = ({
   showHeader = true,
   onView,
   onPreview,
+  onMove,
   onDelete,
   onNavigateFolder,
 }) => {
@@ -155,9 +157,16 @@ export const FileTable: React.FC<FileTableProps> = ({
                     label: 'Tải xuống',
                     icon: <Download size={15} className="text-emerald-500" />,
                     onClick: () => handleDownload({ stopPropagation: () => {} } as any),
-                  },
+                  }
                 ]
               : []),
+            ...(onMove ? [
+              {
+                label: 'Di chuyển',
+                icon: <FolderOpen size={15} className="text-slate-500" />,
+                onClick: () => onMove(doc),
+              }
+            ] : []),
             {
               label: 'Xóa tài liệu',
               icon: <Trash2 size={15} className="text-rose-500" />,
@@ -169,6 +178,11 @@ export const FileTable: React.FC<FileTableProps> = ({
           return (
             <div
               key={doc.id}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
+                e.dataTransfer.effectAllowed = 'move';
+              }}
               onClick={() => {
                 if (onPreview) {
                   onPreview(doc);

@@ -7,6 +7,8 @@ import { useDebounce } from '@/hooks';
 import {
   getDocumentCategoryTree,
   getDocuments,
+  updateDocumentCategory,
+  updateDocument,
   deleteDocumentCategory,
   deleteDocument,
 } from '@/actions/document';
@@ -23,6 +25,7 @@ import { EditFolderModal } from './_components/edit-folder-modal';
 import { CreateDocumentModal } from './_components/create-document-modal';
 import { DocumentDetailModal } from './_components/document-detail-modal';
 import { DocumentPreviewModal } from './_components/document-preview-modal';
+import { MoveItemModal } from './_components/move-item-modal';
 import { DeleteConfirmModal } from './_components/delete-confirm-modal';
 import { ShareFolderModal } from './_components/share-folder-modal';
 import { Button, Select, TableSearch } from '@/components';
@@ -94,6 +97,9 @@ function MyDocumentsContent() {
   const [previewDocOpen, setPreviewDocOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
 
+  const [moveModalOpen, setMoveModalOpen] = useState(false);
+  const [itemToMove, setItemToMove] = useState<{ type: 'folder' | 'document'; item: DocumentCategory | DocumentItem } | null>(null);
+
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     type: 'folder' | 'document';
@@ -136,11 +142,18 @@ function MyDocumentsContent() {
   });
 
   const documents = useMemo<DocumentItem[]>(() => {
-    if (Array.isArray(documentsData?.items)) return documentsData.items;
-    if (Array.isArray(documentsData)) return documentsData as any;
-    if (Array.isArray((documentsData as any)?.data)) return (documentsData as any).data;
-    return [];
-  }, [documentsData]);
+    let rawItems: DocumentItem[] = [];
+    if (Array.isArray(documentsData?.items)) rawItems = documentsData.items;
+    else if (Array.isArray(documentsData)) rawItems = documentsData as any;
+    else if (Array.isArray((documentsData as any)?.data)) rawItems = (documentsData as any).data;
+
+    if (currentFolderId === null) {
+      return rawItems.filter((doc) => doc.categoryId === null || doc.categoryId === undefined);
+    }
+    return rawItems.filter(
+      (doc) => doc.categoryId === currentFolderId || doc.category?.id === currentFolderId
+    );
+  }, [documentsData, currentFolderId]);
 
   const safeCategoryTree = useMemo<DocumentCategory[]>(() => {
     if (Array.isArray(categoryTree)) return categoryTree;
@@ -238,6 +251,61 @@ function MyDocumentsContent() {
     } catch (error: any) {
       toast.error(error.message || 'Lỗi khi xóa');
       setDeleteModal((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  // Hàm đệ quy kiểm tra xem targetId có nằm trong nhánh của sourceId không
+  const isDescendant = (categories: DocumentCategory[], sourceId: number, targetId: number): boolean => {
+    for (const cat of categories) {
+      if (cat.id === sourceId) {
+        const checkChildren = (children?: DocumentCategory[]): boolean => {
+          if (!children) return false;
+          if (children.some(c => c.id === targetId)) return true;
+          return children.some(c => checkChildren(c.children));
+        };
+        return checkChildren(cat.children);
+      }
+      if (cat.children && cat.children.length > 0) {
+        if (isDescendant(cat.children, sourceId, targetId)) return true;
+      }
+    }
+    return false;
+  };
+
+  const handleDropItem = async (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => {
+    if (sourceType === 'folder') {
+      if (sourceId === targetFolderId) return; // Drop on itself
+      if (isDescendant(safeCategoryTree, sourceId, targetFolderId)) {
+        toast.error('Vị trí đích không hợp lệ (không thể di chuyển vào thư mục con).');
+        return;
+      }
+    }
+
+    try {
+      if (sourceType === 'folder') {
+        await updateDocumentCategory(sourceId, { parentId: targetFolderId });
+        toast.success('Di chuyển thư mục thành công');
+      } else {
+        const doc = documents.find(d => d.id === sourceId);
+        if (doc) {
+          await updateDocument(sourceId, { 
+            title: doc.title,
+            documentType: doc.documentType,
+            status: doc.status,
+            shareScope: doc.shareScope,
+            categoryId: targetFolderId 
+          });
+          toast.success('Di chuyển tài liệu thành công');
+        } else {
+          // If not in current view, maybe just try with categoryId
+          await updateDocument(sourceId, { categoryId: targetFolderId });
+          toast.success('Di chuyển tài liệu thành công');
+        }
+      }
+      refetchCategories();
+      refetchDocuments();
+    } catch (error: any) {
+      toast.error(error.message || 'Lỗi khi di chuyển');
     }
   };
 
@@ -433,6 +501,11 @@ function MyDocumentsContent() {
                       setSharingFolder(f);
                       setShareFolderOpen(true);
                     }}
+                    onMove={(f) => {
+                      setItemToMove({ type: 'folder', item: f });
+                      setMoveModalOpen(true);
+                    }}
+                    onDropItem={handleDropItem}
                     onDelete={(f) => {
                       setDeleteModal({
                         isOpen: true,
@@ -457,6 +530,10 @@ function MyDocumentsContent() {
                     onView={(d) => {
                       setSelectedDoc(d);
                       setDetailDocOpen(true);
+                    }}
+                    onMove={(d) => {
+                      setItemToMove({ type: 'document', item: d });
+                      setMoveModalOpen(true);
                     }}
                     onDelete={(d) => {
                       setDeleteModal({
@@ -487,6 +564,11 @@ function MyDocumentsContent() {
                       setSharingFolder(f);
                       setShareFolderOpen(true);
                     }}
+                    onMove={(f) => {
+                      setItemToMove({ type: 'folder', item: f });
+                      setMoveModalOpen(true);
+                    }}
+                    onDropItem={handleDropItem}
                     onDelete={(f) => {
                       setDeleteModal({
                         isOpen: true,
@@ -511,6 +593,10 @@ function MyDocumentsContent() {
                     onView={(d) => {
                       setSelectedDoc(d);
                       setDetailDocOpen(true);
+                    }}
+                    onMove={(d) => {
+                      setItemToMove({ type: 'document', item: d });
+                      setMoveModalOpen(true);
                     }}
                     onDelete={(d) => {
                       setDeleteModal({
@@ -619,6 +705,21 @@ function MyDocumentsContent() {
           setSelectedDoc(null);
         }}
         document={selectedDoc}
+      />
+
+      {/* 4.6 Move Item Modal */}
+      <MoveItemModal
+        isOpen={moveModalOpen}
+        onClose={() => {
+          setMoveModalOpen(false);
+          setItemToMove(null);
+        }}
+        type={itemToMove?.type || 'folder'}
+        item={itemToMove?.item || null}
+        onSuccess={() => {
+          refetchCategories();
+          refetchDocuments();
+        }}
       />
 
       {/* 5. Delete Confirm Modal */}

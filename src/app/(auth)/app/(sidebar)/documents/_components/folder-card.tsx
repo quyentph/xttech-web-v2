@@ -11,6 +11,8 @@ interface FolderCardProps {
   isActive?: boolean;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
+  onMove?: (folder: DocumentCategory) => void;
+  onDropItem?: (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => void;
   onDelete: (folder: DocumentCategory) => void;
   onShare?: (folder: DocumentCategory) => void;
 }
@@ -21,6 +23,8 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   isActive = false,
   onOpen,
   onEdit,
+  onMove,
+  onDropItem,
   onDelete,
   onShare,
 }) => {
@@ -117,6 +121,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
             icon: <Edit2 size={15} className="text-blue-500" />,
             onClick: () => onEdit(folder),
           },
+          ...(onMove ? [
+            {
+              label: 'Di chuyển',
+              icon: <FolderOpen size={15} className="text-slate-500" />,
+              onClick: () => onMove(folder),
+            }
+          ] : []),
           {
             label: 'Xóa thư mục',
             icon: <Trash2 size={15} className="text-rose-500" />,
@@ -127,13 +138,42 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       : []),
   ];
 
+  const [isDragOver, setIsDragOver] = useState(false);
+
   return (
     <div
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'folder', id: folder.id }));
+        e.dataTransfer.effectAllowed = 'move';
+      }}
+      onDragOver={(e) => {
+        if (!onDropItem) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setIsDragOver(true);
+      }}
+      onDragLeave={() => {
+        setIsDragOver(false);
+      }}
+      onDrop={(e) => {
+        if (!onDropItem) return;
+        e.preventDefault();
+        setIsDragOver(false);
+        try {
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          if (data && data.type && data.id) {
+            onDropItem(data.type, data.id, folder.id);
+          }
+        } catch (err) {}
+      }}
       onClick={() => onOpen(folder)}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
         isActive
           ? 'bg-primary/10 border-primary shadow-xs ring-1 ring-primary/30'
+          : isDragOver
+          ? 'bg-primary/20 border-primary ring-2 ring-primary/50'
           : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}

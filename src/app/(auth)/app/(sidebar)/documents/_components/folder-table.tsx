@@ -14,6 +14,8 @@ interface FolderTableProps {
   activeFolderId?: number | null;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
+  onMove?: (folder: DocumentCategory) => void;
+  onDropItem?: (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => void;
   onDelete: (folder: DocumentCategory) => void;
   onShare?: (folder: DocumentCategory) => void;
 }
@@ -44,11 +46,14 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   activeFolderId,
   onOpen,
   onEdit,
+  onMove,
+  onDropItem,
   onDelete,
   onShare,
 }) => {
   const { user } = useAuthStore();
   const [openMenuFolderId, setOpenMenuFolderId] = useState<number | null>(null);
+  const [dragOverFolderId, setDragOverFolderId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -160,6 +165,13 @@ export const FolderTable: React.FC<FolderTableProps> = ({
                     icon: <Edit2 size={15} className="text-blue-500" />,
                     onClick: () => onEdit(folder),
                   },
+                  ...(onMove ? [
+                    {
+                      label: 'Di chuyển',
+                      icon: <FolderOpen size={15} className="text-slate-500" />,
+                      onClick: () => onMove(folder),
+                    }
+                  ] : []),
                   {
                     label: 'Xóa thư mục',
                     icon: <Trash2 size={15} className="text-rose-500" />,
@@ -175,11 +187,38 @@ export const FolderTable: React.FC<FolderTableProps> = ({
           return (
             <div
               key={folder.id}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'folder', id: folder.id }));
+                e.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(e) => {
+                if (!onDropItem) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                setDragOverFolderId(folder.id);
+              }}
+              onDragLeave={() => {
+                setDragOverFolderId(null);
+              }}
+              onDrop={(e) => {
+                if (!onDropItem) return;
+                e.preventDefault();
+                setDragOverFolderId(null);
+                try {
+                  const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                  if (data && data.type && data.id) {
+                    onDropItem(data.type, data.id, folder.id);
+                  }
+                } catch (err) {}
+              }}
               onClick={() => onOpen(folder)}
               className={cn(
                 'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 transition-colors cursor-pointer text-xs text-slate-800',
                 isActive
                   ? 'bg-primary/10 border-l-2 border-primary text-primary'
+                  : dragOverFolderId === folder.id
+                  ? 'bg-primary/20 ring-2 ring-primary/50'
                   : 'hover:bg-[#f1f3f4]',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}

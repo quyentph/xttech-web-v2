@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Eye, MoreVertical, Trash2 } from 'lucide-react';
+import { Download, Eye, MoreVertical, Trash2, FolderOpen } from 'lucide-react';
 import type { DocumentItem } from '@/types';
 import { DOCUMENT_TYPE_MAP, DOCUMENT_STATUS_MAP } from '@/types';
 import { formatBytes, getFileVisualInfo } from '../_utils/doc-helpers';
@@ -13,6 +13,7 @@ interface FileCardProps {
   locationName?: string;
   onPreview?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
+  onMove?: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
 }
 
@@ -21,6 +22,7 @@ export const FileCard: React.FC<FileCardProps> = ({
   locationName,
   onPreview,
   onView,
+  onMove,
   onDelete,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -118,9 +120,16 @@ export const FileCard: React.FC<FileCardProps> = ({
             label: 'Tải xuống',
             icon: <Download size={15} className="text-emerald-500" />,
             onClick: handleDownload,
-          },
+          }
         ]
       : []),
+    ...(onMove ? [
+      {
+        label: 'Di chuyển',
+        icon: <FolderOpen size={15} className="text-slate-500" />,
+        onClick: () => onMove(doc),
+      }
+    ] : []),
     {
       label: 'Xóa tài liệu',
       icon: <Trash2 size={15} className="text-rose-500" />,
@@ -136,6 +145,11 @@ export const FileCard: React.FC<FileCardProps> = ({
 
   return (
     <div
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
+        e.dataTransfer.effectAllowed = 'move';
+      }}
       onClick={() => {
         if (onPreview) {
           onPreview(doc);
