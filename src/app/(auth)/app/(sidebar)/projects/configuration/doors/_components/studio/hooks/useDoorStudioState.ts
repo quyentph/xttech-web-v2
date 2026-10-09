@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Door, DoorCreate, DoorUpdate, DoorCalculateResponse, SelectedAccessoryItem } from '@/types';
 import { calculateDoor, createDoor, updateDoor, getDoorSeriesList, getProfileBars, getAccessoryCombos, getAccessories, getGlasses, getBrandColors, getBrands, } from '@/actions';
 import { FrameShape, SashOpenType, SceneCellNode, StudioMainTab, FrameConfig, SashConfig, DEFAULT_FRAME_CONFIG, DEFAULT_SASH_CONFIG, MullionInfo, MullionCutType, ColorSwatch, ALUMINUM_PALETTE, GlassGrilleConfig, } from '../studio-types';
@@ -16,11 +16,15 @@ interface UseDoorStudioStateProps {
   isOpen: boolean;
   onClose: () => void;
   door?: Door | null;
+  defaultBrandId?: number | null;
 }
 
-export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioStateProps) {
+export function useDoorStudioState({ isOpen, onClose, door, defaultBrandId }: UseDoorStudioStateProps) {
   // Navigation Tabs
   const [activeMainTab, setActiveMainTab] = useState<StudioMainTab>('draw');
+
+  // Selected Brand State
+  const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
 
   // Basic Door State
   const [w, setW] = useState<number>(1400);
@@ -32,6 +36,7 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
   const [hardwareColor, setHardwareColor] = useState<string>('#1E293B');
   const [frameShape, setFrameShape] = useState<FrameShape>('rect');
   const [seriesId, setSeriesId] = useState<number | undefined>(1);
+  const prevSeriesIdRef = useRef<number | undefined>(undefined);
   const [selectedComboIds, setSelectedComboIds] = useState<number[]>([]);
   const [selectedAccessories, setSelectedAccessories] = useState<SelectedAccessoryItem[]>([]);
 
@@ -60,10 +65,14 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
   // Fetch Door Series
   const { data: seriesData } = useQuery({
     queryKey: ['door-series-list'],
-    queryFn: () => getDoorSeriesList({ limit: 100 }),
+    queryFn: () => getDoorSeriesList({ limit: 9999 }),
     enabled: isOpen,
   });
-  const availableSeries = seriesData?.items || [];
+  const allAvailableSeries = seriesData?.items || [];
+  const availableSeries = useMemo(() => {
+    if (!selectedBrandId) return allAvailableSeries;
+    return allAvailableSeries.filter((s) => s.brandId === selectedBrandId);
+  }, [allAvailableSeries, selectedBrandId]);
 
   // Fetch Profile Bars (filtered by seriesId)
   const { data: profilesData } = useQuery({
@@ -79,13 +88,16 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
     );
   }, [availableProfiles]);
 
-  // Fetch Brands (Thương hiệu thực tế từ CSDL)
+  // Fetch Brands (Chỉ lấy hãng nhôm: brandType === 'aluminum')
   const { data: brandsData } = useQuery({
-    queryKey: ['brands-list'],
-    queryFn: () => getBrands({ limit: 200, isActive: true }),
+    queryKey: ['brands-list', 'aluminum'],
+    queryFn: () => getBrands({ limit: 9999, isActive: true, brandType: 'aluminum' }),
     enabled: isOpen,
   });
-  const availableBrands = useMemo(() => brandsData?.items || [], [brandsData]);
+  const availableBrands = useMemo(() => {
+    const list = (brandsData?.items || []).filter((b) => !b.brandType || b.brandType === 'aluminum');
+    return [...list].sort((a, b) => a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' }));
+  }, [brandsData]);
 
   // Fetch Accessory Combos (Đầy đủ toàn bộ combo từ CSDL)
   const { data: combosData } = useQuery({
@@ -115,14 +127,13 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
     return availableGlasses.find((g) => g.isDefault) || availableGlasses[0] || null;
   }, [availableGlasses]);
 
-  // Lấy brandId từ hệ nhôm (DoorSeries) đang chọn
-  const selectedSeries = availableSeries.find((s) => s.id === seriesId);
-  const brandId = selectedSeries?.brandId;
+  // Lấy brandId đang active
+  const brandId = selectedBrandId;
 
   // Fetch danh sách màu thực tế của Hãng từ Database
   const { data: brandColorsData } = useQuery({
     queryKey: ['brand-colors', brandId],
-    queryFn: () => getBrandColors({ brandId, limit: 100, isActive: true }),
+    queryFn: () => getBrandColors({ brandId: brandId || undefined, limit: 100, isActive: true }),
     enabled: isOpen && !!brandId,
   });
   const availableBrandColors = useMemo(() => brandColorsData?.items || [], [brandColorsData]);
@@ -137,21 +148,29 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
         }))
       : ALUMINUM_PALETTE;
 
-  // Tự động fallback màu khi đổi hệ nhôm
+  // Tự động fallback màu khi người dùng đổi hệ nhôm trong Studio
   useEffect(() => {
-    if (availableBrandColors.length > 0) {
-      const exists = availableBrandColors.some(
-        (c) => c.colorHex.toLowerCase() === aluminumColor.toLowerCase()
-      );
-      if (!exists) {
-        const defaultColor =
-          availableBrandColors.find((c) => c.isDefault) || availableBrandColors[0];
-        if (defaultColor) {
-          setAluminumColor(defaultColor.colorHex);
+    if (
+      prevSeriesIdRef.current !== undefined &&
+      seriesId !== undefined &&
+      prevSeriesIdRef.current !== seriesId
+    ) {
+      prevSeriesIdRef.current = seriesId;
+      if (availableBrandColors.length > 0) {
+        const cleanCurrent = (aluminumColor || '').trim().toLowerCase();
+        const exists = availableBrandColors.some(
+          (c) => (c.colorHex || '').trim().toLowerCase() === cleanCurrent
+        );
+        if (!exists) {
+          const defaultColor =
+            availableBrandColors.find((c) => c.isDefault) || availableBrandColors[0];
+          if (defaultColor) {
+            setAluminumColor(defaultColor.colorHex.trim());
+          }
         }
       }
     }
-  }, [availableBrandColors, aluminumColor]);
+  }, [seriesId, availableBrandColors, aluminumColor]);
 
   // Khởi tạo hoặc nạp lại state khi sửa cửa cũ, HOẶC reset toàn bộ khi thêm cửa mới
   useEffect(() => {
@@ -166,9 +185,25 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
       if (sc.w) setW(sc.w);
       if (sc.h) setH(sc.h);
       if (sc.frameShape) setFrameShape(sc.frameShape);
-      if (sc.aluminumColor) setAluminumColor(sc.aluminumColor);
-      if (sc.hardwareColor) setHardwareColor(sc.hardwareColor);
-      if (sc.seriesId) setSeriesId(sc.seriesId);
+      const rawColor = (sc.aluminumColor || sc.surface_color || '').trim();
+      if (rawColor) setAluminumColor(rawColor);
+      const rawHwColor = (sc.hardwareColor || '').trim();
+      if (rawHwColor) setHardwareColor(rawHwColor);
+      if (sc.seriesId) {
+        setSeriesId(sc.seriesId);
+        prevSeriesIdRef.current = sc.seriesId;
+        const curSeries = allAvailableSeries.find((s) => s.id === sc.seriesId);
+        if (curSeries?.brandId) setSelectedBrandId(curSeries.brandId);
+        else if (door.doorSeries?.brandId) setSelectedBrandId(door.doorSeries.brandId);
+      } else if (door.doorSeriesId) {
+        setSeriesId(door.doorSeriesId);
+        prevSeriesIdRef.current = door.doorSeriesId;
+        if (door.doorSeries?.brandId) setSelectedBrandId(door.doorSeries.brandId);
+      } else if (defaultBrandId) {
+        setSelectedBrandId(defaultBrandId);
+        setSeriesId(undefined);
+        prevSeriesIdRef.current = undefined;
+      }
       if (sc.selectedComboIds && Array.isArray(sc.selectedComboIds)) {
         setSelectedComboIds(sc.selectedComboIds);
       } else if (sc.selectedComboId) {
@@ -196,12 +231,23 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
           topEdge: { ...DEFAULT_FRAME_CONFIG.topEdge, ...(sc.frameConfig.topEdge || {}) },
           rightEdge: { ...DEFAULT_FRAME_CONFIG.rightEdge, ...(sc.frameConfig.rightEdge || {}) },
           bottomEdge: { ...DEFAULT_FRAME_CONFIG.bottomEdge, ...(sc.frameConfig.bottomEdge || {}) },
+          archConfig: {
+            ...(DEFAULT_FRAME_CONFIG.archConfig || { isCutAtApex: false, bendingClampingMm: 400 }),
+            ...(sc.frameConfig.archConfig || {}),
+          },
         });
       }
+      const defaultFamily = door?.type === 'cd' ? 'Cửa đi mở quay' : 'Cửa sổ mở quay/Hất';
       if (sc.sashConfig) {
         setSashConfig({
           ...DEFAULT_SASH_CONFIG,
+          family: sc.sashConfig.family || defaultFamily,
           ...sc.sashConfig,
+        });
+      } else {
+        setSashConfig({
+          ...DEFAULT_SASH_CONFIG,
+          family: defaultFamily,
         });
       }
       if (sc.rootCell) {
@@ -219,15 +265,22 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
       const defaultH = 1600;
       const initialRoot = createDefaultRootCell(defaultW, defaultH);
 
-      setName('Vách kính cố định');
+      setName('Cửa đi mở quay');
       setCode('');
-      setType('ck');
+      setType('casement_door');
       setW(defaultW);
       setH(defaultH);
       setFrameShape('rect');
       setAluminumColor('#955F20');
       setHardwareColor('#1E293B');
-      setSeriesId(1);
+      const initialBrandId = defaultBrandId || (availableBrands[0]?.id ?? null);
+      setSelectedBrandId(initialBrandId);
+      const brandSeriesList = initialBrandId
+        ? allAvailableSeries.filter((s) => s.brandId === initialBrandId)
+        : allAvailableSeries;
+      const initialSeriesId = brandSeriesList[0]?.id || undefined;
+      setSeriesId(initialSeriesId);
+      prevSeriesIdRef.current = initialSeriesId;
       setSelectedComboIds([]);
       setSelectedAccessories([]);
       setFrameConfig(DEFAULT_FRAME_CONFIG);
@@ -243,7 +296,7 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
       setIsCalculating(false);
       setActiveMainTab('draw');
     }
-  }, [door, isOpen]);
+  }, [door, isOpen, defaultBrandId, allAvailableSeries.length]);
 
   const pushState = (newRoot: SceneCellNode) => {
     const nextHist = [...history.slice(0, historyIdx + 1), newRoot];
@@ -324,7 +377,11 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
     }
   };
 
-  const handleUpdateDimension = (target: 'w' | 'h' | 'cell' | 'handleHeight', value: number, cellId?: string) => {
+  const handleUpdateDimension = (
+    target: 'w' | 'h' | 'cell' | 'cell-w' | 'cell-h' | 'handleHeight',
+    value: number,
+    cellId?: string
+  ) => {
     if (target === 'w') {
       handleChangeDimension(value, h);
     } else if (target === 'h') {
@@ -333,10 +390,13 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
       const clampedVal = Math.max(200, Math.min(h - 100, value));
       pushState(updateNode(rootCell, cellId, { handleHeight: clampedVal }));
       toast.success(`Đã cập nhật cao độ khóa: ${clampedVal} mm`);
-    } else if (target === 'cell' && cellId) {
+    } else if (target === 'cell-h' && cellId) {
+      const tryH = resizeCellInParent(rootCell, cellId, value, 'h');
+      pushState(tryH);
+    } else if ((target === 'cell-w' || target === 'cell') && cellId) {
       const tryW = resizeCellInParent(rootCell, cellId, value, 'w');
       const tryH = resizeCellInParent(rootCell, cellId, value, 'h');
-      const changed = JSON.stringify(tryW) !== JSON.stringify(rootCell) ? tryW : tryH;
+      const changed = JSON.stringify(tryW) !== JSON.stringify(rootCell) ? tryW : (target === 'cell' ? tryH : rootCell);
       pushState(changed);
     }
   };
@@ -628,8 +688,8 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
           w,
           h,
           frameShape,
-          aluminumColor,
-          hardwareColor,
+          aluminumColor: (aluminumColor || '').trim(),
+          hardwareColor: (hardwareColor || '').trim(),
           rootCell,
           frameConfig,
           sashConfig,
@@ -647,6 +707,8 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['doors'] });
+      queryClient.invalidateQueries({ queryKey: ['door-templates'] });
+      queryClient.invalidateQueries({ queryKey: ['doors-stats'] });
       toast.success(door?.id ? 'Cập nhật thiết kế thành công' : 'Lưu thiết kế thành công');
       onClose();
     },
@@ -713,11 +775,14 @@ export function useDoorStudioState({ isOpen, onClose, door }: UseDoorStudioState
     calcData,
     isCalculating,
     availableSeries,
+    allAvailableSeries,
     availableProfiles,
     availableBeads,
     availableCombos,
     availableAccessories,
     availableBrands,
+    selectedBrandId,
+    setSelectedBrandId,
     availableGlasses,
     defaultGlass,
     dynamicAluminumColors,
