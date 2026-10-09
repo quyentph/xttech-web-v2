@@ -81,10 +81,7 @@ export const createDocumentCategory = async (payload: CreateDocumentCategoryPayl
 };
 
 // Cập nhật thư mục
-export const updateDocumentCategory = async (
-  id: number,
-  payload: UpdateDocumentCategoryPayload,
-): Promise<DocumentCategory> => {
+export const updateDocumentCategory = async (id: number, payload: UpdateDocumentCategoryPayload): Promise<DocumentCategory> => {
   try {
     const res = await api.put(`/api/v1/document-categories/${id}`, payload);
     return res.data?.data ?? res.data;
@@ -98,12 +95,7 @@ export const deleteDocumentCategory = async (id: number): Promise<void> => {
   try {
     await api.delete(`/api/v1/document-categories/${id}`);
   } catch (error: any) {
-    throw new Error(
-      extractErrorMessage(
-        error,
-        'Không thể xóa thư mục. Hãy chắc chắn thư mục không còn tài liệu hoặc thư mục con.',
-      ),
-    );
+    throw new Error(extractErrorMessage(error, 'Không thể xóa thư mục. Hãy chắc chắn thư mục không còn tài liệu hoặc thư mục con.'));
   }
 };
 
@@ -210,10 +202,7 @@ export const removeDocumentFromFolder = async (documentId: number, categoryId: n
 // ==========================================
 
 // 4.1. Phân quyền chia sẻ thư mục: POST /api/v1/document-categories/{id}/shares
-export const shareDocumentCategory = async (
-  categoryId: number,
-  payload: ShareFolderPayload,
-): Promise<FolderShare> => {
+export const shareDocumentCategory = async (categoryId: number, payload: ShareFolderPayload): Promise<FolderShare> => {
   try {
     const res = await api.post(`/api/v1/document-categories/${categoryId}/shares`, payload);
     return res.data?.data ?? res.data;
@@ -223,9 +212,7 @@ export const shareDocumentCategory = async (
 };
 
 // 4.2. Xem danh sách những người đang được chia sẻ thư mục: GET /api/v1/document-categories/{id}/shares
-export const getDocumentCategoryShares = async (
-  categoryId: number,
-): Promise<FolderShare[]> => {
+export const getDocumentCategoryShares = async (categoryId: number): Promise<FolderShare[]> => {
   try {
     const res = await api.get(`/api/v1/document-categories/${categoryId}/shares`);
     const raw = res.data?.data ?? res.data;
@@ -239,10 +226,7 @@ export const getDocumentCategoryShares = async (
 };
 
 // 4.3. Thu hồi quyền chia sẻ: DELETE /api/v1/document-categories/{id}/shares/{shareId}
-export const revokeDocumentCategoryShare = async (
-  categoryId: number,
-  shareId: number | string,
-): Promise<void> => {
+export const revokeDocumentCategoryShare = async (categoryId: number, shareId: number | string): Promise<void> => {
   try {
     await api.delete(`/api/v1/document-categories/${categoryId}/shares/${shareId}`);
   } catch (error: any) {
@@ -250,3 +234,42 @@ export const revokeDocumentCategoryShare = async (
   }
 };
 
+// ==========================================
+// 4. Phê duyệt & Quy trình tài liệu (Approval Workflow)
+// ==========================================
+
+// Phê duyệt hoặc từ chối tài liệu
+export const reviewDocument = async (
+  documentId: number,
+  payload: {
+    approvalStatus: 'approved' | 'rejected';
+    approvalNote?: string;
+  },
+): Promise<DocumentItem> => {
+  try {
+    const res = await api.post(`/api/v1/documents/${documentId}/approve`, payload);
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể xử lý phê duyệt tài liệu'));
+  }
+};
+
+// Trình duyệt tài liệu (chuyển sang trạng thái chờ duyệt)
+export const submitDocument = async (documentId: number): Promise<DocumentItem> => {
+  try {
+    const res = await api.post(`/api/v1/documents/${documentId}/submit`);
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể trình duyệt tài liệu'));
+  }
+};
+
+// Ban hành tài liệu đã được duyệt
+export const publishDocument = async (documentId: number): Promise<DocumentItem> => {
+  try {
+    const res = await api.post(`/api/v1/documents/${documentId}/publish`);
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể ban hành tài liệu'));
+  }
+};

@@ -38,6 +38,58 @@ const documentSchema = z.object({
 
 type DocumentFormValues = z.infer<typeof documentSchema>;
 
+// Chỉ người dùng có role admin, hr hoặc super/supper admin mới có quyền phê duyệt
+const isApproverEligible = (emp: any): boolean => {
+  if (!emp) return false;
+
+  const validKeywords = ['admin', 'hr', 'super', 'supper', 'quản trị', 'nhân sự'];
+
+  const matchString = (val?: string | null): boolean => {
+    if (!val || typeof val !== 'string') return false;
+    const lower = val.toLowerCase().trim();
+    return validKeywords.some((keyword) => lower.includes(keyword));
+  };
+
+  // 1. Kiểm tra trong danh sách roles
+  if (Array.isArray(emp.roles) && emp.roles.length > 0) {
+    const hasMatch = emp.roles.some((r: any) => {
+      if (typeof r === 'string') return matchString(r);
+      return matchString(r?.code) || matchString(r?.name);
+    });
+    if (hasMatch) return true;
+  }
+
+  // 2. Kiểm tra thuộc tính role đơn lẻ nếu có
+  if (typeof emp.role === 'string' && matchString(emp.role)) return true;
+  if (emp.role && typeof emp.role === 'object') {
+    if (matchString(emp.role?.code) || matchString(emp.role?.name)) return true;
+  }
+
+  // 3. Kiểm tra positions nếu có
+  if (Array.isArray(emp.positions) && emp.positions.length > 0) {
+    const hasMatchPos = emp.positions.some((p: any) => {
+      if (typeof p === 'string') return matchString(p);
+      return matchString(p?.code) || matchString(p?.name);
+    });
+    if (hasMatchPos) return true;
+  }
+
+  return false;
+};
+
+// Lấy nhãn hiển thị vai trò của người duyệt
+const getApproverRoleBadge = (emp: any): string => {
+  if (Array.isArray(emp.roles) && emp.roles.length > 0) {
+    const names = emp.roles
+      .map((r: any) => (typeof r === 'string' ? r : r.name || r.code))
+      .filter(Boolean);
+    if (names.length > 0) return names.join(', ');
+  }
+  if (typeof emp.role === 'string') return emp.role;
+  if (emp.role && typeof emp.role === 'object') return emp.role.name || emp.role.code || '';
+  return 'Cán bộ duyệt';
+};
+
 export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   isOpen,
   onClose,
@@ -74,10 +126,10 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     },
   });
 
-  // Fetch employees for approver selection
+  // Fetch employees for approver selection (Chỉ lấy tài khoản có quyền duyệt: Admin, HR, Super Admin)
   const { data: employeesData } = useQuery({
     queryKey: ['employees', 'approvers'],
-    queryFn: () => getEmployees({ limit: 100 }),
+    queryFn: () => getEmployees({ limit: 200 }),
     enabled: isOpen,
   });
 
@@ -262,16 +314,22 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     [],
   );
 
-  const approverOptions = useMemo(
-    () => [
+  const approverOptions = useMemo(() => {
+    // Chỉ hiển thị các nhân sự có quyền duyệt (Admin, HR, Super Admin)
+    const eligibleApprovers = employees.filter(isApproverEligible);
+
+    return [
       { value: '', label: 'Không chỉ định (Tự duyệt / Bản thảo)' },
-      ...employees.map((emp: any) => ({
-        value: emp.id,
-        label: `${emp.fullName || emp.name} (${emp.email || 'NV'})`,
-      })),
-    ],
-    [employees],
-  );
+      ...eligibleApprovers.map((emp: any) => {
+        const roleName = getApproverRoleBadge(emp);
+        const roleLabel = roleName ? ` [${roleName}]` : '';
+        return {
+          value: emp.id,
+          label: `${emp.fullName || emp.name}${roleLabel} (${emp.email || 'NV'})`,
+        };
+      }),
+    ];
+  }, [employees]);
 
   const titleVal = watch('title');
   const codeVal = watch('code');
@@ -418,7 +476,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
 
           <div>
             <Select
-              label="Người phê duyệt (Nếu cần trình duyệt)"
+              label="Người phê duyệt (Chỉ Admin / HR / Super Admin)"
               fullWidth
               value={approverIdVal}
               onChange={(e) => setValue('approverId', e.target.value)}

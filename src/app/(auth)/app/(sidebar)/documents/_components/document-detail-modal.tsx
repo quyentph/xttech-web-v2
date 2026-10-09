@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Button } from '@/components';
 import { Download, FileText, Clock, User, Calendar, Folder, CheckCircle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import type { DocumentItem } from '@/types';
@@ -13,19 +13,53 @@ import {
 import { formatBytes, getFileVisualInfo } from '../_utils/doc-helpers';
 import { getFileUrl } from '@/utils/string';
 import dayjs from 'dayjs';
+import { reviewDocument } from '@/actions/document';
+import { useAuthStore } from '@/stores';
+import { usePermission } from '@/hooks/user-permission';
+import toast from 'react-hot-toast';
 
 interface DocumentDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   document: DocumentItem | null;
+  onSuccess?: () => void;
 }
 
 export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
   isOpen,
   onClose,
   document: doc,
+  onSuccess,
 }) => {
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const currentUser = useAuthStore((state) => state.user);
+  const { hasRole, isAdmin, isHR, isSuper } = usePermission();
+
   if (!doc) return null;
+
+  // Chỉ role admin, hr, super/supper admin hoặc đúng người được chỉ định duyệt mới có quyền phê duyệt
+  const canApprove =
+    isAdmin ||
+    isHR ||
+    isSuper ||
+    hasRole(['admin', 'hr', 'super', 'supper', 'super_admin', 'supper_admin']) ||
+    (Boolean(currentUser?.id) && String(doc.approverId) === String(currentUser?.id));
+
+  const isPendingApproval = doc.approvalStatus === 'pending' || doc.approvalStatus === 'submitted';
+
+  const handleReview = async (status: 'approved' | 'rejected') => {
+    try {
+      setReviewLoading(true);
+      await reviewDocument(doc.id, { approvalStatus: status });
+      toast.success(status === 'approved' ? 'Phê duyệt tài liệu thành công!' : 'Đã từ chối tài liệu');
+      onSuccess?.();
+      onClose();
+    } catch (error: any) {
+      toast.error(error.message || 'Không thể thực hiện phê duyệt');
+    } finally {
+      setReviewLoading(false);
+    }
+  };
 
   const currentVersion = doc.currentVersion;
   const fileName = currentVersion?.fileName || doc.title;
@@ -72,17 +106,40 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
             {currentVersion?.fileSize ? `Dung lượng: ${formatBytes(currentVersion.fileSize)}` : ''}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={onClose}>
+            <Button variant="ghost" onClick={onClose} disabled={reviewLoading}>
               Đóng
             </Button>
             {downloadUrl && (
               <Button
-                variant="primary"
+                variant="outline"
                 onClick={handleDownload}
                 leftIcon={<Download size={15} />}
+                disabled={reviewLoading}
               >
                 Tải tệp tin
               </Button>
+            )}
+            {canApprove && isPendingApproval && (
+              <>
+                <Button
+                  variant="danger"
+                  onClick={() => handleReview('rejected')}
+                  loading={reviewLoading}
+                  disabled={reviewLoading}
+                  size="sm"
+                >
+                  Từ chối
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => handleReview('approved')}
+                  loading={reviewLoading}
+                  disabled={reviewLoading}
+                  size="sm"
+                >
+                  Phê duyệt
+                </Button>
+              </>
             )}
           </div>
         </div>

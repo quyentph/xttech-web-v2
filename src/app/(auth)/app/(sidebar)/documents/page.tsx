@@ -599,6 +599,7 @@ export default function MyDocumentsPage() {
           setSelectedDoc(null);
         }}
         document={selectedDoc}
+        onSuccess={refetchDocuments}
       />
 
       {/* 5. Delete Confirm Modal */}
