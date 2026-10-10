@@ -53,6 +53,9 @@ export const TrashTab: React.FC = () => {
   } = useQuery<TrashItem[]>({
     queryKey: ['documents', 'trash'],
     queryFn: getTrashItems,
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
 
   const trashItems: TrashItem[] = useMemo(() => {

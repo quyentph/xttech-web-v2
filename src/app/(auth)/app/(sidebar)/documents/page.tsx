@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks';
 import {
   getDocumentCategoryTree,
@@ -48,6 +48,7 @@ import toast from 'react-hot-toast';
 function MyDocumentsContent() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
+  const queryClient = useQueryClient();
   
   // Navigation & View States
   const [currentFolderId, setCurrentFolderId] = useState<number | null>(null);
@@ -278,6 +279,8 @@ function MyDocumentsContent() {
         await deleteDocumentCategory(deleteModal.id);
         toast.success(`Đã xóa thư mục "${deleteModal.name}"`);
         refetchCategories();
+        queryClient.invalidateQueries({ queryKey: ['documents', 'trash'] });
+        queryClient.invalidateQueries({ queryKey: ['document-categories'] });
         if (currentFolderId === deleteModal.id) {
           handleGoBack();
         }
@@ -285,6 +288,8 @@ function MyDocumentsContent() {
         await deleteDocument(deleteModal.id);
         toast.success(`Đã xóa tài liệu "${deleteModal.name}"`);
         refetchDocuments();
+        queryClient.invalidateQueries({ queryKey: ['documents', 'trash'] });
+        queryClient.invalidateQueries({ queryKey: ['documents'] });
       }
       setDeleteModal((prev) => ({ ...prev, isOpen: false, loading: false }));
     } catch (error: any) {
