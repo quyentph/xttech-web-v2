@@ -60,6 +60,7 @@ export const acceptedSections = [
   'documents-list',
   'documents-my',
   'documents-shared',
+  'documents-trash',
 ];
 
 export interface SidebarItemWithRoles extends Omit<SidebarItemType, 'subItems'> {
@@ -285,6 +286,12 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
             id: 'documents-shared',
             label: 'Được chia sẻ',
             href: '/app/documents?tab=shared',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+          {
+            id: 'documents-trash',
+            label: 'Thùng rác',
+            href: '/app/documents?tab=trash',
             roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
         ],

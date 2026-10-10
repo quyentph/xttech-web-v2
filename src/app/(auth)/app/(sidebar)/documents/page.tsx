@@ -496,7 +496,13 @@ function MyDocumentsContent() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm md:text-base font-bold text-slate-800 truncate leading-tight">
-                    {currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
+                    {currentFolder
+                      ? currentFolder.name
+                      : tab === 'shared'
+                      ? 'Được chia sẻ với tôi'
+                      : tab === 'trash'
+                      ? 'Thùng rác'
+                      : 'Tài liệu của tôi'}
                   </h2>
                   {currentFolder?.code && (
                     <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
