@@ -338,11 +338,11 @@ const MultiSelect = React.forwardRef<HTMLDivElement, MultiSelectProps>(
                 {filteredOptions.length === 0 ? (
                   <div className="px-3 py-4 text-xs text-gray-400 text-center">Không tìm thấy kết quả</div>
                 ) : (
-                  filteredOptions.map((opt) => {
+                  filteredOptions.map((opt, idx) => {
                     const isSelected = selectedValues.map(String).includes(String(opt.value));
                     return (
                       <button
-                        key={opt.value}
+                        key={`${opt.value}-${idx}`}
                         type="button"
                         disabled={opt.disabled}
                         onClick={() => handleToggleOption(opt.value)}

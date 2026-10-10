@@ -1,18 +1,31 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+
 import { Modal, Button, Input, Textarea, Select, MultiSelect } from '@/components';
+
 import { createDocument } from '@/actions/document';
+
 import { getEmployees } from '@/actions/employee';
+
 import { getDepartments } from '@/actions/department';
+
 import { DOCUMENT_TYPE_MAP, SHARE_SCOPE_MAP } from '@/types';
+
 import { formatBytes, getFileVisualInfo } from '../_utils/doc-helpers';
+
 import toast from 'react-hot-toast';
+
 import { Upload, FileUp, X } from 'lucide-react';
+
 import type { DocumentCategory } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { z } from 'zod';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import { useForm } from 'react-hook-form';
 
 interface CreateDocumentModalProps {
@@ -35,6 +48,8 @@ const documentSchema = z.object({
   approverId: z.string().optional(),
   effectiveDate: z.string().optional(),
   expirationDate: z.string().optional(),
+  recipientUserIds: z.array(z.string()).optional(),
+  recipientDepartmentIds: z.array(z.string()).optional(),
 });
 
 type DocumentFormValues = z.infer<typeof documentSchema>;
@@ -97,9 +112,9 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   categories,
   onSuccess,
 }) => {
+  const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<(string | number)[]>([]);
   const [selectedDepartmentIds, setSelectedDepartmentIds] = useState<(string | number)[]>([]);
 
@@ -127,14 +142,124 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     },
   });
 
-  // Fetch employees for approver selection & recipients
+  // React Query Mutation để tạo mới tài liệu
+  const createDocumentMutation = useMutation({
+    mutationFn: async ({
+      data,
+      file,
+      userIds,
+      deptIds,
+    }: {
+      data: DocumentFormValues;
+      file: File;
+      userIds: (string | number)[];
+      deptIds: (string | number)[];
+    }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Backend FastAPI yêu cầu dữ liệu thông tin tài liệu nằm trong trường 'document_data' (dạng JSON string)
+      const documentData: Record<string, any> = {
+        title: data.title.trim(),
+        documentType: data.documentType,
+        document_type: data.documentType,
+        shareScope: data.shareScope || 'private',
+        share_scope: data.shareScope || 'private',
+      };
+
+      if (data.code?.trim()) {
+        documentData.code = data.code.trim().toUpperCase();
+      }
+      if (data.categoryId) {
+        documentData.category_id = Number(data.categoryId);
+        documentData.categoryId = Number(data.categoryId);
+      }
+      if (data.summary?.trim()) {
+        documentData.summary = data.summary.trim();
+      }
+      if (data.approverId && data.approverId.trim() !== '') {
+        documentData.approver_id = data.approverId.trim();
+        documentData.approverId = data.approverId.trim();
+      }
+      if (data.effectiveDate && data.effectiveDate.trim() !== '') {
+        documentData.effective_date = data.effectiveDate.trim();
+        documentData.effectiveDate = data.effectiveDate.trim();
+      }
+      if (data.expirationDate && data.expirationDate.trim() !== '') {
+        documentData.expiration_date = data.expirationDate.trim();
+        documentData.expirationDate = data.expirationDate.trim();
+      }
+
+      if (userIds.length > 0) {
+        documentData.recipientUserIds = userIds.map(String);
+        documentData.recipient_user_ids = userIds.map(String);
+      }
+      if (deptIds.length > 0) {
+        documentData.recipientDepartmentIds = deptIds.map(Number);
+        documentData.recipient_department_ids = deptIds.map(Number);
+      }
+
+      formData.append('document_data', JSON.stringify(documentData));
+
+      // Đồng thời bổ sung các trường riêng lẻ để tương thích đa dạng API
+      formData.append('title', data.title.trim());
+      formData.append('document_type', data.documentType);
+      formData.append('documentType', data.documentType);
+      if (data.code?.trim()) formData.append('code', data.code.trim().toUpperCase());
+      if (data.categoryId) {
+        formData.append('category_id', String(data.categoryId));
+        formData.append('categoryId', String(data.categoryId));
+      }
+      if (data.summary?.trim()) formData.append('summary', data.summary.trim());
+      if (data.shareScope) {
+        formData.append('share_scope', data.shareScope);
+        formData.append('shareScope', data.shareScope);
+      }
+      if (data.approverId) {
+        formData.append('approver_id', data.approverId);
+        formData.append('approverId', data.approverId);
+      }
+      if (data.effectiveDate) {
+        formData.append('effective_date', data.effectiveDate);
+        formData.append('effectiveDate', data.effectiveDate);
+      }
+      if (data.expirationDate) {
+        formData.append('expiration_date', data.expirationDate);
+        formData.append('expirationDate', data.expirationDate);
+      }
+      if (userIds.length > 0) {
+        formData.append('recipientUserIds', JSON.stringify(userIds.map(String)));
+        formData.append('recipient_user_ids', JSON.stringify(userIds.map(String)));
+      }
+      if (deptIds.length > 0) {
+        formData.append('recipientDepartmentIds', JSON.stringify(deptIds.map(Number)));
+        formData.append('recipient_department_ids', JSON.stringify(deptIds.map(Number)));
+      }
+
+      return createDocument(formData);
+    },
+    onSuccess: () => {
+      toast.success('Tải lên và tạo tài liệu thành công!');
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
+      onSuccess();
+      onClose();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Không thể tạo tài liệu');
+    },
+  });
+
+  const loading = createDocumentMutation.isPending;
+
+  // Lấy danh sách nhân viên để làm người phê duyệt hoặc người nhận
   const { data: employeesData } = useQuery({
     queryKey: ['employees', 'approvers'],
     queryFn: () => getEmployees({ limit: 200 }),
     enabled: isOpen,
   });
 
-  // Fetch departments for recipients
+  // Lấy danh sách phòng ban
   const { data: departmentsData } = useQuery({
     queryKey: ['departments', 'share-options'],
     queryFn: () => getDepartments({ limit: 100 }),
@@ -181,6 +306,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     }
   }, [isOpen, currentFolderId, reset]);
 
+  // Xử lý chọn file
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected) {
@@ -193,6 +319,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     }
   };
 
+  // Xử lý kéo thả file
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const dropped = e.dataTransfer.files?.[0];
@@ -206,114 +333,35 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     }
   };
 
-  const handleFormSubmit = async (data: DocumentFormValues) => {
+  const handleFormSubmit = (data: DocumentFormValues) => {
     if (!file) {
       setFileError('Vui lòng chọn hoặc tải lên tệp tin');
       return;
     }
 
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // Backend FastAPI yêu cầu dữ liệu thông tin tài liệu nằm trong trường 'document_data' (dạng JSON string)
-      const documentData: Record<string, any> = {
-        title: data.title.trim(),
-        documentType: data.documentType,
-        document_type: data.documentType,
-        shareScope: data.shareScope || 'all',
-        share_scope: data.shareScope || 'all',
-      };
-
-      if (data.code?.trim()) {
-        documentData.code = data.code.trim().toUpperCase();
-      }
-      if (data.categoryId) {
-        documentData.category_id = Number(data.categoryId);
-        documentData.categoryId = Number(data.categoryId);
-      }
-      if (data.summary?.trim()) {
-        documentData.summary = data.summary.trim();
-      }
-      if (data.approverId && data.approverId.trim() !== '') {
-        documentData.approver_id = data.approverId.trim();
-        documentData.approverId = data.approverId.trim();
-      }
-      if (data.effectiveDate && data.effectiveDate.trim() !== '') {
-        documentData.effective_date = data.effectiveDate.trim();
-        documentData.effectiveDate = data.effectiveDate.trim();
-      }
-      if (data.expirationDate && data.expirationDate.trim() !== '') {
-        documentData.expiration_date = data.expirationDate.trim();
-        documentData.expirationDate = data.expirationDate.trim();
-      }
-
-      if (selectedUserIds.length > 0) {
-        documentData.recipientUserIds = selectedUserIds.map(String);
-        documentData.recipient_user_ids = selectedUserIds.map(String);
-      }
-      if (selectedDepartmentIds.length > 0) {
-        documentData.recipientDepartmentIds = selectedDepartmentIds.map(Number);
-        documentData.recipient_department_ids = selectedDepartmentIds.map(Number);
-      }
-
-      formData.append('document_data', JSON.stringify(documentData));
-
-      // Đồng thời bổ sung các trường riêng lẻ để tương thích đa dạng API
-      formData.append('title', data.title.trim());
-      formData.append('document_type', data.documentType);
-      formData.append('documentType', data.documentType);
-      if (data.code?.trim()) formData.append('code', data.code.trim().toUpperCase());
-      if (data.categoryId) {
-        formData.append('category_id', String(data.categoryId));
-        formData.append('categoryId', String(data.categoryId));
-      }
-      if (data.summary?.trim()) formData.append('summary', data.summary.trim());
-      if (data.shareScope) {
-        formData.append('share_scope', data.shareScope);
-        formData.append('shareScope', data.shareScope);
-      }
-      if (data.approverId) {
-        formData.append('approver_id', data.approverId);
-        formData.append('approverId', data.approverId);
-      }
-      if (data.effectiveDate) {
-        formData.append('effective_date', data.effectiveDate);
-        formData.append('effectiveDate', data.effectiveDate);
-      }
-      if (data.expirationDate) {
-        formData.append('expiration_date', data.expirationDate);
-        formData.append('expirationDate', data.expirationDate);
-      }
-      if (selectedUserIds.length > 0) {
-        formData.append('recipientUserIds', JSON.stringify(selectedUserIds.map(String)));
-        formData.append('recipient_user_ids', JSON.stringify(selectedUserIds.map(String)));
-      }
-      if (selectedDepartmentIds.length > 0) {
-        formData.append('recipientDepartmentIds', JSON.stringify(selectedDepartmentIds.map(Number)));
-        formData.append('recipient_department_ids', JSON.stringify(selectedDepartmentIds.map(Number)));
-      }
-
-      await createDocument(formData);
-      toast.success('Tải lên và tạo tài liệu thành công!');
-      onSuccess();
-      onClose();
-    } catch (error: any) {
-      toast.error(error.message || 'Không thể tạo tài liệu');
-    } finally {
-      setLoading(false);
-    }
+    createDocumentMutation.mutate({
+      data,
+      file,
+      userIds: selectedUserIds,
+      deptIds: selectedDepartmentIds,
+    });
   };
 
-  // Flatten categories for select dropdown
-  const flattenCategories = (cats: DocumentCategory[], prefix = ''): { id: number; name: string }[] => {
+  // Tạo thụt lề trực quan theo cấp bậc
+  const flattenCategories = (
+    cats: DocumentCategory[],
+    prefix = '',
+    visited = new Set<number>()
+  ): { id: number; name: string }[] => {
     let result: { id: number; name: string }[] = [];
     if (!Array.isArray(cats)) return result;
     cats.forEach((cat) => {
-      result.push({ id: cat.id, name: `${prefix}${cat.name}` });
-      if (cat.children && cat.children.length > 0) {
-        result = result.concat(flattenCategories(cat.children, `${prefix}— `));
+      if (cat?.id && !visited.has(cat.id)) {
+        visited.add(cat.id);
+        result.push({ id: cat.id, name: `${prefix}${cat.name}` });
+      }
+      if (cat?.children && cat.children.length > 0) {
+        result = result.concat(flattenCategories(cat.children, `${prefix}— `, visited));
       }
     });
     return result;
@@ -347,10 +395,17 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   const approverOptions = useMemo(() => {
     // Chỉ hiển thị các nhân sự có quyền duyệt (Admin, HR, Super Admin)
     const eligibleApprovers = employees.filter(isApproverEligible);
+    const seenIds = new Set<string | number>();
+
+    const uniqueApprovers = eligibleApprovers.filter((emp: any) => {
+      if (!emp?.id || seenIds.has(emp.id)) return false;
+      seenIds.add(emp.id);
+      return true;
+    });
 
     return [
       { value: '', label: 'Không chỉ định (Tự duyệt / Bản thảo)' },
-      ...eligibleApprovers.map((emp: any) => {
+      ...uniqueApprovers.map((emp: any) => {
         const roleName = getApproverRoleBadge(emp);
         const roleLabel = roleName ? ` [${roleName}]` : '';
         return {
@@ -362,19 +417,33 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   }, [employees]);
 
   const employeeOptions = useMemo(() => {
-    return employees.map((emp: any) => ({
-      value: String(emp.id),
-      label: emp.fullName || emp.username || 'Nhân sự',
-      subLabel: emp.email || (emp.code ? `Mã: ${emp.code}` : undefined),
-    }));
+    const seen = new Set<string | number>();
+    return employees
+      .filter((emp: any) => {
+        if (!emp?.id || seen.has(emp.id)) return false;
+        seen.add(emp.id);
+        return true;
+      })
+      .map((emp: any) => ({
+        value: String(emp.id),
+        label: emp.fullName || emp.username || 'Nhân sự',
+        subLabel: emp.email || (emp.code ? `Mã: ${emp.code}` : undefined),
+      }));
   }, [employees]);
 
   const departmentOptions = useMemo(() => {
-    return departments.map((dept: any) => ({
-      value: String(dept.id),
-      label: dept.name,
-      subLabel: dept.code ? `[${dept.code}]` : undefined,
-    }));
+    const seen = new Set<string | number>();
+    return departments
+      .filter((dept: any) => {
+        if (!dept?.id || seen.has(dept.id)) return false;
+        seen.add(dept.id);
+        return true;
+      })
+      .map((dept: any) => ({
+        value: String(dept.id),
+        label: dept.name,
+        subLabel: dept.code ? `[${dept.code}]` : undefined,
+      }));
   }, [departments]);
 
   const titleVal = watch('title');

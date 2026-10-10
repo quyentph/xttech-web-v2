@@ -262,9 +262,17 @@ export const EditDocumentModal: React.FC<EditDocumentModalProps> = ({
 
   const approverOptions = useMemo(() => {
     const eligibleApprovers = employees.filter(isApproverEligible);
+    const seenIds = new Set<string | number>();
+
+    const uniqueApprovers = eligibleApprovers.filter((emp: any) => {
+      if (!emp?.id || seenIds.has(emp.id)) return false;
+      seenIds.add(emp.id);
+      return true;
+    });
+
     return [
       { value: '', label: 'Không chỉ định (Tự duyệt / Bản thảo)' },
-      ...eligibleApprovers.map((emp: any) => {
+      ...uniqueApprovers.map((emp: any) => {
         const roleName = getApproverRoleBadge(emp);
         const roleLabel = roleName ? ` [${roleName}]` : '';
         return {
@@ -276,19 +284,33 @@ export const EditDocumentModal: React.FC<EditDocumentModalProps> = ({
   }, [employees]);
 
   const employeeOptions = useMemo(() => {
-    return employees.map((emp: any) => ({
-      value: String(emp.id),
-      label: emp.fullName || emp.username || 'Nhân sự',
-      subLabel: emp.email || (emp.code ? `Mã: ${emp.code}` : undefined),
-    }));
+    const seen = new Set<string | number>();
+    return employees
+      .filter((emp: any) => {
+        if (!emp?.id || seen.has(emp.id)) return false;
+        seen.add(emp.id);
+        return true;
+      })
+      .map((emp: any) => ({
+        value: String(emp.id),
+        label: emp.fullName || emp.username || 'Nhân sự',
+        subLabel: emp.email || (emp.code ? `Mã: ${emp.code}` : undefined),
+      }));
   }, [employees]);
 
   const departmentOptions = useMemo(() => {
-    return departments.map((dept: any) => ({
-      value: String(dept.id),
-      label: dept.name,
-      subLabel: dept.code ? `[${dept.code}]` : undefined,
-    }));
+    const seen = new Set<string | number>();
+    return departments
+      .filter((dept: any) => {
+        if (!dept?.id || seen.has(dept.id)) return false;
+        seen.add(dept.id);
+        return true;
+      })
+      .map((dept: any) => ({
+        value: String(dept.id),
+        label: dept.name,
+        subLabel: dept.code ? `[${dept.code}]` : undefined,
+      }));
   }, [departments]);
 
   const titleVal = watch('title');

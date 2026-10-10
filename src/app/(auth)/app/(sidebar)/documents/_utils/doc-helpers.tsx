@@ -8,6 +8,7 @@ import {
   File,
 } from 'lucide-react';
 
+// Định dạng dung lượng tệp
 export function formatBytes(bytes?: number, decimals = 1): string {
   if (!bytes || bytes === 0) return '0 B';
   const k = 1024;
@@ -17,6 +18,7 @@ export function formatBytes(bytes?: number, decimals = 1): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
+// Tự động sinh mã tài liệu theo tên tài liệu
 export function generateSlugCode(text: string, prefix = 'DOC'): string {
   if (!text) return `${prefix}_${Date.now().toString().slice(-4)}`;
   // Remove accents
@@ -35,12 +37,14 @@ export function generateSlugCode(text: string, prefix = 'DOC'): string {
   return slug || `${prefix}_${Date.now().toString().slice(-4)}`;
 }
 
+// Lấy đuôi file
 export function getFileExtension(filename?: string): string {
   if (!filename) return '';
   const parts = filename.split('.');
   return parts.length > 1 ? parts.pop()!.toLowerCase() : '';
 }
 
+// Định nghĩa thông tin hiển thị của file
 export function getFileVisualInfo(filename?: string, mimeType?: string) {
   const ext = getFileExtension(filename);
 
@@ -106,6 +110,7 @@ export function getFileVisualInfo(filename?: string, mimeType?: string) {
   };
 }
 
+// Icon tùy theo loại file
 export function DriveFileIcon({
   filename,
   mimeType,
