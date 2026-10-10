@@ -101,10 +101,7 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
         </div>
       }
       footer={
-        <div className="flex items-center justify-between w-full">
-          <div className="text-xs text-slate-600">
-            {currentVersion?.fileSize ? `Dung lượng: ${formatBytes(currentVersion.fileSize)}` : ''}
-          </div>
+        <div className="flex items-center justify-end w-full">
           <div className="flex items-center gap-2">
             <Button variant="ghost" onClick={onClose} disabled={reviewLoading}>
               Đóng
@@ -147,12 +144,9 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
     >
       <div className="space-y-4 text-xs">
         {/* Header file banner */}
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
-          <div className={`p-3 rounded-xl border shrink-0 ${visualInfo.bgColor}`}>
-            {visualInfo.icon}
-          </div>
+        <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 flex items-start gap-3">
           <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-800">
                 {doc.code}
               </span>
@@ -188,7 +182,7 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
         )}
 
         {/* Thông tin hành chính & phê duyệt */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/80">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-lg bg-white border border-slate-200/80">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-slate-600">
               <Folder size={14} className="text-slate-500 shrink-0" />
