@@ -538,7 +538,7 @@ function MyDocumentsContent() {
                     folder={folder}
                     isSelected={selectedItemKeys.has(`folder-${folder.id}`)}
                     onToggleSelect={(f) => toggleSelectItem('folder', f.id)}
-                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
+                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : (tab === 'trash' ? 'Thùng rác' : 'Tài liệu của tôi'))}
                     onOpen={(f) => setCurrentFolderId(f.id)}
                     onEdit={(f) => {
                       setEditingFolder(f);
@@ -613,7 +613,7 @@ function MyDocumentsContent() {
                     folders={foldersToDisplay}
                     selectedKeys={selectedItemKeys}
                     onToggleSelect={(f) => toggleSelectItem('folder', f.id)}
-                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
+                    locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : (tab === 'trash' ? 'Thùng rác' : 'Tài liệu của tôi'))}
                     showHeader={true}
                     onOpen={(f) => setCurrentFolderId(f.id)}
                     onEdit={(f) => {

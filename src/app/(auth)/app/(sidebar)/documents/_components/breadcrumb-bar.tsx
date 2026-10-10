@@ -57,11 +57,10 @@ export const BreadcrumbBar: React.FC<BreadcrumbBarProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate(folder.id)}
-                className={`h-8 px-2.5 rounded-md text-xs font-medium transition-all max-w-[200px] truncate shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                  isLast
-                    ? 'bg-primary/10 text-primary font-semibold'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                }`}
+                className={`h-8 px-2.5 rounded-md text-xs font-medium transition-all max-w-[200px] truncate shrink-0 cursor-pointer flex items-center gap-1.5 ${isLast
+                  ? 'bg-primary/10 text-primary font-semibold'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  }`}
                 title={folder.name}
               >
                 <Folder size={14} className={isLast ? 'text-primary fill-primary/20' : 'text-slate-500'} />
