@@ -1,31 +1,29 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Input, Textarea, Select, MultiSelect } from '@/components';
-import { createDocument } from '@/actions/document';
+import { updateDocument } from '@/actions/document';
 import { getEmployees } from '@/actions/employee';
 import { getDepartments } from '@/actions/department';
 import { DOCUMENT_TYPE_MAP, SHARE_SCOPE_MAP } from '@/types';
-import { formatBytes, getFileVisualInfo } from '../_utils/doc-helpers';
 import toast from 'react-hot-toast';
-import { Upload, FileUp, X } from 'lucide-react';
-import type { DocumentCategory } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import { Edit3 } from 'lucide-react';
+import type { DocumentCategory, DocumentItem } from '@/types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import dayjs from 'dayjs';
 
-interface CreateDocumentModalProps {
+interface EditDocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentFolderId?: number | null;
-  currentFolder?: DocumentCategory | null;
+  document: DocumentItem | null;
   categories: DocumentCategory[];
   onSuccess: () => void;
 }
 
-// Validation schema dùng Zod theo chuẩn form-modal
-const documentSchema = z.object({
+const editDocumentSchema = z.object({
   title: z.string().min(1, { message: 'Tiêu đề tài liệu không được để trống' }),
   documentType: z.string().min(1, { message: 'Vui lòng chọn loại văn bản' }),
   code: z.string().optional(),
@@ -37,21 +35,16 @@ const documentSchema = z.object({
   expirationDate: z.string().optional(),
 });
 
-type DocumentFormValues = z.infer<typeof documentSchema>;
+type EditDocumentFormValues = z.infer<typeof editDocumentSchema>;
 
-// Chỉ người dùng có role admin, hr hoặc super/supper admin mới có quyền phê duyệt
 const isApproverEligible = (emp: any): boolean => {
   if (!emp) return false;
-
   const validKeywords = ['admin', 'hr', 'super', 'supper', 'quản trị', 'nhân sự'];
-
   const matchString = (val?: string | null): boolean => {
     if (!val || typeof val !== 'string') return false;
     const lower = val.toLowerCase().trim();
     return validKeywords.some((keyword) => lower.includes(keyword));
   };
-
-  // 1. Kiểm tra trong danh sách roles
   if (Array.isArray(emp.roles) && emp.roles.length > 0) {
     const hasMatch = emp.roles.some((r: any) => {
       if (typeof r === 'string') return matchString(r);
@@ -59,14 +52,10 @@ const isApproverEligible = (emp: any): boolean => {
     });
     if (hasMatch) return true;
   }
-
-  // 2. Kiểm tra thuộc tính role đơn lẻ nếu có
   if (typeof emp.role === 'string' && matchString(emp.role)) return true;
   if (emp.role && typeof emp.role === 'object') {
     if (matchString(emp.role?.code) || matchString(emp.role?.name)) return true;
   }
-
-  // 3. Kiểm tra positions nếu có
   if (Array.isArray(emp.positions) && emp.positions.length > 0) {
     const hasMatchPos = emp.positions.some((p: any) => {
       if (typeof p === 'string') return matchString(p);
@@ -74,14 +63,14 @@ const isApproverEligible = (emp: any): boolean => {
     });
     if (hasMatchPos) return true;
   }
-
   return false;
 };
 
-// Lấy nhãn hiển thị vai trò của người duyệt
 const getApproverRoleBadge = (emp: any): string => {
   if (Array.isArray(emp.roles) && emp.roles.length > 0) {
-    const names = emp.roles.map((r: any) => (typeof r === 'string' ? r : r.name || r.code)).filter(Boolean);
+    const names = emp.roles
+      .map((r: any) => (typeof r === 'string' ? r : r.name || r.code))
+      .filter(Boolean);
     if (names.length > 0) return names.join(', ');
   }
   if (typeof emp.role === 'string') return emp.role;
@@ -89,21 +78,17 @@ const getApproverRoleBadge = (emp: any): string => {
   return 'Cán bộ duyệt';
 };
 
-export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
+export const EditDocumentModal: React.FC<EditDocumentModalProps> = ({
   isOpen,
   onClose,
-  currentFolderId = null,
-  currentFolder = null,
+  document: doc,
   categories,
   onSuccess,
 }) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<(string | number)[]>([]);
   const [selectedDepartmentIds, setSelectedDepartmentIds] = useState<(string | number)[]>([]);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -112,29 +97,17 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
     setValue,
     watch,
     formState: { errors },
-  } = useForm<DocumentFormValues>({
-    resolver: zodResolver(documentSchema),
-    defaultValues: {
-      title: '',
-      documentType: 'work_report',
-      code: '',
-      categoryId: currentFolderId || '',
-      summary: '',
-      shareScope: 'private',
-      approverId: '',
-      effectiveDate: '',
-      expirationDate: '',
-    },
+  } = useForm<EditDocumentFormValues>({
+    resolver: zodResolver(editDocumentSchema),
   });
 
-  // Fetch employees for approver selection & recipients
+  // Fetch employees & departments for selection
   const { data: employeesData } = useQuery({
-    queryKey: ['employees', 'approvers'],
+    queryKey: ['employees', 'share-options'],
     queryFn: () => getEmployees({ limit: 200 }),
     enabled: isOpen,
   });
 
-  // Fetch departments for recipients
   const { data: departmentsData } = useQuery({
     queryKey: ['departments', 'share-options'],
     queryFn: () => getDepartments({ limit: 100 }),
@@ -162,158 +135,98 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   }, [register]);
 
   useEffect(() => {
-    if (isOpen) {
-      setFile(null);
-      setFileError(null);
-      setSelectedUserIds([]);
-      setSelectedDepartmentIds([]);
+    if (isOpen && doc) {
       reset({
-        title: '',
-        documentType: 'work_report',
-        code: '',
-        categoryId: currentFolderId || '',
-        summary: '',
-        shareScope: 'private',
-        approverId: '',
-        effectiveDate: '',
-        expirationDate: '',
+        title: doc.title || '',
+        documentType: doc.documentType || 'work_report',
+        code: doc.code || '',
+        categoryId: doc.categoryId || doc.category?.id || '',
+        summary: doc.summary || '',
+        shareScope: doc.shareScope || 'private',
+        approverId: doc.approverId || doc.approver?.id || '',
+        effectiveDate: doc.effectiveDate ? dayjs(doc.effectiveDate).format('YYYY-MM-DD') : '',
+        expirationDate: doc.expirationDate ? dayjs(doc.expirationDate).format('YYYY-MM-DD') : '',
       });
-    }
-  }, [isOpen, currentFolderId, reset]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0];
-    if (selected) {
-      setFile(selected);
-      setFileError(null);
-      if (!watch('title')?.trim()) {
-        const nameWithoutExt = selected.name.replace(/\.[^/.]+$/, '');
-        setValue('title', nameWithoutExt, { shouldValidate: true });
-      }
+      // Populate recipients if available
+      const recipientUsers = (doc.recipients || [])
+        .map((r) => r.userId)
+        .filter(Boolean);
+      setSelectedUserIds(recipientUsers);
+      setSelectedDepartmentIds([]);
     }
-  };
+  }, [isOpen, doc, reset]);
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const dropped = e.dataTransfer.files?.[0];
-    if (dropped) {
-      setFile(dropped);
-      setFileError(null);
-      if (!watch('title')?.trim()) {
-        const nameWithoutExt = dropped.name.replace(/\.[^/.]+$/, '');
-        setValue('title', nameWithoutExt, { shouldValidate: true });
-      }
-    }
-  };
-
-  const handleFormSubmit = async (data: DocumentFormValues) => {
-    if (!file) {
-      setFileError('Vui lòng chọn hoặc tải lên tệp tin');
-      return;
-    }
+  const handleFormSubmit = async (data: EditDocumentFormValues) => {
+    if (!doc) return;
 
     try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
 
-      // Backend FastAPI yêu cầu dữ liệu thông tin tài liệu nằm trong trường 'document_data' (dạng JSON string)
-      const documentData: Record<string, any> = {
+      const payload: Record<string, any> = {
         title: data.title.trim(),
         documentType: data.documentType,
         document_type: data.documentType,
-        shareScope: data.shareScope || 'all',
-        share_scope: data.shareScope || 'all',
+        shareScope: data.shareScope || 'private',
+        share_scope: data.shareScope || 'private',
       };
 
-      if (data.code?.trim()) {
-        documentData.code = data.code.trim().toUpperCase();
-      }
+      if (data.code?.trim()) payload.code = data.code.trim().toUpperCase();
       if (data.categoryId) {
-        documentData.category_id = Number(data.categoryId);
-        documentData.categoryId = Number(data.categoryId);
+        payload.categoryId = Number(data.categoryId);
+        payload.category_id = Number(data.categoryId);
       }
-      if (data.summary?.trim()) {
-        documentData.summary = data.summary.trim();
-      }
-      if (data.approverId && data.approverId.trim() !== '') {
-        documentData.approver_id = data.approverId.trim();
-        documentData.approverId = data.approverId.trim();
-      }
-      if (data.effectiveDate && data.effectiveDate.trim() !== '') {
-        documentData.effective_date = data.effectiveDate.trim();
-        documentData.effectiveDate = data.effectiveDate.trim();
-      }
-      if (data.expirationDate && data.expirationDate.trim() !== '') {
-        documentData.expiration_date = data.expirationDate.trim();
-        documentData.expirationDate = data.expirationDate.trim();
-      }
-
-      if (selectedUserIds.length > 0) {
-        documentData.recipientUserIds = selectedUserIds.map(String);
-        documentData.recipient_user_ids = selectedUserIds.map(String);
-      }
-      if (selectedDepartmentIds.length > 0) {
-        documentData.recipientDepartmentIds = selectedDepartmentIds.map(Number);
-        documentData.recipient_department_ids = selectedDepartmentIds.map(Number);
-      }
-
-      formData.append('document_data', JSON.stringify(documentData));
-
-      // Đồng thời bổ sung các trường riêng lẻ để tương thích đa dạng API
-      formData.append('title', data.title.trim());
-      formData.append('document_type', data.documentType);
-      formData.append('documentType', data.documentType);
-      if (data.code?.trim()) formData.append('code', data.code.trim().toUpperCase());
-      if (data.categoryId) {
-        formData.append('category_id', String(data.categoryId));
-        formData.append('categoryId', String(data.categoryId));
-      }
-      if (data.summary?.trim()) formData.append('summary', data.summary.trim());
-      if (data.shareScope) {
-        formData.append('share_scope', data.shareScope);
-        formData.append('shareScope', data.shareScope);
-      }
+      if (data.summary !== undefined) payload.summary = data.summary?.trim() || null;
       if (data.approverId) {
-        formData.append('approver_id', data.approverId);
-        formData.append('approverId', data.approverId);
+        payload.approverId = data.approverId.trim();
+        payload.approver_id = data.approverId.trim();
       }
       if (data.effectiveDate) {
-        formData.append('effective_date', data.effectiveDate);
-        formData.append('effectiveDate', data.effectiveDate);
+        payload.effectiveDate = data.effectiveDate.trim();
+        payload.effective_date = data.effectiveDate.trim();
       }
       if (data.expirationDate) {
-        formData.append('expiration_date', data.expirationDate);
-        formData.append('expirationDate', data.expirationDate);
-      }
-      if (selectedUserIds.length > 0) {
-        formData.append('recipientUserIds', JSON.stringify(selectedUserIds.map(String)));
-        formData.append('recipient_user_ids', JSON.stringify(selectedUserIds.map(String)));
-      }
-      if (selectedDepartmentIds.length > 0) {
-        formData.append('recipientDepartmentIds', JSON.stringify(selectedDepartmentIds.map(Number)));
-        formData.append('recipient_department_ids', JSON.stringify(selectedDepartmentIds.map(Number)));
+        payload.expirationDate = data.expirationDate.trim();
+        payload.expiration_date = data.expirationDate.trim();
       }
 
-      await createDocument(formData);
-      toast.success('Tải lên và tạo tài liệu thành công!');
+      if (selectedUserIds.length > 0) {
+        payload.recipientUserIds = selectedUserIds.map(String);
+        payload.recipient_user_ids = selectedUserIds.map(String);
+      }
+      if (selectedDepartmentIds.length > 0) {
+        payload.recipientDepartmentIds = selectedDepartmentIds.map(Number);
+        payload.recipient_department_ids = selectedDepartmentIds.map(Number);
+      }
+
+      await updateDocument(doc.id, payload);
+      toast.success('Cập nhật thông tin tài liệu thành công!');
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
       onSuccess();
       onClose();
     } catch (error: any) {
-      toast.error(error.message || 'Không thể tạo tài liệu');
+      toast.error(error.message || 'Không thể cập nhật tài liệu');
     } finally {
       setLoading(false);
     }
   };
 
-  // Flatten categories for select dropdown
-  const flattenCategories = (cats: DocumentCategory[], prefix = ''): { id: number; name: string }[] => {
+  // Flatten categories for select dropdown (với cơ chế deduplicate ID)
+  const flattenCategories = (
+    cats: DocumentCategory[],
+    prefix = '',
+    visited = new Set<number>()
+  ): { id: number; name: string }[] => {
     let result: { id: number; name: string }[] = [];
     if (!Array.isArray(cats)) return result;
     cats.forEach((cat) => {
-      result.push({ id: cat.id, name: `${prefix}${cat.name}` });
-      if (cat.children && cat.children.length > 0) {
-        result = result.concat(flattenCategories(cat.children, `${prefix}— `));
+      if (cat?.id && !visited.has(cat.id)) {
+        visited.add(cat.id);
+        result.push({ id: cat.id, name: `${prefix}${cat.name}` });
+      }
+      if (cat?.children && cat.children.length > 0) {
+        result = result.concat(flattenCategories(cat.children, `${prefix}— `, visited));
       }
     });
     return result;
@@ -331,7 +244,10 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   );
 
   const folderOptions = useMemo(
-    () => [{ value: '', label: 'Thư mục gốc (Root)' }, ...flatCategoryList.map((cat) => ({ value: cat.id, label: cat.name }))],
+    () => [
+      { value: '', label: 'Thư mục gốc (Root)' },
+      ...flatCategoryList.map((cat) => ({ value: cat.id, label: cat.name })),
+    ],
     [flatCategoryList],
   );
 
@@ -345,9 +261,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   );
 
   const approverOptions = useMemo(() => {
-    // Chỉ hiển thị các nhân sự có quyền duyệt (Admin, HR, Super Admin)
     const eligibleApprovers = employees.filter(isApproverEligible);
-
     return [
       { value: '', label: 'Không chỉ định (Tự duyệt / Bản thảo)' },
       ...eligibleApprovers.map((emp: any) => {
@@ -387,6 +301,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   const expirationDateVal = watch('expirationDate');
   const summaryVal = watch('summary');
 
+  if (!doc) return null;
+
   return (
     <Modal
       isOpen={isOpen}
@@ -394,59 +310,13 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
       size="lg"
       title={
         <div className="flex items-center gap-2 text-slate-800">
-          <Upload className="text-primary" size={20} />
-          <span>Tải lên & Tạo tài liệu mới</span>
+          <Edit3 className="text-primary" size={20} />
+          <span>Chỉnh sửa thông tin tài liệu</span>
         </div>
       }
       className="m-2 max-w-2xl w-full"
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4 text-xs">
-        {/* Upload Dropzone */}
-        <div>
-          <label className="text-xs font-semibold text-gray-700 select-none block mb-1.5">
-            Tệp đính kèm (PDF, DOCX, XLSX, Ảnh...) <span className="text-rose-500">*</span>
-          </label>
-          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-
-          {!file ? (
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-slate-50 flex flex-col items-center justify-center gap-2 group ${
-                fileError ? 'border-red-500 bg-red-50/10' : 'border-slate-300 hover:border-primary/60'
-              }`}
-            >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <FileUp size={24} />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-700 text-xs">Nhấp để tải tệp hoặc kéo thả vào đây</p>
-                <p className="text-[11px] text-slate-400 mt-0.5">Hỗ trợ tài liệu Word, Excel, PDF, hình ảnh...</p>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">{getFileVisualInfo(file.name).icon}</div>
-                <div className="truncate">
-                  <p className="font-semibold text-slate-800 truncate">{file.name}</p>
-                  <p className="text-[10px] text-slate-400">{formatBytes(file.size)}</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setFile(null)}
-                className="p-1 rounded-full text-slate-400 hover:text-rose-500 hover:bg-slate-200/60 transition-colors cursor-pointer"
-                title="Chọn tệp khác"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          )}
-          {fileError && <span className="text-xs text-red-500 mt-1 block">{fileError}</span>}
-        </div>
-
         {/* Title & Code */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -462,9 +332,9 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
 
           <div>
             <Input
-              label="Mã văn bản (Tùy chọn)"
+              label="Mã văn bản"
               fullWidth
-              placeholder="Tự động nếu để trống"
+              placeholder="Mã tài liệu"
               value={codeVal}
               onChange={(e) => setValue('code', e.target.value.toUpperCase())}
               error={errors.code?.message}
@@ -488,9 +358,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
 
           <div>
             <Select
-              label="Lưu vào Thư mục"
+              label="Thư mục"
               fullWidth
-              disabled
               value={categoryIdVal}
               onChange={(e) => setValue('categoryId', e.target.value ? Number(e.target.value) : '')}
               options={folderOptions}
@@ -554,7 +423,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
           <div>
             <Input
               type="date"
-              label="Ngày bắt đầu hiệu lực (Tùy chọn)"
+              label="Ngày bắt đầu hiệu lực"
               fullWidth
               value={effectiveDateVal}
               onChange={(e) => setValue('effectiveDate', e.target.value)}
@@ -564,7 +433,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
           <div>
             <Input
               type="date"
-              label="Ngày hết hiệu lực (Tùy chọn)"
+              label="Ngày hết hiệu lực"
               fullWidth
               value={expirationDateVal}
               onChange={(e) => setValue('expirationDate', e.target.value)}
@@ -590,10 +459,12 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             Hủy
           </Button>
           <Button variant="primary" size="sm" type="submit" disabled={loading} loading={loading}>
-            Tải lên tài liệu
+            Lưu thay đổi
           </Button>
         </div>
       </form>
     </Modal>
   );
 };
+
+export default EditDocumentModal;

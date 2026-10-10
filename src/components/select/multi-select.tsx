@@ -362,16 +362,12 @@ const MultiSelect = React.forwardRef<HTMLDivElement, MultiSelectProps>(
                           <div className="flex flex-col min-w-0 text-left">
                             <span className="whitespace-normal leading-snug">{opt.label}</span>
                             {opt.subLabel && (
-                              <span className={cn('text-xs', isSelected ? 'text-primary/80 font-normal' : 'text-gray-400')}>
-                                {opt.subLabel}
-                              </span>
+                              <span className={cn('text-xs', isSelected ? 'text-primary/80 font-normal' : 'text-gray-400')}>{opt.subLabel}</span>
                             )}
                           </div>
                         </div>
                         {isSelected && (
-                          <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase rounded bg-primary text-white shrink-0">
-                            Đã chọn
-                          </span>
+                          <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase rounded bg-primary text-white shrink-0">Đã chọn</span>
                         )}
                       </button>
                     );

@@ -195,8 +195,8 @@ export const deleteDocument = async (id: number): Promise<void> => {
 export const markDocumentAsRead = async (id: number): Promise<void> => {
   try {
     await api.post(`/api/v1/documents/${id}/read`);
-  } catch (error) {
-    console.warn('Lỗi đánh dấu đã đọc:', error);
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể đánh dấu đã đọc'));
   }
 };
 
@@ -246,7 +246,7 @@ export const getDocumentCategoryShares = async (categoryId: number): Promise<Fol
   }
 };
 
-// 4.3. Thu hồi quyền chia sẻ: DELETE /api/v1/document-categories/{id}/shares/{shareId}
+// 4.3. Thu hồi quyền chia sẻ thư mục: DELETE /api/v1/document-categories/{id}/shares/{shareId}
 export const revokeDocumentCategoryShare = async (categoryId: number, shareId: number | string): Promise<void> => {
   try {
     await api.delete(`/api/v1/document-categories/${categoryId}/shares/${shareId}`);
@@ -254,6 +254,121 @@ export const revokeDocumentCategoryShare = async (categoryId: number, shareId: n
     throw new Error(extractErrorMessage(error, 'Không thể thu hồi quyền chia sẻ'));
   }
 };
+
+// ==========================================
+// 3.1. Phân quyền chia sẻ tài liệu (Document Sharing)
+// ==========================================
+
+// 4.4. Phân quyền chia sẻ tài liệu: Cập nhật người nhận qua PUT /api/v1/documents/{id} (hoặc POST /shares)
+export const shareDocument = async (
+  documentId: number,
+  payload: {
+    shareScope?: string;
+    recipientUserIds?: (string | number)[];
+    recipientDepartmentIds?: (string | number)[];
+    userId?: string;
+    departmentId?: number;
+    permission?: string;
+  }
+): Promise<any> => {
+  try {
+    // 1. Thử gọi API chuyên biệt POST /api/v1/documents/{id}/shares nếu chỉ thêm 1 user
+    if (payload.userId && !payload.recipientUserIds) {
+      try {
+        const res = await api.post(`/api/v1/documents/${documentId}/shares`, {
+          userId: payload.userId,
+          permission: payload.permission || 'view',
+        });
+        return res.data?.data ?? res.data;
+      } catch (err: any) {
+        // Fallback sang PUT /api/v1/documents/{id} bên dưới
+      }
+    }
+
+    // 2. Gửi request PUT /api/v1/documents/{id} cập nhật danh sách người nhận và phạm vi chia sẻ
+    const updateData: Record<string, any> = {};
+    if (payload.shareScope) {
+      updateData.shareScope = payload.shareScope;
+      updateData.share_scope = payload.shareScope;
+    }
+    if (payload.recipientUserIds) {
+      updateData.recipientUserIds = payload.recipientUserIds.map(String);
+      updateData.recipient_user_ids = payload.recipientUserIds.map(String);
+    }
+    if (payload.recipientDepartmentIds) {
+      updateData.recipientDepartmentIds = payload.recipientDepartmentIds.map(Number);
+      updateData.recipient_department_ids = payload.recipientDepartmentIds.map(Number);
+    }
+
+    const res = await api.put(`/api/v1/documents/${documentId}`, updateData);
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể chia sẻ tài liệu'));
+  }
+};
+
+// 4.5. Xem danh sách những người đang được chia sẻ tài liệu
+export const getDocumentShares = async (documentId: number): Promise<FolderShare[]> => {
+  try {
+    const res = await api.get(`/api/v1/documents/${documentId}/shares`);
+    const raw = res.data?.data ?? res.data;
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw?.items)) return raw.items;
+    return [];
+  } catch (error: any) {
+    // Fallback: Lấy chi tiết tài liệu và extract mảng recipients
+    try {
+      const docRes = await api.get(`/api/v1/documents/${documentId}`);
+      const docData = docRes.data?.data ?? docRes.data;
+      if (Array.isArray(docData?.recipients)) {
+        return docData.recipients.map((r: any) => ({
+          id: r.id || r.userId,
+          categoryId: documentId,
+          userId: r.userId,
+          userName: r.fullName,
+          user: {
+            id: r.userId,
+            fullName: r.fullName,
+            email: r.email,
+            avatar: r.avatar,
+          },
+          departmentId: r.departmentId,
+          departmentName: r.departmentName,
+          permission: 'view',
+        }));
+      }
+    } catch (e) {
+      console.warn('Lỗi getDocumentShares fallback:', e);
+    }
+    return [];
+  }
+};
+
+// 4.6. Thu hồi quyền chia sẻ tài liệu
+export const revokeDocumentShare = async (documentId: number, shareId: number | string): Promise<void> => {
+  try {
+    await api.delete(`/api/v1/documents/${documentId}/shares/${shareId}`);
+  } catch (error: any) {
+    // Fallback: Lấy tài liệu hiện tại, lọc bớt userId/departmentId và PUT cập nhật lại
+    try {
+      const docRes = await api.get(`/api/v1/documents/${documentId}`);
+      const docData = docRes.data?.data ?? docRes.data;
+      const currentRecipients: any[] = docData?.recipients || [];
+      const updatedUserIds = currentRecipients
+        .filter((r) => String(r.id) !== String(shareId) && String(r.userId) !== String(shareId))
+        .map((r) => String(r.userId))
+        .filter(Boolean);
+
+      await api.put(`/api/v1/documents/${documentId}`, {
+        recipientUserIds: updatedUserIds,
+        recipient_user_ids: updatedUserIds,
+      });
+    } catch (e: any) {
+      throw new Error(extractErrorMessage(e, 'Không thể thu hồi quyền chia sẻ tài liệu'));
+    }
+  }
+};
+
 
 // ==========================================
 // 4. Phê duyệt & Quy trình tài liệu (Approval Workflow)

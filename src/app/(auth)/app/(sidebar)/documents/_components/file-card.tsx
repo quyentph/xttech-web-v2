@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Eye, MoreVertical, Trash2, FolderOpen } from 'lucide-react';
+import { Download, Eye, MoreVertical, Trash2, FolderOpen, Share2, Edit3 } from 'lucide-react';
 import type { DocumentItem } from '@/types';
 import { DOCUMENT_TYPE_MAP, DOCUMENT_STATUS_MAP } from '@/types';
 import { formatBytes, getFileVisualInfo } from '../_utils/doc-helpers';
@@ -13,6 +13,8 @@ interface FileCardProps {
   locationName?: string;
   onPreview?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
+  onEdit?: (document: DocumentItem) => void;
+  onShare?: (document: DocumentItem) => void;
   onMove?: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
 }
@@ -22,6 +24,8 @@ export const FileCard: React.FC<FileCardProps> = ({
   locationName,
   onPreview,
   onView,
+  onEdit,
+  onShare,
   onMove,
   onDelete,
 }) => {
@@ -123,6 +127,20 @@ export const FileCard: React.FC<FileCardProps> = ({
           }
         ]
       : []),
+    ...(onEdit ? [
+      {
+        label: 'Chỉnh sửa',
+        icon: <Edit3 size={15} className="text-primary" />,
+        onClick: () => onEdit(doc),
+      }
+    ] : []),
+    ...(onShare ? [
+      {
+        label: 'Chia sẻ',
+        icon: <Share2 size={15} className="text-primary" />,
+        onClick: () => onShare(doc),
+      }
+    ] : []),
     ...(onMove ? [
       {
         label: 'Di chuyển',

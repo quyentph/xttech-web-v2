@@ -7,10 +7,13 @@ import {
   shareDocumentCategory,
   getDocumentCategoryShares,
   revokeDocumentCategoryShare,
+  shareDocument,
+  getDocumentShares,
+  revokeDocumentShare,
 } from '@/actions/document';
 import { getEmployees } from '@/actions/employee';
 import { getDepartments } from '@/actions/department';
-import type { DocumentCategory, FolderShare } from '@/types';
+import type { DocumentCategory, DocumentItem, FolderShare } from '@/types';
 import { useAuthStore } from '@/stores';
 import toast from 'react-hot-toast';
 import {
@@ -27,7 +30,8 @@ import { cn } from '@/utils';
 interface ShareFolderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  folder: DocumentCategory | null;
+  folder?: DocumentCategory | null;
+  document?: DocumentItem | null;
   onSuccess?: () => void;
 }
 
@@ -35,10 +39,15 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
   isOpen,
   onClose,
   folder,
+  document,
   onSuccess,
 }) => {
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
+
+  const isDoc = Boolean(document);
+  const targetId = isDoc ? document?.id : folder?.id;
+  const itemName = isDoc ? document?.title || '' : folder?.name || '';
 
   const [shareTarget, setShareTarget] = useState<'user' | 'department' | 'all'>('user');
   const [selectedUserIds, setSelectedUserIds] = useState<(string | number)[]>([]);
@@ -51,15 +60,20 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
     name: string;
   } | null>(null);
 
-  // 1. Fetch current shares of folder
+  // 1. Fetch current shares of folder / document
   const {
     data: shares = [],
     isLoading: isLoadingShares,
     refetch: refetchShares,
   } = useQuery<FolderShare[]>({
-    queryKey: ['document-category-shares', folder?.id],
-    queryFn: () => (folder ? getDocumentCategoryShares(folder.id) : Promise.resolve([])),
-    enabled: Boolean(isOpen && folder?.id),
+    queryKey: isDoc ? ['document-shares', targetId] : ['document-category-shares', targetId],
+    queryFn: () => {
+      if (!targetId) return Promise.resolve([]);
+      if (isDoc && document) return getDocumentShares(document.id);
+      if (folder) return getDocumentCategoryShares(folder.id);
+      return Promise.resolve([]);
+    },
+    enabled: Boolean(isOpen && targetId),
   });
 
   // 2. Fetch Employees list
@@ -142,13 +156,48 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
       setPermission('view');
       setConfirmRevokeState(null);
     }
-  }, [isOpen, folder?.id, existingUserIds, existingDepartmentIds]);
+  }, [isOpen, targetId, existingUserIds, existingDepartmentIds]);
+
+  const invalidateShareQueries = () => {
+    refetchShares();
+    if (isDoc && document) {
+      queryClient.invalidateQueries({ queryKey: ['document-shares', document.id] });
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
+    } else if (folder) {
+      queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
+      queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+    }
+  };
 
   // Handle Share Submit
   const handleShareSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!folder) return;
+    if (!targetId) return;
 
+    // Đôi với TÀI LIỆU: Gọi API update PUT /api/v1/documents/{id} cập nhật shareScope & recipientUserIds / recipientDepartmentIds
+    if (isDoc && document) {
+      try {
+        setIsSubmitting(true);
+        const scope = shareTarget === 'all' ? 'all' : (shareTarget === 'department' ? 'department' : 'private');
+        await shareDocument(document.id, {
+          shareScope: scope,
+          recipientUserIds: shareTarget === 'user' ? selectedUserIds : [],
+          recipientDepartmentIds: shareTarget === 'department' ? selectedDepartmentIds : [],
+        });
+        toast.success('Đã cập nhật quyền chia sẻ tài liệu thành công!');
+        invalidateShareQueries();
+        onSuccess?.();
+        onClose();
+      } catch (error: any) {
+        toast.error(error.message || 'Không thể chia sẻ tài liệu');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Đối với THƯ MỤC: Gọi API share thư mục POST /api/v1/document-categories/{id}/shares
     if (shareTarget === 'user') {
       if (selectedUserIds.length === 0) {
         toast.error('Vui lòng chọn ít nhất một nhân sự để chia sẻ');
@@ -160,13 +209,15 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
         let successCount = 0;
         for (const userId of selectedUserIds) {
           try {
-            await shareDocumentCategory(folder.id, {
-              userId: String(userId),
-              permission,
-            });
-            successCount++;
+            if (folder) {
+              await shareDocumentCategory(folder.id, {
+                userId: String(userId),
+                permission,
+              });
+              successCount++;
+            }
           } catch (err: any) {
-            console.error('Lỗi chia sẻ cho nhân sự:', userId, err);
+            console.error('Lỗi chia sẻ thư mục cho nhân sự:', userId, err);
           }
         }
 
@@ -176,9 +227,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
           toast.error('Không thể chia sẻ cho các nhân sự đã chọn');
         }
 
-        refetchShares();
-        queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
-        queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+        invalidateShareQueries();
         onSuccess?.();
       } catch (error: any) {
         toast.error(error.message || 'Lỗi khi chia sẻ thư mục');
@@ -196,13 +245,15 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
         let successCount = 0;
         for (const deptId of selectedDepartmentIds) {
           try {
-            await shareDocumentCategory(folder.id, {
-              departmentId: Number(deptId),
-              permission,
-            });
-            successCount++;
+            if (folder) {
+              await shareDocumentCategory(folder.id, {
+                departmentId: Number(deptId),
+                permission,
+              });
+              successCount++;
+            }
           } catch (err: any) {
-            console.error('Lỗi chia sẻ cho phòng ban:', deptId, err);
+            console.error('Lỗi chia sẻ thư mục cho phòng ban:', deptId, err);
           }
         }
 
@@ -212,9 +263,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
           toast.error('Không thể chia sẻ cho các phòng ban đã chọn');
         }
 
-        refetchShares();
-        queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
-        queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+        invalidateShareQueries();
         onSuccess?.();
       } catch (error: any) {
         toast.error(error.message || 'Lỗi khi chia sẻ thư mục');
@@ -224,15 +273,15 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
     } else if (shareTarget === 'all') {
       try {
         setIsSubmitting(true);
-        await shareDocumentCategory(folder.id, {
-          isAll: true,
-          permission,
-        } as any);
+        if (folder) {
+          await shareDocumentCategory(folder.id, {
+            isAll: true,
+            permission,
+          } as any);
+        }
 
         toast.success('Đã chia sẻ thư mục cho toàn bộ hệ thống thành công');
-        refetchShares();
-        queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
-        queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+        invalidateShareQueries();
         onSuccess?.();
       } catch (error: any) {
         toast.error(error.message || 'Lỗi khi chia sẻ thư mục cho toàn hệ thống');
@@ -249,16 +298,18 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
 
   // Execute Revoke Share
   const handleRevokeConfirm = async () => {
-    if (!folder || !confirmRevokeState) return;
+    if (!targetId || !confirmRevokeState) return;
     const { id: shareId, name } = confirmRevokeState;
     try {
       setRevokingId(shareId);
-      await revokeDocumentCategoryShare(folder.id, shareId);
+      if (isDoc && document) {
+        await revokeDocumentShare(document.id, shareId);
+      } else if (folder) {
+        await revokeDocumentCategoryShare(folder.id, shareId);
+      }
       toast.success(`Đã hủy quyền chia sẻ của "${name}"`);
       setConfirmRevokeState(null);
-      refetchShares();
-      queryClient.invalidateQueries({ queryKey: ['document-category-shares', folder.id] });
-      queryClient.invalidateQueries({ queryKey: ['document-categories'] });
+      invalidateShareQueries();
       onSuccess?.();
     } catch (error: any) {
       toast.error(error.message || 'Lỗi khi thu hồi quyền chia sẻ');
@@ -267,7 +318,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
     }
   };
 
-  if (!folder) return null;
+  if (!folder && !document) return null;
 
   return (
     <>
@@ -275,7 +326,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         size="lg"
-        title={`CHIA SẺ THƯ MỤC "${folder.name.toUpperCase()}"`}
+        title={`CHIA SẺ ${isDoc ? 'TÀI LIỆU' : 'THƯ MỤC'} "${itemName.toUpperCase()}"`}
       >
         <form onSubmit={handleShareSubmit} className="space-y-6 pt-2 select-none">
           {/* Form thêm đối tượng chia sẻ */}

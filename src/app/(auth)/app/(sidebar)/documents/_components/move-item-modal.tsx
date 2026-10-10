@@ -62,7 +62,7 @@ export const MoveItemModal: React.FC<MoveItemModalProps> = ({
 
   const itemName = item ? ('title' in item ? item.title : item.name) : '';
   const currentParentId = item 
-    ? ('categoryId' in item ? item.categoryId : item.parentId)
+    ? ('categoryId' in item ? item.categoryId : ('parentId' in item ? (item as any).parentId : null))
     : null;
 
   // Lọc cây thư mục để loại bỏ chính nó (nếu là folder)

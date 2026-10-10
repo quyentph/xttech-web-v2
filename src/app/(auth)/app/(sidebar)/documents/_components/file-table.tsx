@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Eye, MoreVertical, Trash2, Folder, Users, FolderOpen } from 'lucide-react';
+import { Download, Eye, MoreVertical, Trash2, Folder, Users, FolderOpen, Share2, Edit3 } from 'lucide-react';
 import type { DocumentItem } from '@/types';
 import { DriveFileIcon } from '../_utils/doc-helpers';
 import { getFileUrl } from '@/utils/string';
@@ -14,6 +14,8 @@ interface FileTableProps {
   currentFolderName?: string;
   onView: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
+  onEdit?: (document: DocumentItem) => void;
+  onShare?: (document: DocumentItem) => void;
   onMove?: (document: DocumentItem) => void;
   onDelete: (document: DocumentItem) => void;
   onNavigateFolder?: (folderId: number | null) => void;
@@ -45,6 +47,8 @@ export const FileTable: React.FC<FileTableProps> = ({
   showHeader = true,
   onView,
   onPreview,
+  onEdit,
+  onShare,
   onMove,
   onDelete,
   onNavigateFolder,
@@ -107,7 +111,7 @@ export const FileTable: React.FC<FileTableProps> = ({
   }, []);
 
   return (
-    <div className="w-full bg-white select-none">
+    <div className="w-full bg-[#fafbfc]">
       {/* Google Drive List Header - Giống hệt ảnh 2: Phẳng, không viền khung bao ngoài */}
       {showHeader && (
         <div className="flex items-center justify-between py-2.5 px-3.5 border-b border-gray-200 text-xs font-medium text-slate-600">
@@ -160,6 +164,20 @@ export const FileTable: React.FC<FileTableProps> = ({
                   }
                 ]
               : []),
+            ...(onEdit ? [
+              {
+                label: 'Chỉnh sửa',
+                icon: <Edit3 size={15} className="text-primary" />,
+                onClick: () => onEdit(doc),
+              }
+            ] : []),
+            ...(onShare ? [
+              {
+                label: 'Chia sẻ',
+                icon: <Share2 size={15} className="text-primary" />,
+                onClick: () => onShare(doc),
+              }
+            ] : []),
             ...(onMove ? [
               {
                 label: 'Di chuyển',

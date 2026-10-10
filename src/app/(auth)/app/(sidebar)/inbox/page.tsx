@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useMemo, useRef, Suspense } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks';
 import { useAuthStore } from '@/stores';
@@ -9,7 +9,7 @@ import {
   getInboxDocuments,
   markDocumentAsRead,
 } from '@/actions/document';
-import type { DocumentItem } from '@/types';
+import type { DocumentItem, GetDocumentsResponse } from '@/types';
 import { DOCUMENT_TYPE_MAP } from '@/types';
 
 // Components
@@ -141,24 +141,49 @@ function InboxPageContent() {
   const totalItems = activeTab === 'need_action' ? displayItems.length : inboxData?.total || 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / limit));
 
+  // In-flight request guard to prevent duplicate API calls for rapid clicks
+  const pendingReadIdsRef = useRef<Set<number>>(new Set());
+
+  // Helper to optimistically update document read status in React Query cache
+  const updateDocReadInCache = (docId: number) => {
+    queryClient.setQueriesData<GetDocumentsResponse>(
+      { queryKey: ['inbox-documents'] },
+      (oldData) => {
+        if (!oldData || !Array.isArray(oldData.items)) return oldData;
+        return {
+          ...oldData,
+          items: oldData.items.map((item) =>
+            item.id === docId ? { ...item, isRead: true } : item
+          ),
+        };
+      }
+    );
+  };
+
   // Handle opening document detail and marking as read
   const handleOpenDetail = async (doc: DocumentItem) => {
     setSelectedDoc(doc);
     setDetailDocOpen(true);
 
-    // Tự động gọi API đánh dấu đã đọc nếu chưa đọc
-    if (!doc.isRead) {
+    // Tự động gọi API đánh dấu đã đọc nếu chưa đọc và không có request đang xử lý
+    if (doc.isRead !== true && !pendingReadIdsRef.current.has(doc.id)) {
+      pendingReadIdsRef.current.add(doc.id);
       try {
         await markDocumentAsRead(doc.id);
-        // Cập nhật trạng thái lạc quan cho modal
-        setSelectedDoc((prev) => (prev ? { ...prev, isRead: true } : null));
+        
+        // Cập nhật ngay trong cache và state modal
+        updateDocReadInCache(doc.id);
+        setSelectedDoc((prev) => (prev && prev.id === doc.id ? { ...prev, isRead: true } : prev));
 
-        // Làm mới cache hộp thư
+        // Invalidate counts & list queries
         queryClient.invalidateQueries({ queryKey: ['inbox-unread-count'] });
         queryClient.invalidateQueries({ queryKey: ['inbox-read-count'] });
+        queryClient.invalidateQueries({ queryKey: ['inbox-total-count'] });
         queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
-      } catch (err) {
-        console.warn('Lỗi đánh dấu đã đọc:', err);
+      } catch (err: any) {
+        toast.error(err.message || 'Không thể đánh dấu đã đọc');
+      } finally {
+        pendingReadIdsRef.current.delete(doc.id);
       }
     }
   };
@@ -166,33 +191,64 @@ function InboxPageContent() {
   // Handle quick mark as read button
   const handleQuickMarkAsRead = async (docId: number, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (pendingReadIdsRef.current.has(docId)) return;
+
+    pendingReadIdsRef.current.add(docId);
     try {
       await markDocumentAsRead(docId);
       toast.success('Đã đánh dấu là đã đọc');
+      
+      updateDocReadInCache(docId);
+
       queryClient.invalidateQueries({ queryKey: ['inbox-unread-count'] });
       queryClient.invalidateQueries({ queryKey: ['inbox-read-count'] });
+      queryClient.invalidateQueries({ queryKey: ['inbox-total-count'] });
       queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
     } catch (err: any) {
       toast.error(err.message || 'Không thể đánh dấu đã đọc');
+    } finally {
+      pendingReadIdsRef.current.delete(docId);
     }
   };
 
   // Handle Mark all currently displayed unread as read
   const handleMarkAllDisplayedAsRead = async () => {
-    const unreadItems = displayItems.filter((item) => !item.isRead);
+    const unreadItems = displayItems.filter((item) => item.isRead !== true);
     if (unreadItems.length === 0) {
       toast('Không có văn bản chưa đọc nào trên trang này');
       return;
     }
 
+    const idsToMark = unreadItems
+      .map((item) => item.id)
+      .filter((id) => !pendingReadIdsRef.current.has(id));
+
+    if (idsToMark.length === 0) return;
+    idsToMark.forEach((id) => pendingReadIdsRef.current.add(id));
+
     try {
-      await Promise.all(unreadItems.map((item) => markDocumentAsRead(item.id)));
-      toast.success(`Đã đánh dấu ${unreadItems.length} văn bản là đã đọc`);
-      queryClient.invalidateQueries({ queryKey: ['inbox-unread-count'] });
-      queryClient.invalidateQueries({ queryKey: ['inbox-read-count'] });
-      queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
-    } catch (err: any) {
-      toast.error(err.message || 'Lỗi khi cập nhật trạng thái');
+      let successCount = 0;
+      for (const id of idsToMark) {
+        try {
+          await markDocumentAsRead(id);
+          updateDocReadInCache(id);
+          successCount++;
+        } catch (err) {
+          console.error(`Lỗi đánh dấu đã đọc cho doc #${id}:`, err);
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(`Đã đánh dấu ${successCount} văn bản là đã đọc`);
+        queryClient.invalidateQueries({ queryKey: ['inbox-unread-count'] });
+        queryClient.invalidateQueries({ queryKey: ['inbox-read-count'] });
+        queryClient.invalidateQueries({ queryKey: ['inbox-total-count'] });
+        queryClient.invalidateQueries({ queryKey: ['inbox-documents'] });
+      } else {
+        toast.error('Không thể đánh dấu đã đọc');
+      }
+    } finally {
+      idsToMark.forEach((id) => pendingReadIdsRef.current.delete(id));
     }
   };
 

@@ -22,7 +22,7 @@ export const InboxItemRow: React.FC<InboxItemRowProps> = ({
   onMarkAsRead,
   currentUserId,
 }) => {
-  const isRead = Boolean(doc.isRead);
+  const isRead = doc.isRead === true;
   const currentVersion = doc.currentVersion;
   const fileName = currentVersion?.fileName || doc.title;
   const visualInfo = getFileVisualInfo(fileName, currentVersion?.mimeType);

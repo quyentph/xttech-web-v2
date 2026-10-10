@@ -23,6 +23,7 @@ import { FileTable } from './_components/file-table';
 import { CreateFolderModal } from './_components/create-folder-modal';
 import { EditFolderModal } from './_components/edit-folder-modal';
 import { CreateDocumentModal } from './_components/create-document-modal';
+import { EditDocumentModal } from './_components/edit-document-modal';
 import { DocumentDetailModal } from './_components/document-detail-modal';
 import { DocumentPreviewModal } from './_components/document-preview-modal';
 import { MoveItemModal } from './_components/move-item-modal';
@@ -91,8 +92,11 @@ function MyDocumentsContent() {
   const [editingFolder, setEditingFolder] = useState<DocumentCategory | null>(null);
   const [shareFolderOpen, setShareFolderOpen] = useState(false);
   const [sharingFolder, setSharingFolder] = useState<DocumentCategory | null>(null);
+  const [sharingDoc, setSharingDoc] = useState<DocumentItem | null>(null);
 
   const [createDocOpen, setCreateDocOpen] = useState(false);
+  const [editDocOpen, setEditDocOpen] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<DocumentItem | null>(null);
   const [detailDocOpen, setDetailDocOpen] = useState(false);
   const [previewDocOpen, setPreviewDocOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
@@ -531,6 +535,15 @@ function MyDocumentsContent() {
                       setSelectedDoc(d);
                       setDetailDocOpen(true);
                     }}
+                    onEdit={(d) => {
+                      setEditingDoc(d);
+                      setEditDocOpen(true);
+                    }}
+                    onShare={(d) => {
+                      setSharingDoc(d);
+                      setSharingFolder(null);
+                      setShareFolderOpen(true);
+                    }}
                     onMove={(d) => {
                       setItemToMove({ type: 'document', item: d });
                       setMoveModalOpen(true);
@@ -562,6 +575,7 @@ function MyDocumentsContent() {
                     }}
                     onShare={(f) => {
                       setSharingFolder(f);
+                      setSharingDoc(null);
                       setShareFolderOpen(true);
                     }}
                     onMove={(f) => {
@@ -593,6 +607,15 @@ function MyDocumentsContent() {
                     onView={(d) => {
                       setSelectedDoc(d);
                       setDetailDocOpen(true);
+                    }}
+                    onEdit={(d) => {
+                      setEditingDoc(d);
+                      setEditDocOpen(true);
+                    }}
+                    onShare={(d) => {
+                      setSharingDoc(d);
+                      setSharingFolder(null);
+                      setShareFolderOpen(true);
                     }}
                     onMove={(d) => {
                       setItemToMove({ type: 'document', item: d });
@@ -665,6 +688,20 @@ function MyDocumentsContent() {
         }}
       />
 
+      {/* 3.5 Edit Document Modal */}
+      <EditDocumentModal
+        isOpen={editDocOpen}
+        onClose={() => {
+          setEditDocOpen(false);
+          setEditingDoc(null);
+        }}
+        document={editingDoc}
+        categories={safeCategoryTree}
+        onSuccess={() => {
+          refetchDocuments();
+        }}
+      />
+
       {/* 4. Document Detail Modal */}
       <DocumentDetailModal
         isOpen={detailDocOpen}
@@ -723,16 +760,19 @@ function MyDocumentsContent() {
         loading={deleteModal.loading}
       />
 
-      {/* 6. Share Folder Modal */}
+      {/* 6. Share Folder / Document Modal */}
       <ShareFolderModal
         isOpen={shareFolderOpen}
         onClose={() => {
           setShareFolderOpen(false);
           setSharingFolder(null);
+          setSharingDoc(null);
         }}
         folder={sharingFolder}
+        document={sharingDoc}
         onSuccess={() => {
           refetchCategories();
+          refetchDocuments();
         }}
       />
     </div>
