@@ -122,12 +122,6 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
       className="m-2 max-w-md w-full"
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4 text-xs">
-        {parentFolder && (
-          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 flex items-center justify-between">
-            <span>Vị trí lưu:</span>
-            <span className="font-semibold text-slate-800">{parentFolder.name}</span>
-          </div>
-        )}
 
         <div>
           <Input

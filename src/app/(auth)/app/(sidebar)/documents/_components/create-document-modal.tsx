@@ -413,8 +413,8 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
         </div>
 
         {/* Title & Code */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="sm:col-span-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
             <Input
               label="Tiêu đề tài liệu *"
               fullWidth
@@ -455,6 +455,7 @@ export const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
             <Select
               label="Lưu vào Thư mục"
               fullWidth
+              disabled
               value={categoryIdVal}
               onChange={(e) => setValue('categoryId', e.target.value ? Number(e.target.value) : '')}
               options={folderOptions}

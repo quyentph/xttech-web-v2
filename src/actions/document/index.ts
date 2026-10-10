@@ -116,7 +116,7 @@ export const deleteDocumentCategory = async (id: number): Promise<void> => {
   try {
     await api.delete(`/api/v1/document-categories/${id}`);
   } catch (error: any) {
-    throw new Error(extractErrorMessage(error, 'Không thể xóa thư mục. Hãy chắc chắn thư mục không còn tài liệu hoặc thư mục con.'));
+    throw new Error(extractErrorMessage(error, 'Không thể xóa thư mục'));
   }
 };
 

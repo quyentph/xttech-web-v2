@@ -618,33 +618,12 @@ function MyDocumentsContent() {
         {/* EMPTY STATE TOÀN BỘ (Khi folder hiện tại không có thư mục con và không có file con nào) */}
         {isEmptyState && (
           <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-dashed border-slate-300 rounded-3xl p-8 max-w-lg mx-auto my-8">
-            <div className="w-16 h-16 rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
+            <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center text-primary mb-4">
               <Folder size={32} />
             </div>
-            <h3 className="text-sm font-bold text-slate-800 mb-1">
+            <h3 className="text-sm font-bold text-slate-800">
               {currentFolder ? `Thư mục "${currentFolder.name}" đang trống` : 'Chưa có thư mục hoặc tài liệu nào'}
             </h3>
-            <p className="text-xs text-slate-500 mb-6 max-w-xs">
-              Bắt đầu tạo thư mục con hoặc tải lên tài liệu đầu tiên để quản lý.
-            </p>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCreateFolderOpen(true)}
-                leftIcon={<FolderPlus className="w-3.5 h-3.5 md:w-4 md:h-4" />}
-              >
-                Thư mục mới
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setCreateDocOpen(true)}
-                leftIcon={<Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />}
-              >
-                Tải lên tài liệu
-              </Button>
-            </div>
           </div>
         )}
       </div>
