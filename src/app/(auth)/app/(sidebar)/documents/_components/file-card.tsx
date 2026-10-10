@@ -111,14 +111,14 @@ export const FileCard: React.FC<FileCardProps> = ({
   }[] = [
     {
       label: 'Xem chi tiết',
-      icon: <Eye size={15} className="text-blue-500" />,
+      icon: <Eye size={15} className="text-primary" />,
       onClick: () => onView(doc),
     },
     ...(downloadUrl
       ? [
           {
             label: 'Tải xuống',
-            icon: <Download size={15} className="text-emerald-500" />,
+            icon: <Download size={15} className="text-primary" />,
             onClick: handleDownload,
           }
         ]
@@ -126,7 +126,7 @@ export const FileCard: React.FC<FileCardProps> = ({
     ...(onMove ? [
       {
         label: 'Di chuyển',
-        icon: <FolderOpen size={15} className="text-slate-500" />,
+        icon: <FolderOpen size={15} className="text-primary" />,
         onClick: () => onMove(doc),
       }
     ] : []),
@@ -212,7 +212,7 @@ export const FileCard: React.FC<FileCardProps> = ({
           onClick={(e) => e.stopPropagation()}
           onPointerEnter={handleMenuPointerEnter}
           onPointerLeave={handlePointerLeave}
-          className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg bg-white shadow-xl ring-1 ring-black/5 divide-y divide-gray-100 overflow-hidden border border-slate-200/80 py-1 animate-in fade-in zoom-in-95 duration-100 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
+          className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg bg-white shadow-xl ring-1 ring-black/5 divide-y divide-gray-100 overflow-hidden border border-slate-200/80 py-0 animate-in fade-in zoom-in-95 duration-100 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
         >
           {menuItems.map((item, idx) => (
             <button
@@ -226,7 +226,7 @@ export const FileCard: React.FC<FileCardProps> = ({
                 item.onClick?.();
               }}
               className={cn(
-                'flex w-full items-center gap-2.5 px-3.5 py-2 text-xs transition-colors duration-150 text-left cursor-pointer font-medium',
+                'flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs transition-colors duration-150 text-left cursor-pointer font-medium first:rounded-t-lg last:rounded-b-lg',
                 item.danger
                   ? 'text-rose-600 hover:bg-rose-50'
                   : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900',

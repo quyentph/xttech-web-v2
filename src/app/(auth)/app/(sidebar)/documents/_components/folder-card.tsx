@@ -102,14 +102,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   }[] = [
     {
       label: 'Mở thư mục',
-      icon: <FolderOpen size={15} className="text-slate-500" />,
+      icon: <FolderOpen size={15} className="text-primary" />,
       onClick: () => onOpen(folder),
     },
     ...(canShare && onShare
       ? [
           {
             label: 'Chia sẻ',
-            icon: <Share2 size={15} className="text-emerald-600" />,
+            icon: <Share2 size={15} className="text-primary" />,
             onClick: () => onShare(folder),
           },
         ]
@@ -118,13 +118,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       ? [
           {
             label: 'Đổi tên / Sửa',
-            icon: <Edit2 size={15} className="text-blue-500" />,
+            icon: <Edit2 size={15} className="text-primary" />,
             onClick: () => onEdit(folder),
           },
           ...(onMove ? [
             {
               label: 'Di chuyển',
-              icon: <FolderOpen size={15} className="text-slate-500" />,
+              icon: <FolderOpen size={15} className="text-primary" />,
               onClick: () => onMove(folder),
             }
           ] : []),
@@ -246,7 +246,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           onClick={(e) => e.stopPropagation()}
           onPointerEnter={handleMenuPointerEnter}
           onPointerLeave={handlePointerLeave}
-          className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg bg-white shadow-xl ring-1 ring-black/5 divide-y divide-gray-100 overflow-hidden border border-slate-200/80 py-1 animate-in fade-in zoom-in-95 duration-100 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
+          className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg bg-white shadow-xl ring-1 ring-black/5 divide-y divide-gray-100 overflow-hidden border border-slate-200/80 py-0 animate-in fade-in zoom-in-95 duration-100 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
         >
           {menuItems.map((item, idx) => (
             <button
@@ -260,7 +260,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
                 item.onClick?.();
               }}
               className={cn(
-                'flex w-full items-center gap-2.5 px-3.5 py-2 text-xs transition-colors duration-150 text-left cursor-pointer font-medium',
+                'flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs transition-colors duration-150 text-left cursor-pointer font-medium first:rounded-t-lg last:rounded-b-lg',
                 item.danger
                   ? 'text-rose-600 hover:bg-rose-50'
                   : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900',
