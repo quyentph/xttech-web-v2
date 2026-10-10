@@ -12,6 +12,8 @@ interface FolderTableProps {
   locationName?: string;
   showHeader?: boolean;
   activeFolderId?: number | null;
+  selectedKeys?: Set<string>;
+  onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onMove?: (folder: DocumentCategory) => void;
@@ -44,6 +46,8 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   locationName,
   showHeader = false,
   activeFolderId,
+  selectedKeys,
+  onToggleSelect,
   onOpen,
   onEdit,
   onMove,
@@ -183,6 +187,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
           ];
 
           const isActive = activeFolderId === folder.id;
+          const isSelected = selectedKeys?.has(`folder-${folder.id}`) ?? false;
 
           return (
             <div
@@ -212,10 +217,20 @@ export const FolderTable: React.FC<FolderTableProps> = ({
                   }
                 } catch (err) {}
               }}
-              onClick={() => onOpen(folder)}
+              onClick={(e) => {
+                if (e.ctrlKey || e.metaKey) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggleSelect?.(folder);
+                  return;
+                }
+                onOpen(folder);
+              }}
               className={cn(
                 'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 transition-colors cursor-pointer text-xs text-slate-800',
-                isActive
+                isSelected
+                  ? 'bg-primary/15 border-l-2 border-primary text-primary font-medium'
+                  : isActive
                   ? 'bg-primary/10 border-l-2 border-primary text-primary'
                   : dragOverFolderId === folder.id
                   ? 'bg-primary/20 ring-2 ring-primary/50'

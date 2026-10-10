@@ -51,11 +51,46 @@ function MyDocumentsContent() {
   
   // Navigation & View States
   const [currentFolderId, setCurrentFolderId] = useState<number | null>(null);
+  const [selectedItemKeys, setSelectedItemKeys] = useState<Set<string>>(new Set());
 
-  // If the URL changes to a different tab, reset currentFolderId to null
+  const toggleSelectItem = (type: 'folder' | 'document', id: number) => {
+    const key = `${type === 'folder' ? 'folder' : 'doc'}-${id}`;
+    setSelectedItemKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  const clearSelection = () => {
+    setSelectedItemKeys(new Set());
+  };
+
+  // If the URL changes to a different tab or folder, reset selection
   useEffect(() => {
     setCurrentFolderId(null);
+    clearSelection();
   }, [tab]);
+
+  useEffect(() => {
+    clearSelection();
+  }, [currentFolderId]);
+
+  // Handle Escape key to clear selection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedItemKeys.size > 0) {
+        clearSelection();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedItemKeys]);
+
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Search & Filter States
@@ -495,6 +530,8 @@ function MyDocumentsContent() {
                   <FolderCard
                     key={`folder-${folder.id}`}
                     folder={folder}
+                    isSelected={selectedItemKeys.has(`folder-${folder.id}`)}
+                    onToggleSelect={(f) => toggleSelectItem('folder', f.id)}
                     locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
                     onOpen={(f) => setCurrentFolderId(f.id)}
                     onEdit={(f) => {
@@ -526,6 +563,8 @@ function MyDocumentsContent() {
                   <FileCard
                     key={`doc-${doc.id}`}
                     document={doc}
+                    isSelected={selectedItemKeys.has(`doc-${doc.id}`)}
+                    onToggleSelect={(d) => toggleSelectItem('document', d.id)}
                     locationName={currentFolder ? currentFolder.name : doc.category?.name || 'Tài liệu của tôi'}
                     onPreview={(d) => {
                       setSelectedDoc(d);
@@ -566,6 +605,8 @@ function MyDocumentsContent() {
                 {foldersToDisplay.length > 0 && (
                   <FolderTable
                     folders={foldersToDisplay}
+                    selectedKeys={selectedItemKeys}
+                    onToggleSelect={(f) => toggleSelectItem('folder', f.id)}
                     locationName={currentFolder ? currentFolder.name : (tab === 'shared' ? 'Được chia sẻ với tôi' : 'Tài liệu của tôi')}
                     showHeader={true}
                     onOpen={(f) => setCurrentFolderId(f.id)}
@@ -598,6 +639,8 @@ function MyDocumentsContent() {
                 {documents.length > 0 && (
                   <FileTable
                     documents={documents}
+                    selectedKeys={selectedItemKeys}
+                    onToggleSelect={(d) => toggleSelectItem('document', d.id)}
                     currentFolderName={currentFolder ? currentFolder.name : 'Tài liệu của tôi'}
                     showHeader={foldersToDisplay.length === 0}
                     onPreview={(d) => {
@@ -775,6 +818,24 @@ function MyDocumentsContent() {
           refetchDocuments();
         }}
       />
+
+      {/* Floating Multi-Selection Bar */}
+      {selectedItemKeys.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-3 border border-slate-700/80 animate-in fade-in slide-in-from-bottom-3 duration-150 text-xs">
+          <span className="font-medium flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Đã chọn <strong>{selectedItemKeys.size}</strong> mục
+          </span>
+          <div className="h-3 w-px bg-slate-700" />
+          <button
+            type="button"
+            onClick={clearSelection}
+            className="text-slate-300 hover:text-white transition-colors cursor-pointer text-xs font-semibold"
+          >
+            Bỏ chọn (Esc)
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 interface FileTableProps {
   documents: DocumentItem[];
   currentFolderName?: string;
+  selectedKeys?: Set<string>;
+  onToggleSelect?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
   onEdit?: (document: DocumentItem) => void;
@@ -45,6 +47,8 @@ export const FileTable: React.FC<FileTableProps> = ({
   documents,
   currentFolderName,
   showHeader = true,
+  selectedKeys,
+  onToggleSelect,
   onView,
   onPreview,
   onEdit,
@@ -193,6 +197,8 @@ export const FileTable: React.FC<FileTableProps> = ({
             },
           ];
 
+          const isSelected = selectedKeys?.has(`doc-${doc.id}`) ?? false;
+
           return (
             <div
               key={doc.id}
@@ -201,7 +207,13 @@ export const FileTable: React.FC<FileTableProps> = ({
                 e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
                 e.dataTransfer.effectAllowed = 'move';
               }}
-              onClick={() => {
+              onClick={(e) => {
+                if (e.ctrlKey || e.metaKey) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggleSelect?.(doc);
+                  return;
+                }
                 if (onPreview) {
                   onPreview(doc);
                 } else if (downloadUrl) {
@@ -212,6 +224,7 @@ export const FileTable: React.FC<FileTableProps> = ({
               }}
               className={cn(
                 'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800',
+                isSelected && 'bg-primary/15 border-l-2 border-primary text-primary font-medium',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >

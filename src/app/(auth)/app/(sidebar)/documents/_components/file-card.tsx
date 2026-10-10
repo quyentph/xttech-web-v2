@@ -11,6 +11,8 @@ import { cn } from '@/utils';
 interface FileCardProps {
   document: DocumentItem;
   locationName?: string;
+  isSelected?: boolean;
+  onToggleSelect?: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
   onEdit?: (document: DocumentItem) => void;
@@ -22,6 +24,8 @@ interface FileCardProps {
 export const FileCard: React.FC<FileCardProps> = ({
   document: doc,
   locationName,
+  isSelected = false,
+  onToggleSelect,
   onPreview,
   onView,
   onEdit,
@@ -168,7 +172,13 @@ export const FileCard: React.FC<FileCardProps> = ({
         e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
         e.dataTransfer.effectAllowed = 'move';
       }}
-      onClick={() => {
+      onClick={(e) => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggleSelect?.(doc);
+          return;
+        }
         if (onPreview) {
           onPreview(doc);
         } else if (downloadUrl) {
@@ -179,7 +189,9 @@ export const FileCard: React.FC<FileCardProps> = ({
       }}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
-        'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+        isSelected
+          ? 'bg-primary/15 border-primary shadow-xs ring-2 ring-primary/60 text-primary'
+          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={`${doc.title} (${doc.code})`}

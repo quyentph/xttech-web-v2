@@ -9,6 +9,8 @@ interface FolderCardProps {
   folder: DocumentCategory;
   locationName?: string;
   isActive?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
   onEdit: (folder: DocumentCategory) => void;
   onMove?: (folder: DocumentCategory) => void;
@@ -21,6 +23,8 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   folder,
   locationName,
   isActive = false,
+  isSelected = false,
+  onToggleSelect,
   onOpen,
   onEdit,
   onMove,
@@ -167,10 +171,20 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           }
         } catch (err) {}
       }}
-      onClick={() => onOpen(folder)}
+      onClick={(e) => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggleSelect?.(folder);
+          return;
+        }
+        onOpen(folder);
+      }}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
-        isActive
+        isSelected
+          ? 'bg-primary/15 border-primary shadow-xs ring-2 ring-primary/60 text-primary'
+          : isActive
           ? 'bg-primary/10 border-primary shadow-xs ring-1 ring-primary/30'
           : isDragOver
           ? 'bg-primary/20 border-primary ring-2 ring-primary/50'
