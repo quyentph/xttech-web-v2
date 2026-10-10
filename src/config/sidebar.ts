@@ -60,7 +60,9 @@ export const acceptedSections = [
   'documents-list',
   'documents-my',
   'documents-shared',
+  'documents-rule',
   'documents-trash',
+  'rules',
   'trash',
 ];
 
@@ -287,6 +289,12 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
             id: 'documents-shared',
             label: 'Được chia sẻ',
             href: '/app/documents?tab=shared',
+            roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
+          },
+          {
+            id: 'documents-rule',
+            label: 'Quy chế',
+            href: '/app/rules',
             roles: ['super', 'admin', 'hr', 'sale', 'technician', 'accountant', 'employee'],
           },
           {
