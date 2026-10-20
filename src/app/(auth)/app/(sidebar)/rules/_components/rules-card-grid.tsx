@@ -362,11 +362,11 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
-      <div className="flex-1 overflow-auto px-4 custom-scrollbar">
+      <div className="flex-1 overflow-auto px-3 sm:px-4 custom-scrollbar">
         {isLoading && items.length === 0 ? (
           <SkeletonCards />
         ) : items.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 pb-4">
             {items.map((doc) => (
               <RuleCard
                 key={doc.id}
@@ -389,7 +389,7 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-100">
+      <div className="p-3 sm:p-4 border-t border-slate-100">
         <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}

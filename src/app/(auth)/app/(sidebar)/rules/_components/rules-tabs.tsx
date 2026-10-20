@@ -49,7 +49,7 @@ export const RulesTabs: React.FC<RulesTabsProps> = ({ activeTab, summary, onChan
   const visibleTabs = tabs.filter((tab) => tab.value !== 'to_process' || tab.count > 0 || activeTab === 'to_process');
 
   return (
-    <div className="flex gap-1 border-b border-slate-200 px-4 mt-3 overflow-x-auto" role="tablist">
+    <div className="flex gap-1 border-b border-slate-200 px-4 mt-2 sm:mt-3 overflow-x-auto no-scrollbar scroll-smooth" role="tablist">
       {visibleTabs.map((tab) => {
         const isActive = tab.value === activeTab;
         return (
@@ -61,7 +61,7 @@ export const RulesTabs: React.FC<RulesTabsProps> = ({ activeTab, summary, onChan
             aria-selected={isActive}
             onClick={() => onChange(tab.value)}
             className={cn(
-              'flex items-center gap-2 px-4 py-2.5 text-xs font-medium border-b-2 -mb-px whitespace-nowrap cursor-pointer select-none transition-colors',
+              'flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-medium border-b-2 -mb-px whitespace-nowrap cursor-pointer select-none transition-colors shrink-0',
               isActive
                 ? 'border-primary text-primary font-semibold'
                 : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300',

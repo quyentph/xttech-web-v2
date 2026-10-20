@@ -18,7 +18,7 @@ export const RulesHeader: React.FC<RulesHeaderProps> = ({ search, onSearchChange
       </div>
       <div className="min-w-0">
         <h1 className="text-base font-bold text-slate-800 leading-tight">Cơ chế &amp; Quy định</h1>
-        <p className="text-xs text-slate-500 truncate">
+        <p className="text-xs text-slate-500 truncate hidden sm:block">
           Quy chế, quy định, chính sách, quy trình, quyết định, thông báo, hướng dẫn, định mức
         </p>
       </div>
@@ -35,7 +35,7 @@ export const RulesHeader: React.FC<RulesHeaderProps> = ({ search, onSearchChange
           className="w-full h-9 pl-8 pr-3 text-xs rounded-lg border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
         />
       </div>
-      <Button id="rules-create-button" size="sm" leftIcon={<Plus size={14} />} onClick={onCreate}>
+      <Button id="rules-create-button" size="sm" leftIcon={<Plus size={14} />} onClick={onCreate} className="shrink-0">
         Soạn cơ chế
       </Button>
     </div>

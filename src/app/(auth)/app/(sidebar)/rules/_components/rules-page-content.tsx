@@ -101,6 +101,7 @@ export function RulesPageContent() {
         onStatusChange={filters.setStatus}
         onUnreadOnlyChange={filters.setUnreadOnly}
         onExpiringOnlyChange={filters.setExpiringOnly}
+        onResetFilters={filters.resetFilters}
       />
 
       {filters.tab === 'current' ? (
