@@ -103,9 +103,7 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
           // Chỉ làm mới danh sách tài liệu bên ngoài để cập nhật badge Đã đọc/Chưa đọc, KHÔNG làm mới toàn bộ root
           queryClient.invalidateQueries({ queryKey: DOC_QUERY_KEYS.documents.list() });
         })
-        .catch((err) => {
-          console.debug('markDocumentAsRead status:', err?.message);
-        });
+        .catch(() => {});
     }
     if (!isOpen) {
       markedDocIdRef.current = null;
@@ -362,8 +360,8 @@ export const DocumentDetailModal: React.FC<DocumentDetailModalProps> = ({
       if (selectedApproverId !== String(currentApproverId)) {
         try {
           await updateDocument(doc.id, { approverId: selectedApproverId });
-        } catch (updateErr) {
-          console.warn('Could not pre-update approverId:', updateErr);
+        } catch {
+          // Bỏ qua lỗi cập nhật trước approverId
         }
       }
 

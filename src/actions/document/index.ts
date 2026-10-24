@@ -81,8 +81,7 @@ export const getDocumentCategoryTree = async (): Promise<DocumentCategory[]> => 
     }));
 
     return [...markedMy, ...markedShared];
-  } catch (error: any) {
-    console.warn('Lỗi getDocumentCategoryTree:', error);
+  } catch {
     return [];
   }
 };
@@ -314,8 +313,7 @@ export const getDocumentCategoryShares = async (categoryId: number): Promise<Fol
     if (Array.isArray(raw)) return raw;
     if (Array.isArray(raw?.items)) return raw.items;
     return [];
-  } catch (error: any) {
-    console.warn('Lỗi getDocumentCategoryShares:', error);
+  } catch {
     return [];
   }
 };
@@ -425,8 +423,7 @@ export const getDocumentShares = async (documentId: number): Promise<FolderShare
         });
     }
     return [];
-  } catch (error: any) {
-    console.warn('Lỗi getDocumentShares:', error);
+  } catch {
     return [];
   }
 };

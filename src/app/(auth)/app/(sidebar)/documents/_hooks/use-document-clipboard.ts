@@ -61,8 +61,8 @@ async function fetchFileBlob(fileUrl: string): Promise<Blob | null> {
       if (res.ok) {
         return await res.blob();
       }
-    } catch (e) {
-      console.warn('Không thể fetch file qua fetch:', e);
+    } catch {
+      // Bỏ qua lỗi fetch
     }
     return null;
   }
@@ -164,8 +164,8 @@ async function duplicateFolder(
     for (const childDoc of childDocs) {
       await duplicateDocument(childDoc, newFolderId, false);
     }
-  } catch (err) {
-    console.warn(`Lỗi khi sao chép tài liệu con của thư mục ${sourceCategory.name}:`, err);
+  } catch {
+    toast.error(`Không thể sao chép một số tài liệu trong thư mục "${sourceCategory.name}"`);
   }
 
   // 3. Đệ quy sao chép các thư mục con (nếu có)
@@ -240,19 +240,19 @@ export function useDocumentClipboard({
             await updateDocument(item.id, { categoryId: targetFolderId });
             successCount++;
           }
-        } catch (err: any) {
+        } catch {
           errorCount++;
-          console.error('Lỗi khi di chuyển:', err);
         }
       }
 
       if (successCount > 0) {
-        toast.success(`Đã di chuyển thành công ${successCount} mục!`, { id: toastId });
+        const errorMsg = errorCount > 0 ? ` (${errorCount} mục thất bại)` : '';
+        toast.success(`Đã di chuyển thành công ${successCount} mục!${errorMsg}`, { id: toastId });
         invalidateDocumentQueries(queryClient);
         setClipboard(null);
         clearSelection();
       } else if (errorCount > 0) {
-        toast.error('Không thể hoàn tất di chuyển', { id: toastId });
+        toast.error('Không thể di chuyển các mục đã chọn', { id: toastId });
       }
     } else if (action === 'copy') {
       const toastId = toast.loading(`Đang sao chép ${items.length} mục...`);
@@ -267,6 +267,7 @@ export function useDocumentClipboard({
               findCategoryInTree(safeCategoryTree, item.id);
 
             if (!sourceFolder) {
+              toast.error(`Không tìm thấy thư mục nguồn "${item.name || item.id}"`);
               errorCount++;
               continue;
             }
@@ -289,6 +290,7 @@ export function useDocumentClipboard({
             }
 
             if (!sourceDoc) {
+              toast.error(`Không tìm thấy tài liệu nguồn "${item.name || item.id}"`);
               errorCount++;
               continue;
             }
@@ -301,14 +303,14 @@ export function useDocumentClipboard({
             await duplicateDocument(sourceDoc, targetFolderId, isSameFolder);
             successCount++;
           }
-        } catch (err: any) {
+        } catch {
           errorCount++;
-          console.error('Lỗi khi sao chép:', err);
         }
       }
 
       if (successCount > 0) {
-        toast.success(`Đã sao chép thành công ${successCount} mục!`, { id: toastId });
+        const errorMsg = errorCount > 0 ? ` (${errorCount} mục thất bại)` : '';
+        toast.success(`Đã sao chép thành công ${successCount} mục!${errorMsg}`, { id: toastId });
         invalidateDocumentQueries(queryClient);
         clearSelection();
         // Không xóa clipboard khi copy để người dùng có thể dán nhiều lần (chuẩn OS)

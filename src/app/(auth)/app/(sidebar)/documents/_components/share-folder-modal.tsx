@@ -288,8 +288,8 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({ isOpen, onCl
               });
               successCount++;
             }
-          } catch (err: any) {
-            console.error('Lỗi chia sẻ thư mục cho nhân sự:', userId, err);
+          } catch {
+            // Bỏ qua lỗi nhân sự đơn lẻ
           }
         }
 
@@ -324,8 +324,8 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({ isOpen, onCl
               });
               successCount++;
             }
-          } catch (err: any) {
-            console.error('Lỗi chia sẻ thư mục cho phòng ban:', deptId, err);
+          } catch {
+            // Bỏ qua lỗi phòng ban đơn lẻ
           }
         }
 
@@ -368,8 +368,8 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({ isOpen, onCl
                   permission: perm,
                 });
                 shareSuccessCount++;
-              } catch (err) {
-                console.warn(`Lỗi chia sẻ cho phòng ban ${dept.id}:`, err);
+              } catch {
+                // Bỏ qua lỗi
               }
             }
           } else if (employees.length > 0) {
@@ -380,8 +380,8 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({ isOpen, onCl
                   permission: perm,
                 });
                 shareSuccessCount++;
-              } catch (err) {
-                console.warn(`Lỗi chia sẻ cho nhân sự ${emp.id}:`, err);
+              } catch {
+                // Bỏ qua lỗi
               }
             }
           }

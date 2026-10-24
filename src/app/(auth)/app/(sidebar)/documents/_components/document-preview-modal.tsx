@@ -710,9 +710,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ isOp
     }
 
     if (doc?.id) {
-      markDocumentAsRead(doc.id).catch((err) => {
-        console.debug('markDocumentAsRead in preview:', err?.message);
-      });
+      markDocumentAsRead(doc.id).catch(() => {});
     }
 
     let isMounted = true;

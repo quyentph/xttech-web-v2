@@ -74,8 +74,8 @@ export function RulesPageContent() {
       try {
         await markDocumentAsRead(doc.id);
         queryClient.invalidateQueries({ queryKey: RULES_QUERY_KEYS.root });
-      } catch (err) {
-        console.error('Failed to mark document as read:', err);
+      } catch {
+        // Bỏ qua lỗi đánh dấu đã đọc
       }
     }
     setPreviewDoc(doc);
