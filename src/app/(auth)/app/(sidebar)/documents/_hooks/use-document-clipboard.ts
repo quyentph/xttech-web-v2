@@ -20,6 +20,8 @@ export interface ClipboardItem {
   type: 'folder' | 'document';
   id: number;
   name?: string;
+  docData?: DocumentItem;
+  folderData?: DocumentCategory;
 }
 
 export interface ClipboardState {
@@ -200,6 +202,56 @@ export function useDocumentClipboard({
     return new Set(clipboard.items.map((it) => `${it.type === 'folder' ? 'folder' : 'doc'}-${it.id}`));
   }, [clipboard]);
 
+  // Cắt các mục đã chọn
+  const handleCutSelected = useCallback(() => {
+    if (selectedItemKeys.size === 0) return;
+
+    const items: ClipboardItem[] = [];
+    selectedItemKeys.forEach((key) => {
+      const [type, idStr] = key.split('-');
+      const id = Number(idStr);
+      if (type === 'folder') {
+        const f =
+          foldersToDisplay.find((item) => item.id === id) ||
+          findCategoryInTree(safeCategoryTree, id);
+        items.push({ type: 'folder', id, name: f?.name, folderData: f || undefined });
+      } else if (type === 'doc') {
+        const d = documents.find((item) => item.id === id);
+        items.push({ type: 'document', id, name: d?.title, docData: d });
+      }
+    });
+
+    if (items.length > 0) {
+      setClipboard({ action: 'cut', items });
+      toast.success(`Đã cắt ${items.length} mục. Mở thư mục đích rồi nhấn Ctrl + V để di chuyển.`);
+    }
+  }, [selectedItemKeys, foldersToDisplay, documents, safeCategoryTree]);
+
+  // Sao chép các mục đã chọn
+  const handleCopySelected = useCallback(() => {
+    if (selectedItemKeys.size === 0) return;
+
+    const items: ClipboardItem[] = [];
+    selectedItemKeys.forEach((key) => {
+      const [type, idStr] = key.split('-');
+      const id = Number(idStr);
+      if (type === 'folder') {
+        const f =
+          foldersToDisplay.find((item) => item.id === id) ||
+          findCategoryInTree(safeCategoryTree, id);
+        items.push({ type: 'folder', id, name: f?.name, folderData: f || undefined });
+      } else if (type === 'doc') {
+        const d = documents.find((item) => item.id === id);
+        items.push({ type: 'document', id, name: d?.title, docData: d });
+      }
+    });
+
+    if (items.length > 0) {
+      setClipboard({ action: 'copy', items });
+      toast.success(`Đã sao chép ${items.length} mục. Mở thư mục đích rồi nhấn Ctrl + V để dán.`);
+    }
+  }, [selectedItemKeys, foldersToDisplay, documents, safeCategoryTree]);
+
   // Thực hiện Dán (Paste) các mục trong clipboard vào thư mục hiện tại
   const executePaste = useCallback(async () => {
     if (!clipboard || clipboard.items.length === 0 || isPasting) return;
@@ -237,8 +289,28 @@ export function useDocumentClipboard({
             await updateDocumentCategory(item.id, { parentId: targetFolderId });
             successCount++;
           } else {
-            await updateDocument(item.id, { categoryId: targetFolderId });
-            successCount++;
+            let doc = item.docData || documents.find((d) => d.id === item.id);
+            if (!doc) {
+              try {
+                doc = await getDocumentById(item.id);
+              } catch {
+                // ignore
+              }
+            }
+
+            if (doc) {
+              await updateDocument(item.id, {
+                title: doc.title,
+                documentType: doc.documentType || 'other',
+                status: doc.status || 'draft',
+                shareScope: doc.shareScope || 'private',
+                categoryId: targetFolderId,
+              });
+              successCount++;
+            } else {
+              await updateDocument(item.id, { categoryId: targetFolderId } as any);
+              successCount++;
+            }
           }
         } catch {
           errorCount++;
@@ -263,6 +335,7 @@ export function useDocumentClipboard({
         try {
           if (item.type === 'folder') {
             const sourceFolder =
+              item.folderData ||
               foldersToDisplay.find((f) => f.id === item.id) ||
               findCategoryInTree(safeCategoryTree, item.id);
 
@@ -280,7 +353,7 @@ export function useDocumentClipboard({
             await duplicateFolder(sourceFolder, targetFolderId, isSameParent);
             successCount++;
           } else {
-            let sourceDoc = documents.find((d) => d.id === item.id);
+            let sourceDoc = item.docData || documents.find((d) => d.id === item.id);
             if (!sourceDoc) {
               try {
                 sourceDoc = await getDocumentById(item.id);
@@ -346,81 +419,49 @@ export function useDocumentClipboard({
       if (isInput) return;
 
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      const key = e.key.toLowerCase();
 
       // 1. Phím Escape: Hủy trạng thái Cắt / Sao chép
-      if (e.key === 'Escape' && clipboard) {
+      if (key === 'escape' && clipboard) {
         setClipboard(null);
-        toast('Đã hủy thao tác di chuyển', { icon: '↩️' });
+        toast('Đã hủy thao tác clipboard', { icon: '↩️' });
         return;
       }
 
       // 2. Ctrl + X (Cut - Cắt)
-      if (isCtrlOrCmd && (e.key === 'x' || e.key === 'X')) {
+      if (isCtrlOrCmd && key === 'x') {
         if (selectedItemKeys.size === 0) return;
         e.preventDefault();
-
-        const items: ClipboardItem[] = [];
-        selectedItemKeys.forEach((key) => {
-          const [type, idStr] = key.split('-');
-          const id = Number(idStr);
-          if (type === 'folder') {
-            const f = foldersToDisplay.find((item) => item.id === id);
-            items.push({ type: 'folder', id, name: f?.name });
-          } else if (type === 'doc') {
-            const d = documents.find((item) => item.id === id);
-            items.push({ type: 'document', id, name: d?.title });
-          }
-        });
-
-        if (items.length > 0) {
-          setClipboard({ action: 'cut', items });
-          toast.success(`Đã cắt ${items.length} mục. Mở thư mục đích rồi nhấn Ctrl + V để di chuyển.`);
-        }
+        handleCutSelected();
         return;
       }
 
       // 3. Ctrl + C (Copy - Sao chép)
-      if (isCtrlOrCmd && (e.key === 'c' || e.key === 'C')) {
+      if (isCtrlOrCmd && key === 'c') {
         if (selectedItemKeys.size === 0) return;
         e.preventDefault();
-
-        const items: ClipboardItem[] = [];
-        selectedItemKeys.forEach((key) => {
-          const [type, idStr] = key.split('-');
-          const id = Number(idStr);
-          if (type === 'folder') {
-            const f = foldersToDisplay.find((item) => item.id === id);
-            items.push({ type: 'folder', id, name: f?.name });
-          } else if (type === 'doc') {
-            const d = documents.find((item) => item.id === id);
-            items.push({ type: 'document', id, name: d?.title });
-          }
-        });
-
-        if (items.length > 0) {
-          setClipboard({ action: 'copy', items });
-          toast.success(`Đã sao chép ${items.length} mục. Mở thư mục đích rồi nhấn Ctrl + V để dán.`);
-        }
+        handleCopySelected();
         return;
       }
 
       // 4. Ctrl + V (Paste - Dán)
-      if (isCtrlOrCmd && (e.key === 'v' || e.key === 'V')) {
+      if (isCtrlOrCmd && key === 'v') {
         if (!clipboard || clipboard.items.length === 0) return;
         e.preventDefault();
-
         await executePaste();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [clipboard, selectedItemKeys, foldersToDisplay, documents, executePaste]);
+  }, [clipboard, selectedItemKeys, handleCutSelected, handleCopySelected, executePaste]);
 
   return {
     clipboard,
     cutItemKeys,
     clearClipboard: () => setClipboard(null),
     executePaste,
+    handleCutSelected,
+    handleCopySelected,
   };
 }

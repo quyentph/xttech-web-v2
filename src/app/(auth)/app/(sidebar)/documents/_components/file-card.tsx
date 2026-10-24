@@ -18,6 +18,7 @@ interface FileCardProps {
   myCategoryIds?: Set<number>;
   isSelected?: boolean;
   isCut?: boolean;
+  selectedItemKeys?: Set<string>;
   onSelect?: (document: DocumentItem) => void;
   onToggleSelect?: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
@@ -40,6 +41,7 @@ export const FileCard: React.FC<FileCardProps> = ({
   myCategoryIds,
   isSelected = false,
   isCut = false,
+  selectedItemKeys,
   onSelect,
   onToggleSelect,
   onPreview,
@@ -208,7 +210,18 @@ export const FileCard: React.FC<FileCardProps> = ({
           e.preventDefault();
           return;
         }
-        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
+        const isMultiple = isSelected && (selectedItemKeys ? selectedItemKeys.size > 1 : false);
+        const items = isMultiple && selectedItemKeys
+          ? Array.from(selectedItemKeys).map((k) => {
+              const [t, id] = k.split('-');
+              return { type: t === 'folder' ? ('folder' as const) : ('document' as const), id: Number(id) };
+            })
+          : [{ type: 'document' as const, id: doc.id }];
+
+        e.dataTransfer.setData(
+          'text/plain',
+          JSON.stringify({ type: 'document', id: doc.id, items })
+        );
         e.dataTransfer.effectAllowed = 'move';
       }}
       onClick={(e) => {

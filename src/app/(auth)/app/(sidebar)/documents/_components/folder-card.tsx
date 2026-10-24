@@ -14,13 +14,19 @@ interface FolderCardProps {
   isActive?: boolean;
   isSelected?: boolean;
   isCut?: boolean;
+  selectedItemKeys?: Set<string>;
   onSelect?: (folder: DocumentCategory) => void;
   onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
   onViewDetail?: (folder: DocumentCategory) => void;
   onEdit?: (folder: DocumentCategory) => void;
   onMove?: (folder: DocumentCategory) => void;
-  onDropItem?: (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => void;
+  onDropItem?: (
+    sourceType: 'folder' | 'document',
+    sourceId: number,
+    targetFolderId: number,
+    bulkItems?: Array<{ type: 'folder' | 'document'; id: number }>
+  ) => void;
   onDelete?: (folder: DocumentCategory) => void;
   onShare?: (folder: DocumentCategory) => void;
 }
@@ -32,6 +38,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   isActive = false,
   isSelected = false,
   isCut = false,
+  selectedItemKeys,
   onSelect,
   onToggleSelect,
   onOpen,
@@ -160,7 +167,18 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           e.preventDefault();
           return;
         }
-        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'folder', id: folder.id }));
+        const isMultiple = isSelected && (selectedItemKeys ? selectedItemKeys.size > 1 : false);
+        const items = isMultiple && selectedItemKeys
+          ? Array.from(selectedItemKeys).map((k) => {
+              const [t, id] = k.split('-');
+              return { type: t === 'folder' ? ('folder' as const) : ('document' as const), id: Number(id) };
+            })
+          : [{ type: 'folder' as const, id: folder.id }];
+
+        e.dataTransfer.setData(
+          'text/plain',
+          JSON.stringify({ type: 'folder', id: folder.id, items })
+        );
         e.dataTransfer.effectAllowed = 'move';
       }}
       onDragOver={(e) => {
@@ -178,8 +196,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         setIsDragOver(false);
         try {
           const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-          if (data && data.type && data.id) {
-            onDropItem(data.type, data.id, folder.id);
+          if (data) {
+            const items = Array.isArray(data.items) && data.items.length > 0
+              ? data.items
+              : (data.type && data.id ? [{ type: data.type, id: data.id }] : []);
+            if (items.length > 0) {
+              onDropItem(data.type || items[0].type, data.id || items[0].id, folder.id, items);
+            }
           }
         } catch (err) {}
       }}

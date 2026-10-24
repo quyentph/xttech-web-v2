@@ -239,7 +239,18 @@ export const FileTable: React.FC<FileTableProps> = ({
                   e.preventDefault();
                   return;
                 }
-                e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'document', id: doc.id }));
+                const isMultiple = isSelected && (selectedKeys ? selectedKeys.size > 1 : false);
+                const items = isMultiple && selectedKeys
+                  ? Array.from(selectedKeys).map((k) => {
+                      const [t, id] = k.split('-');
+                      return { type: t === 'folder' ? ('folder' as const) : ('document' as const), id: Number(id) };
+                    })
+                  : [{ type: 'document' as const, id: doc.id }];
+
+                e.dataTransfer.setData(
+                  'text/plain',
+                  JSON.stringify({ type: 'document', id: doc.id, items })
+                );
                 e.dataTransfer.effectAllowed = 'move';
               }}
               onClick={(e) => {

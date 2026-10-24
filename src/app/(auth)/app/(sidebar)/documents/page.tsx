@@ -76,6 +76,11 @@ function MyDocumentsContent() {
     handleOpenDeleteSelected,
     handleDropItem,
     handleRemoveFromFolder,
+
+    // Clipboard Handlers
+    executePaste,
+    handleCutSelected,
+    handleCopySelected,
   } = useDocumentExplorer({ tab });
 
   return (
@@ -97,8 +102,6 @@ function MyDocumentsContent() {
         canCreate={canCreate}
         onCreateFolder={modals.actions.openCreateFolder}
         onCreateDocument={modals.actions.openCreateDoc}
-        selectedCount={selectedItemKeys.size}
-        onDeleteSelected={handleOpenDeleteSelected}
       />
 
       {/* 2. Scrollable Main Views */}
@@ -161,6 +164,9 @@ function MyDocumentsContent() {
         clipboard={clipboard}
         onClearClipboard={clearClipboard}
         onDeleteSelected={handleOpenDeleteSelected}
+        onCopySelected={handleCopySelected}
+        onCutSelected={handleCutSelected}
+        onPaste={executePaste}
       />
     </div>
   );

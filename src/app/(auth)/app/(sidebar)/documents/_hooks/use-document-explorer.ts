@@ -13,6 +13,7 @@ import {
   deleteDocumentCategory,
   deleteDocument,
   removeDocumentFromFolder,
+  getDocumentById,
 } from '@/actions/document';
 import {
   DOCUMENT_TYPE_MAP,
@@ -450,59 +451,98 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedItemKeys, allDisplayKeys, modals.state.deleteModal.isOpen, handleOpenDeleteSelected, selectAllItems]);
 
-  // Drag & Drop move item handler
+  // Drag & Drop move item handler (hỗ trợ cả kéo 1 item và kéo nhiều item đã chọn)
   const handleDropItem = useCallback(
-    async (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => {
-      if (sourceType === 'document') {
-        const doc = documents.find((d) => d.id === sourceId);
-        if (doc) {
-          const perms = getDocumentPermissions(doc, currentUser, {
-            isSharedSection,
-            canManageDocuments,
-          });
-          if (!perms.canMove && !canManageDocuments) {
-            toast.error('Chỉ chủ sở hữu tài liệu mới có quyền di chuyển');
-            return;
-          }
-        }
-      }
+    async (
+      sourceType: 'folder' | 'document',
+      sourceId: number,
+      targetFolderId: number,
+      bulkItems?: Array<{ type: 'folder' | 'document'; id: number }>
+    ) => {
+      const itemsToMove =
+        bulkItems && bulkItems.length > 0
+          ? bulkItems
+          : [{ type: sourceType, id: sourceId }];
+
+      if (itemsToMove.length === 0) return;
 
       if (isSharedSection && !canManageDocuments) {
         toast.error('Bạn không có quyền di chuyển trong mục Được chia sẻ với tôi');
         return;
       }
 
-      if (sourceType === 'folder') {
-        if (sourceId === targetFolderId) return;
-        if (isDescendant(safeCategoryTree, sourceId, targetFolderId)) {
-          toast.error('Vị trí đích không hợp lệ (không thể di chuyển vào thư mục con).');
-          return;
+      const toastId = toast.loading(
+        itemsToMove.length > 1
+          ? `Đang di chuyển ${itemsToMove.length} mục...`
+          : 'Đang di chuyển...'
+      );
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const item of itemsToMove) {
+        try {
+          if (item.type === 'folder') {
+            if (item.id === targetFolderId) {
+              errorCount++;
+              continue;
+            }
+            if (isDescendant(safeCategoryTree, item.id, targetFolderId)) {
+              errorCount++;
+              continue;
+            }
+            await updateDocumentCategory(item.id, { parentId: targetFolderId });
+            successCount++;
+          } else {
+            let doc = documents.find((d) => d.id === item.id);
+            if (!doc) {
+              try {
+                doc = await getDocumentById(item.id);
+              } catch {
+                // ignore
+              }
+            }
+
+            if (doc) {
+              const perms = getDocumentPermissions(doc, currentUser, {
+                isSharedSection,
+                canManageDocuments,
+              });
+              if (!perms.canMove && !canManageDocuments) {
+                errorCount++;
+                continue;
+              }
+
+              await updateDocument(item.id, {
+                title: doc.title,
+                documentType: doc.documentType || 'other',
+                status: doc.status || 'draft',
+                shareScope: doc.shareScope || 'private',
+                categoryId: targetFolderId,
+              });
+              successCount++;
+            } else {
+              await updateDocument(item.id, { categoryId: targetFolderId } as any);
+              successCount++;
+            }
+          }
+        } catch {
+          errorCount++;
         }
       }
 
-      try {
-        if (sourceType === 'folder') {
-          await updateDocumentCategory(sourceId, { parentId: targetFolderId });
-          toast.success('Di chuyển thư mục thành công');
-        } else {
-          const doc = documents.find((d) => d.id === sourceId);
-          if (doc) {
-            await updateDocument(sourceId, {
-              title: doc.title,
-              documentType: doc.documentType,
-              status: doc.status,
-              shareScope: doc.shareScope,
-              categoryId: targetFolderId,
-            });
-            toast.success('Di chuyển tài liệu thành công');
-          } else {
-            await updateDocument(sourceId, { categoryId: targetFolderId });
-            toast.success('Di chuyển tài liệu thành công');
-          }
-        }
+      if (successCount > 0) {
+        const errorMsg = errorCount > 0 ? ` (${errorCount} mục thất bại)` : '';
+        toast.success(
+          itemsToMove.length > 1
+            ? `Đã di chuyển thành công ${successCount} mục!${errorMsg}`
+            : 'Di chuyển thành công!',
+          { id: toastId }
+        );
         invalidateDocumentQueries(queryClient);
-      } catch (error: any) {
-        showErrorToast(error, 'Lỗi khi di chuyển');
+        clearSelection();
+      } else {
+        toast.error('Không thể di chuyển các mục đã chọn', { id: toastId });
       }
     },
     [
@@ -513,11 +553,19 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
       safeCategoryTree,
       isDescendant,
       queryClient,
+      clearSelection,
     ],
   );
 
   // 10. Keyboard Clipboard Hook (Ctrl + X, Ctrl + C, Ctrl + V)
-  const { cutItemKeys, clipboard, clearClipboard } = useDocumentClipboard({
+  const {
+    cutItemKeys,
+    clipboard,
+    clearClipboard,
+    executePaste,
+    handleCutSelected,
+    handleCopySelected,
+  } = useDocumentClipboard({
     selectedItemKeys,
     currentFolderId,
     foldersToDisplay,
@@ -565,6 +613,9 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     cutItemKeys,
     clipboard,
     clearClipboard,
+    executePaste,
+    handleCutSelected,
+    handleCopySelected,
 
     // Modals
     modals,

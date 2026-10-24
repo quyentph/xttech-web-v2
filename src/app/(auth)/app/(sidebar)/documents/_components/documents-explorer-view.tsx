@@ -28,7 +28,12 @@ interface DocumentsExplorerViewProps {
   cutItemKeys?: Set<string>;
   onClearSelection?: () => void;
   onNavigateFolder: (id: number | null) => void;
-  onDropItem: (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => void;
+  onDropItem: (
+    sourceType: 'folder' | 'document',
+    sourceId: number,
+    targetFolderId: number,
+    bulkItems?: Array<{ type: 'folder' | 'document'; id: number }>
+  ) => void;
   onRemoveFromFolder: (doc: DocumentItem) => void;
   modals: DocumentModalsHook;
 }
@@ -103,6 +108,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               folder={folder}
               isSharedSection={isSharedSection}
               isSelected={selectedItemKeys.has(`folder-${folder.id}`)}
+              selectedItemKeys={selectedItemKeys}
               isCut={cutItemKeys?.has(`folder-${folder.id}`)}
               onSelect={() => selectSingleItem?.('folder', folder.id)}
               onToggleSelect={() => toggleSelectItem('folder', folder.id)}
@@ -126,6 +132,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               currentFolderId={currentFolderId}
               myCategoryIds={allMyCategoryIds}
               isSelected={selectedItemKeys.has(`doc-${doc.id}`)}
+              selectedItemKeys={selectedItemKeys}
               isCut={cutItemKeys?.has(`doc-${doc.id}`)}
               onSelect={() => selectSingleItem?.('document', doc.id)}
               onToggleSelect={() => toggleSelectItem('document', doc.id)}
