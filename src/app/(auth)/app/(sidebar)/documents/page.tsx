@@ -35,11 +35,14 @@ function MyDocumentsContent() {
     hasActiveFilters,
     handleResetFilters,
 
-    // Selection
+    // Selection & Clipboard
     selectedItemKeys,
     toggleSelectItem,
     selectSingleItem,
     clearSelection,
+    cutItemKeys,
+    clipboard,
+    clearClipboard,
 
     // Modals
     modals,
@@ -122,6 +125,7 @@ function MyDocumentsContent() {
           selectedItemKeys={selectedItemKeys}
           toggleSelectItem={toggleSelectItem}
           selectSingleItem={selectSingleItem}
+          cutItemKeys={cutItemKeys}
           onClearSelection={clearSelection}
           onNavigateFolder={setCurrentFolderId}
           onDropItem={handleDropItem}
@@ -141,8 +145,13 @@ function MyDocumentsContent() {
         onRefetchDocuments={refetchDocuments}
       />
 
-      {/* 4. Floating Multi-Selection Bar */}
-      <FloatingSelectionBar selectedCount={selectedItemKeys.size} onClearSelection={clearSelection} />
+      {/* 4. Floating Multi-Selection & Clipboard Bar */}
+      <FloatingSelectionBar
+        selectedCount={selectedItemKeys.size}
+        onClearSelection={clearSelection}
+        clipboard={clipboard}
+        onClearClipboard={clearClipboard}
+      />
     </div>
   );
 }

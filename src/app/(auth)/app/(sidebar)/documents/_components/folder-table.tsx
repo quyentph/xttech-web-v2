@@ -15,6 +15,7 @@ interface FolderTableProps {
   showHeader?: boolean;
   activeFolderId?: number | null;
   selectedKeys?: Set<string>;
+  cutKeys?: Set<string>;
   onSelect?: (folder: DocumentCategory) => void;
   onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
@@ -52,6 +53,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   showHeader = false,
   activeFolderId,
   selectedKeys,
+  cutKeys,
   onSelect,
   onToggleSelect,
   onOpen,
@@ -195,6 +197,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
 
           const isActive = activeFolderId === folder.id;
           const isSelected = selectedKeys?.has(`folder-${folder.id}`) ?? false;
+          const isCut = cutKeys?.has(`folder-${folder.id}`) ?? false;
 
           return (
             <div
@@ -261,6 +264,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
                   : dragOverFolderId === folder.id
                   ? 'bg-primary/20 ring-2 ring-primary/50'
                   : 'hover:bg-[#f1f3f4] focus-visible:bg-slate-50',
+                isCut && 'opacity-50 border-dashed border-slate-400',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >

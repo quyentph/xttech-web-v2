@@ -17,6 +17,7 @@ interface FileTableProps {
   currentFolderId?: number | null;
   myCategoryIds?: Set<number>;
   selectedKeys?: Set<string>;
+  cutKeys?: Set<string>;
   onSelect?: (document: DocumentItem) => void;
   onToggleSelect?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
@@ -60,6 +61,7 @@ export const FileTable: React.FC<FileTableProps> = ({
   myCategoryIds,
   showHeader = true,
   selectedKeys,
+  cutKeys,
   onSelect,
   onToggleSelect,
   onView,
@@ -226,6 +228,7 @@ export const FileTable: React.FC<FileTableProps> = ({
           ];
 
           const isSelected = selectedKeys?.has(`doc-${doc.id}`) ?? false;
+          const isCut = cutKeys?.has(`doc-${doc.id}`) ?? false;
 
           return (
             <div
@@ -278,6 +281,7 @@ export const FileTable: React.FC<FileTableProps> = ({
               className={cn(
                 'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800 outline-none',
                 isSelected && 'bg-primary/10 border-l-4 border-l-primary ring-1 ring-inset ring-primary/20 text-primary font-medium',
+                isCut && 'opacity-50 border-dashed border-slate-400',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >

@@ -27,6 +27,7 @@ import {
   getDocumentPermissions,
 } from '@/app/(auth)/app/(sidebar)/documents/_utils/doc-helpers';
 import { useDocumentSelection } from '@/app/(auth)/app/(sidebar)/documents/_hooks/use-document-selection';
+import { useDocumentClipboard } from '@/app/(auth)/app/(sidebar)/documents/_hooks/use-document-clipboard';
 import { useFolderTree } from '@/app/(auth)/app/(sidebar)/documents/_hooks/use-folder-tree';
 import { useDocumentModals } from '@/app/(auth)/app/(sidebar)/documents/_hooks/use-document-modals';
 import { DOC_QUERY_KEYS, invalidateDocumentQueries } from '@/app/(auth)/app/(sidebar)/documents/_utils/doc-query-keys';
@@ -404,6 +405,18 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     ],
   );
 
+  // 10. Keyboard Clipboard Hook (Ctrl + X, Ctrl + C, Ctrl + V)
+  const { cutItemKeys, clipboard, clearClipboard } = useDocumentClipboard({
+    selectedItemKeys,
+    currentFolderId,
+    foldersToDisplay,
+    documents,
+    safeCategoryTree,
+    isDescendant,
+    clearSelection,
+    isSharedSection,
+  });
+
   return {
     // Navigation & View
     currentFolderId,
@@ -429,11 +442,14 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     setFilterUnreadOnly,
     unreadCount,
 
-    // Selection
+    // Selection & Clipboard
     selectedItemKeys,
     toggleSelectItem,
     selectSingleItem,
     clearSelection,
+    cutItemKeys,
+    clipboard,
+    clearClipboard,
 
     // Modals
     modals,

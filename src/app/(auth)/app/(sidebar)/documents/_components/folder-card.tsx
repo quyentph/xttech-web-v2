@@ -13,6 +13,7 @@ interface FolderCardProps {
   isSharedSection?: boolean;
   isActive?: boolean;
   isSelected?: boolean;
+  isCut?: boolean;
   onSelect?: (folder: DocumentCategory) => void;
   onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
@@ -30,6 +31,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   isSharedSection = false,
   isActive = false,
   isSelected = false,
+  isCut = false,
   onSelect,
   onToggleSelect,
   onOpen,
@@ -214,6 +216,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           : isDragOver
           ? 'bg-primary/20 border-primary ring-2 ring-primary/50'
           : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs focus-visible:ring-2 focus-visible:ring-primary/50',
+        isCut && 'opacity-50 border-dashed border-slate-400',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={folder.name}

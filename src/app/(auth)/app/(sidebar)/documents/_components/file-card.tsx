@@ -17,6 +17,7 @@ interface FileCardProps {
   currentFolderId?: number | null;
   myCategoryIds?: Set<number>;
   isSelected?: boolean;
+  isCut?: boolean;
   onSelect?: (document: DocumentItem) => void;
   onToggleSelect?: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
@@ -38,6 +39,7 @@ export const FileCard: React.FC<FileCardProps> = ({
   currentFolderId,
   myCategoryIds,
   isSelected = false,
+  isCut = false,
   onSelect,
   onToggleSelect,
   onPreview,
@@ -250,6 +252,7 @@ export const FileCard: React.FC<FileCardProps> = ({
         isSelected
           ? 'bg-primary/10 border-primary ring-2 ring-primary ring-offset-2 ring-offset-white shadow-sm text-primary font-medium'
           : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs focus-visible:ring-2 focus-visible:ring-primary/50',
+        isCut && 'opacity-50 border-dashed border-slate-400',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={`${doc.title} (${doc.code})`}
