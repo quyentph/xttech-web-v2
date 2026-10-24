@@ -10,6 +10,9 @@ import { Modal, Button, Input, Select, MultiSelect, Textarea, Checkbox } from '@
 import { usePermission } from '@/hooks';
 import type { DocumentItem } from '@/types';
 import { DOCUMENT_TYPE_MAP, RULE_FILTER_TYPES } from '@/types';
+import { bulkUploadDocuments } from '@/actions/document';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { useRulesShareOptions } from '../_hooks/use-rules-share-options';
 import { useRuleSave, type RuleFormValues } from '../_hooks/use-rule-save';
 import { RuleFilePicker } from './rule-file-picker';
@@ -96,9 +99,13 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
   onSaved,
 }) => {
   const { user } = usePermission();
-  const [file, setFile] = useState<File | null>(null);
+  const queryClient = useQueryClient();
+  const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [isBulkUploading, setIsBulkUploading] = useState(false);
   const isSubmitIntentRef = useRef(false);
+
+  const isBulkMode = files.length > 1;
 
   const { approverOptions, employeeOptions, departmentOptions } = useRulesShareOptions(isOpen, user?.id);
 
@@ -124,7 +131,7 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
     reset(buildDefaults(doc, supersedingDoc));
-    setFile(null);
+    setFiles([]);
     setFileError(null);
   }, [isOpen, doc, supersedingDoc, reset]);
 
@@ -142,11 +149,35 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
   const selectedDeptIds = Array.isArray(rawDeptIds) ? rawDeptIds : EMPTY_ARRAY;
   const selectedUserIds = Array.isArray(rawUserIds) ? rawUserIds : EMPTY_ARRAY;
 
-  const onValid = (values: RuleFormValues) => {
-    if (!doc && !file) {
-      setFileError('Vui lòng chọn tệp văn bản đính kèm');
+  const onValid = async (values: RuleFormValues) => {
+    if (!doc && files.length === 0) {
+      setFileError('Vui lòng chọn ít nhất một tệp văn bản đính kèm');
       return;
     }
+
+    // Nếu chọn nhiều file khi giữ Ctrl -> Tải lên hàng loạt bản nháp cơ chế
+    if (files.length > 1) {
+      setIsBulkUploading(true);
+      const toastId = toast.loading(`Đang tải lên ${files.length} cơ chế...`);
+      try {
+        await bulkUploadDocuments({
+          files,
+          shareScope: values.shareScope,
+        });
+        toast.success(`Đã tải lên thành công ${files.length} cơ chế!`, { id: toastId });
+        queryClient.invalidateQueries({ queryKey: ['rules'] });
+        queryClient.invalidateQueries({ queryKey: ['documents'] });
+        onSaved();
+        onClose();
+      } catch (err: any) {
+        toast.error(err.message || 'Lỗi khi tải lên hàng loạt cơ chế', { id: toastId });
+      } finally {
+        setIsBulkUploading(false);
+      }
+      return;
+    }
+
+    const singleFile = files[0] ?? null;
 
     if (isSubmitIntentRef.current) {
       if (!values.approverId) {
@@ -163,10 +194,10 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
       }
     }
 
-    saveMutation.mutate({ values, file, existingDoc: doc, isSubmitting: isSubmitIntentRef.current });
+    saveMutation.mutate({ values, file: singleFile, existingDoc: doc, isSubmitting: isSubmitIntentRef.current });
   };
 
-  const isLoading = saveMutation.isPending;
+  const isLoading = saveMutation.isPending || isBulkUploading;
   const isSubmittingLoading = isLoading && Boolean(saveMutation.variables?.isSubmitting);
 
   return (
@@ -209,28 +240,43 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
           </div>
         )}
         <RuleFilePicker
-          file={file}
+          files={files}
           existingFileName={doc?.currentVersion?.fileName}
           isRequired={!doc}
           error={fileError}
           onChange={(selected) => {
-            setFile(selected);
+            setFiles(selected);
             setFileError(null);
-            if (selected && !watch('title')) setValue('title', selected.name.replace(/\.[^/.]+$/, ''));
+            if (selected.length === 1 && !watch('title')) {
+              setValue('title', selected[0].name.replace(/\.[^/.]+$/, ''));
+            }
           }}
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Input label="Tiêu đề cơ chế *" fullWidth {...register('title')} error={errors.title?.message} />
-          <Select
-            label="Loại cơ chế *"
-            fullWidth
-            value={watch('documentType')}
-            onChange={(e) => setValue('documentType', e.target.value, { shouldValidate: true })}
-            options={TYPE_OPTIONS}
-            error={errors.documentType?.message}
-          />
-        </div>
+        {!isBulkMode ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Input label="Tiêu đề cơ chế *" fullWidth {...register('title')} error={errors.title?.message} />
+            <Select
+              label="Loại cơ chế *"
+              fullWidth
+              value={watch('documentType')}
+              onChange={(e) => setValue('documentType', e.target.value, { shouldValidate: true })}
+              options={TYPE_OPTIONS}
+              error={errors.documentType?.message}
+            />
+          </div>
+        ) : (
+          <div>
+            <Select
+              label="Loại cơ chế áp dụng chung *"
+              fullWidth
+              value={watch('documentType')}
+              onChange={(e) => setValue('documentType', e.target.value, { shouldValidate: true })}
+              options={TYPE_OPTIONS}
+              error={errors.documentType?.message}
+            />
+          </div>
+        )}
 
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">Trích yếu nội dung</label>
@@ -322,31 +368,46 @@ export const RuleEditorModal: React.FC<RuleEditorModalProps> = ({
           <Button variant="outline" size="sm" onClick={onClose} disabled={isLoading}>
             Hủy
           </Button>
-          <Button
-            id="rule-save-draft"
-            variant="outline"
-            size="sm"
-            type="submit"
-            disabled={isLoading}
-            loading={isLoading && !isSubmittingLoading}
-            onClick={() => {
-              isSubmitIntentRef.current = false;
-            }}
-          >
-            Lưu nháp
-          </Button>
-          <Button
-            id="rule-save-submit"
-            size="sm"
-            type="submit"
-            disabled={isLoading}
-            loading={isSubmittingLoading}
-            onClick={() => {
-              isSubmitIntentRef.current = true;
-            }}
-          >
-            Lưu &amp; gửi duyệt
-          </Button>
+
+          {isBulkMode ? (
+            <Button
+              id="rule-save-bulk"
+              size="sm"
+              type="submit"
+              disabled={isLoading}
+              loading={isLoading}
+            >
+              Lưu {files.length} cơ chế (Bản nháp)
+            </Button>
+          ) : (
+            <>
+              <Button
+                id="rule-save-draft"
+                variant="outline"
+                size="sm"
+                type="submit"
+                disabled={isLoading}
+                loading={isLoading && !isSubmittingLoading}
+                onClick={() => {
+                  isSubmitIntentRef.current = false;
+                }}
+              >
+                Lưu nháp
+              </Button>
+              <Button
+                id="rule-save-submit"
+                size="sm"
+                type="submit"
+                disabled={isLoading}
+                loading={isSubmittingLoading}
+                onClick={() => {
+                  isSubmitIntentRef.current = true;
+                }}
+              >
+                Lưu &amp; gửi duyệt
+              </Button>
+            </>
+          )}
         </div>
       </form>
     </Modal>

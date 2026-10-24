@@ -93,7 +93,7 @@ export const DocumentsToolbar: React.FC<DocumentsToolbarProps> = ({
           </div>
         </div>
 
-        {/* Right: Action buttons (Ẩn khi ở mục Được chia sẻ với tôi đối với user thường) */}
+        {/* Right: Action buttons */}
         {canCreate && (
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Button

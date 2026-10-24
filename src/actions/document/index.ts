@@ -12,6 +12,8 @@ import type {
   ShareFolderPayload,
   DocumentRecipientsResponse,
   PublishDocumentPayload,
+  BulkUploadDocumentsPayload,
+  BulkUploadDocumentsResponse,
 } from '@/types';
 
 export * from './rules';
@@ -191,6 +193,42 @@ export const createDocument = async (formData: FormData): Promise<DocumentItem> 
     return res.data?.data ?? res.data;
   } catch (error: any) {
     throw new Error(extractErrorMessage(error, 'Không thể tạo mới tài liệu'));
+  }
+};
+
+// Tải lên hàng loạt tài liệu hoặc toàn bộ thư mục giữ nguyên cấu trúc (Bulk Upload)
+export const bulkUploadDocuments = async (
+  payload: BulkUploadDocumentsPayload,
+): Promise<BulkUploadDocumentsResponse> => {
+  try {
+    const formData = new FormData();
+
+    // 1. Thêm danh sách file vào multipart/form-data
+    payload.files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    // 2. Relative paths (nếu tải lên cả thư mục giữ nguyên cấu trúc)
+    if (payload.relativePaths && payload.relativePaths.length > 0) {
+      formData.append('relative_paths', JSON.stringify(payload.relativePaths));
+    }
+
+    // 3. Category ID thư mục đích
+    if (payload.categoryId !== undefined && payload.categoryId !== null) {
+      formData.append('category_id', String(payload.categoryId));
+    }
+
+    // 4. Phạm vi chia sẻ (private / all / department)
+    formData.append('share_scope', payload.shareScope || 'private');
+
+    const res = await api.post('/api/v1/documents/bulk-upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data?.data ?? res.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, 'Không thể tải lên hàng loạt tài liệu'));
   }
 };
 

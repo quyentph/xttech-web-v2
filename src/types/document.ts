@@ -290,3 +290,19 @@ export interface ShareFolderPayload {
   permission: 'view' | 'edit';
 }
 
+export interface BulkUploadDocumentsPayload {
+  files: File[];
+  relativePaths?: string[];
+  categoryId?: number | null;
+  shareScope?: 'private' | 'all' | 'department' | string;
+}
+
+export interface BulkUploadDocumentsResponse {
+  message?: string;
+  total?: number;
+  successCount?: number;
+  failedCount?: number;
+  createdDocuments?: DocumentItem[];
+  createdCategories?: DocumentCategory[];
+  [key: string]: any;
+}
