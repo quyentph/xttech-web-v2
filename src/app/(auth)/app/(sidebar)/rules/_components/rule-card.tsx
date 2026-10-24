@@ -26,6 +26,8 @@ import { RuleTypeBadge, formatRuleDate, getDaysUntilExpiry } from './rule-badges
 export interface RuleCardProps {
   doc: DocumentItem;
   context?: RuleActionContext;
+  isFocused?: boolean;
+  onFocus?: () => void;
   onPreview: (doc: DocumentItem) => void;
   onOpenDetail: (doc: DocumentItem) => void;
   onEdit?: (doc: DocumentItem) => void;
@@ -144,6 +146,8 @@ const CardReadCompliance: React.FC<{ doc: DocumentItem }> = ({ doc }) => {
 export const RuleCard: React.FC<RuleCardProps> = ({
   doc,
   context,
+  isFocused = false,
+  onFocus,
   onPreview,
   onOpenDetail,
   onEdit,
@@ -179,10 +183,28 @@ export const RuleCard: React.FC<RuleCardProps> = ({
 
   return (
     <div
-      onClick={() => onPreview(doc)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onFocus?.();
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        onPreview(doc);
+      }}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          onPreview(doc);
+        }
+      }}
       className={cn(
-        'group relative flex flex-col justify-between rounded-xl border bg-white p-3.5 transition-all cursor-pointer hover:shadow-md hover:border-primary/40',
-        isUnread ? 'border-primary/40 bg-sky-50/15' : 'border-slate-200',
+        'group relative flex flex-col justify-between rounded-xl border bg-white p-3.5 transition-all cursor-pointer outline-none',
+        isFocused
+          ? 'border-primary ring-2 ring-primary ring-offset-2 ring-offset-white shadow-md bg-primary/[0.03]'
+          : isUnread
+          ? 'border-primary/40 bg-sky-50/15 hover:shadow-md hover:border-primary/60'
+          : 'border-slate-200 hover:shadow-md hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
       <div className="flex flex-col gap-2.5">

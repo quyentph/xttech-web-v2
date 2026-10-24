@@ -26,10 +26,26 @@ const TreeNode: React.FC<{
     <div className="select-none text-xs">
       <div
         onClick={() => onSelectCategory(node.id)}
+        onDoubleClick={(e) => {
+          e.stopPropagation();
+          if (hasChildren) {
+            setIsOpen((prev) => !prev);
+          }
+        }}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            if (hasChildren) {
+              setIsOpen((prev) => !prev);
+            }
+          }
+        }}
         style={{ paddingLeft: `${level * 14 + 8}px` }}
         className={cn(
-          'flex items-center gap-1.5 py-1.5 pr-2 rounded-lg cursor-pointer transition-colors group',
-          isActive ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+          'flex items-center gap-1.5 py-1.5 pr-2 rounded-lg cursor-pointer transition-all duration-150 group outline-none',
+          isActive
+            ? 'bg-primary/10 text-primary font-semibold ring-2 ring-primary/50 shadow-2xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-primary/40',
         )}
       >
         {/* Toggle chevron */}

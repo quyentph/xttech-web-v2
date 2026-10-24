@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FileSearch } from 'lucide-react';
 import { TablePagination } from '@/components/table';
 import type { DocumentItem } from '@/types';
@@ -58,10 +58,14 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
 }) => {
   const currentPage = limit > 0 ? Math.floor(offset / limit) + 1 : 1;
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
+  const [focusedDocId, setFocusedDocId] = useState<number | null>(null);
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-slate-50/30">
-      <div className="flex-1 overflow-auto px-4 pt-3 custom-scrollbar">
+      <div
+        className="flex-1 overflow-auto px-4 pt-3 custom-scrollbar"
+        onClick={() => setFocusedDocId(null)}
+      >
         {isLoading && items.length === 0 ? (
           <SkeletonCards />
         ) : items.length > 0 ? (
@@ -71,6 +75,8 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
                 key={doc.id}
                 doc={doc}
                 context={context}
+                isFocused={focusedDocId === doc.id}
+                onFocus={() => setFocusedDocId(doc.id)}
                 onPreview={onPreview}
                 onOpenDetail={onOpenDetail}
                 onEdit={onEdit}

@@ -38,6 +38,7 @@ function MyDocumentsContent() {
     // Selection
     selectedItemKeys,
     toggleSelectItem,
+    selectSingleItem,
     clearSelection,
 
     // Modals
@@ -120,6 +121,8 @@ function MyDocumentsContent() {
           canDeleteFolder={canDeleteCurrentFolder}
           selectedItemKeys={selectedItemKeys}
           toggleSelectItem={toggleSelectItem}
+          selectSingleItem={selectSingleItem}
+          onClearSelection={clearSelection}
           onNavigateFolder={setCurrentFolderId}
           onDropItem={handleDropItem}
           onRemoveFromFolder={handleRemoveFromFolder}

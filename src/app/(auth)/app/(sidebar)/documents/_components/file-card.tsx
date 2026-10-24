@@ -17,6 +17,7 @@ interface FileCardProps {
   currentFolderId?: number | null;
   myCategoryIds?: Set<number>;
   isSelected?: boolean;
+  onSelect?: (document: DocumentItem) => void;
   onToggleSelect?: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
@@ -37,6 +38,7 @@ export const FileCard: React.FC<FileCardProps> = ({
   currentFolderId,
   myCategoryIds,
   isSelected = false,
+  onSelect,
   onToggleSelect,
   onPreview,
   onView,
@@ -208,12 +210,20 @@ export const FileCard: React.FC<FileCardProps> = ({
         e.dataTransfer.effectAllowed = 'move';
       }}
       onClick={(e) => {
+        e.stopPropagation();
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          e.stopPropagation();
           onToggleSelect?.(doc);
           return;
         }
+        if (onSelect) {
+          onSelect(doc);
+        } else {
+          onToggleSelect?.(doc);
+        }
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
         if (onPreview) {
           onPreview(doc);
         } else if (downloadUrl) {
@@ -222,11 +232,24 @@ export const FileCard: React.FC<FileCardProps> = ({
           onView(doc);
         }
       }}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (onPreview) {
+            onPreview(doc);
+          } else if (downloadUrl) {
+            window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+          } else {
+            onView(doc);
+          }
+        }
+      }}
       className={cn(
-        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
+        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150 outline-none',
         isSelected
-          ? 'bg-primary/15 border-primary shadow-xs ring-2 ring-primary/60 text-primary'
-          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+          ? 'bg-primary/10 border-primary ring-2 ring-primary ring-offset-2 ring-offset-white shadow-sm text-primary font-medium'
+          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs focus-visible:ring-2 focus-visible:ring-primary/50',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={`${doc.title} (${doc.code})`}

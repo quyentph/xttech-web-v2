@@ -55,7 +55,7 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
   }, [tab, defaultFolderId]);
 
   // 2. Selection Hook
-  const { selectedItemKeys, toggleSelectItem, clearSelection } = useDocumentSelection(currentFolderId, tab);
+  const { selectedItemKeys, toggleSelectItem, selectSingleItem, clearSelection } = useDocumentSelection(currentFolderId, tab);
 
   // 3. Search & Filters (Đồng bộ URL qua useQueryParam)
   const [rawSearch, setRawSearch] = useQueryParam('search', '');
@@ -432,6 +432,7 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     // Selection
     selectedItemKeys,
     toggleSelectItem,
+    selectSingleItem,
     clearSelection,
 
     // Modals

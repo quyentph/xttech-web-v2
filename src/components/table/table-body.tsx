@@ -5,20 +5,44 @@ export function TableBody<T>({
   columns,
   select,
   onRowClick,
+  onRowDoubleClick,
+  focusedRowKey,
+  getRowKey,
 }: {
   data: T[];
   columns: ITableColumn<T>[];
   select: boolean;
   onRowClick?: (row: T) => void;
+  onRowDoubleClick?: (row: T) => void;
+  focusedRowKey?: string | number | null;
+  getRowKey?: (row: T, index: number) => string | number;
 }) {
   return (
     <tbody>
       {data?.map((row: T, index: number) => {
+        const isFocused =
+          focusedRowKey !== undefined && focusedRowKey !== null && getRowKey
+            ? getRowKey(row, index) === focusedRowKey
+            : false;
+
         return (
           <tr
             key={index}
             onClick={() => onRowClick?.(row)}
-            className={`group hover:bg-slate-50/60 border-b border-slate-200 ${onRowClick ? 'cursor-pointer' : ''}`}
+            onDoubleClick={() => onRowDoubleClick?.(row)}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onRowDoubleClick?.(row);
+              }
+            }}
+            className={`group border-b border-slate-200 transition-colors outline-none ${
+              onRowClick || onRowDoubleClick ? 'cursor-pointer' : ''
+            } ${
+              isFocused
+                ? 'bg-primary/10 border-l-4 border-l-primary text-primary font-medium'
+                : 'hover:bg-slate-50/60 focus-visible:bg-slate-50'
+            }`}
           >
             {/* Render checkbox */}
             {select && (

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FilePen, FileSearch, ShieldCheck, Trash2 } from 'lucide-react';
 import { TableHeader, TableBody, TablePagination, type ITableColumn } from '@/components/table';
 import { cn } from '@/utils';
@@ -88,6 +88,7 @@ export const RulesTable: React.FC<RulesTableProps> = ({
 }) => {
   const currentPage = limit > 0 ? Math.floor(offset / limit) + 1 : 1;
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
+  const [focusedRowId, setFocusedRowId] = useState<number | null>(null);
 
   const columns = useMemo<ITableColumn<DocumentItem>[]>(() => [
     {
@@ -223,7 +224,10 @@ export const RulesTable: React.FC<RulesTableProps> = ({
                   data={items}
                   columns={columns}
                   select={false}
-                  onRowClick={onOpen}
+                  onRowClick={(row) => setFocusedRowId(row.id)}
+                  onRowDoubleClick={onOpen}
+                  focusedRowKey={focusedRowId}
+                  getRowKey={(row) => row.id}
                 />
               )}
             </table>

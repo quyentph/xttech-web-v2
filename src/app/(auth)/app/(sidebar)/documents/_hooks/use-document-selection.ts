@@ -16,6 +16,11 @@ export function useDocumentSelection(currentFolderId: number | null, tab: string
     });
   }, []);
 
+  const selectSingleItem = useCallback((type: 'folder' | 'document', id: number) => {
+    const key = `${type === 'folder' ? 'folder' : 'doc'}-${id}`;
+    setSelectedItemKeys(new Set([key]));
+  }, []);
+
   const clearSelection = useCallback(() => {
     setSelectedItemKeys(new Set());
   }, []);
@@ -44,6 +49,7 @@ export function useDocumentSelection(currentFolderId: number | null, tab: string
   return {
     selectedItemKeys,
     toggleSelectItem,
+    selectSingleItem,
     clearSelection,
   };
 }

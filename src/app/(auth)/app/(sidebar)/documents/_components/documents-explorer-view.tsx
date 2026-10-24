@@ -24,6 +24,8 @@ interface DocumentsExplorerViewProps {
   canDeleteFolder: boolean;
   selectedItemKeys: Set<string>;
   toggleSelectItem: (type: 'folder' | 'document', id: number) => void;
+  selectSingleItem?: (type: 'folder' | 'document', id: number) => void;
+  onClearSelection?: () => void;
   onNavigateFolder: (id: number | null) => void;
   onDropItem: (sourceType: 'folder' | 'document', sourceId: number, targetFolderId: number) => void;
   onRemoveFromFolder: (doc: DocumentItem) => void;
@@ -45,6 +47,8 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
   canDeleteFolder,
   selectedItemKeys,
   toggleSelectItem,
+  selectSingleItem,
+  onClearSelection,
   onNavigateFolder,
   onDropItem,
   onRemoveFromFolder,
@@ -76,7 +80,12 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div
+      className="space-y-3 min-h-[300px]"
+      onClick={() => {
+        onClearSelection?.();
+      }}
+    >
       {isLoadingDocuments ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -92,6 +101,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               folder={folder}
               isSharedSection={isSharedSection}
               isSelected={selectedItemKeys.has(`folder-${folder.id}`)}
+              onSelect={() => selectSingleItem?.('folder', folder.id)}
               onToggleSelect={() => toggleSelectItem('folder', folder.id)}
               locationName={locationName}
               onOpen={(f) => onNavigateFolder(f.id)}
@@ -113,6 +123,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               currentFolderId={currentFolderId}
               myCategoryIds={allMyCategoryIds}
               isSelected={selectedItemKeys.has(`doc-${doc.id}`)}
+              onSelect={() => selectSingleItem?.('document', doc.id)}
               onToggleSelect={() => toggleSelectItem('document', doc.id)}
               locationName={
                 currentFolder
@@ -138,6 +149,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               folders={foldersToDisplay}
               isSharedSection={isSharedSection}
               selectedKeys={selectedItemKeys}
+              onSelect={(f) => selectSingleItem?.('folder', f.id)}
               onToggleSelect={(f) => toggleSelectItem('folder', f.id)}
               locationName={locationName}
               showHeader={true}
@@ -159,6 +171,7 @@ export const DocumentsExplorerView: React.FC<DocumentsExplorerViewProps> = ({
               currentFolderId={currentFolderId}
               myCategoryIds={allMyCategoryIds}
               selectedKeys={selectedItemKeys}
+              onSelect={(d) => selectSingleItem?.('document', d.id)}
               onToggleSelect={(d) => toggleSelectItem('document', d.id)}
               currentFolderName={locationName}
               showHeader={foldersToDisplay.length === 0}

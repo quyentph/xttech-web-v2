@@ -15,6 +15,7 @@ interface FolderTableProps {
   showHeader?: boolean;
   activeFolderId?: number | null;
   selectedKeys?: Set<string>;
+  onSelect?: (folder: DocumentCategory) => void;
   onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
   onViewDetail?: (folder: DocumentCategory) => void;
@@ -51,6 +52,7 @@ export const FolderTable: React.FC<FolderTableProps> = ({
   showHeader = false,
   activeFolderId,
   selectedKeys,
+  onSelect,
   onToggleSelect,
   onOpen,
   onViewDetail,
@@ -227,23 +229,38 @@ export const FolderTable: React.FC<FolderTableProps> = ({
                 } catch (err) {}
               }}
               onClick={(e) => {
+                e.stopPropagation();
                 if (e.ctrlKey || e.metaKey) {
                   e.preventDefault();
-                  e.stopPropagation();
                   onToggleSelect?.(folder);
                   return;
                 }
+                if (onSelect) {
+                  onSelect(folder);
+                } else {
+                  onToggleSelect?.(folder);
+                }
+              }}
+              onDoubleClick={(e) => {
+                e.stopPropagation();
                 onOpen(folder);
               }}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  onOpen(folder);
+                }
+              }}
               className={cn(
-                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 transition-colors cursor-pointer text-xs text-slate-800',
+                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 transition-colors cursor-pointer text-xs text-slate-800 outline-none',
                 isSelected
-                  ? 'bg-primary/15 border-l-2 border-primary text-primary font-medium'
+                  ? 'bg-primary/10 border-l-4 border-l-primary ring-1 ring-inset ring-primary/20 text-primary font-medium'
                   : isActive
                   ? 'bg-primary/10 border-l-2 border-primary text-primary'
                   : dragOverFolderId === folder.id
                   ? 'bg-primary/20 ring-2 ring-primary/50'
-                  : 'hover:bg-[#f1f3f4]',
+                  : 'hover:bg-[#f1f3f4] focus-visible:bg-slate-50',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >

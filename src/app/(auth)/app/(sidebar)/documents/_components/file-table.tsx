@@ -17,6 +17,7 @@ interface FileTableProps {
   currentFolderId?: number | null;
   myCategoryIds?: Set<number>;
   selectedKeys?: Set<string>;
+  onSelect?: (document: DocumentItem) => void;
   onToggleSelect?: (document: DocumentItem) => void;
   onView: (document: DocumentItem) => void;
   onPreview?: (document: DocumentItem) => void;
@@ -59,6 +60,7 @@ export const FileTable: React.FC<FileTableProps> = ({
   myCategoryIds,
   showHeader = true,
   selectedKeys,
+  onSelect,
   onToggleSelect,
   onView,
   onPreview,
@@ -238,12 +240,20 @@ export const FileTable: React.FC<FileTableProps> = ({
                 e.dataTransfer.effectAllowed = 'move';
               }}
               onClick={(e) => {
+                e.stopPropagation();
                 if (e.ctrlKey || e.metaKey) {
                   e.preventDefault();
-                  e.stopPropagation();
                   onToggleSelect?.(doc);
                   return;
                 }
+                if (onSelect) {
+                  onSelect(doc);
+                } else {
+                  onToggleSelect?.(doc);
+                }
+              }}
+              onDoubleClick={(e) => {
+                e.stopPropagation();
                 if (onPreview) {
                   onPreview(doc);
                 } else if (downloadUrl) {
@@ -252,9 +262,22 @@ export const FileTable: React.FC<FileTableProps> = ({
                   onView(doc);
                 }
               }}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (onPreview) {
+                    onPreview(doc);
+                  } else if (downloadUrl) {
+                    window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    onView(doc);
+                  }
+                }
+              }}
               className={cn(
-                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800',
-                isSelected && 'bg-primary/15 border-l-2 border-primary text-primary font-medium',
+                'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800 outline-none',
+                isSelected && 'bg-primary/10 border-l-4 border-l-primary ring-1 ring-inset ring-primary/20 text-primary font-medium',
                 isMenuOpen && 'z-40 bg-[#f1f3f4]'
               )}
             >

@@ -13,6 +13,7 @@ interface FolderCardProps {
   isSharedSection?: boolean;
   isActive?: boolean;
   isSelected?: boolean;
+  onSelect?: (folder: DocumentCategory) => void;
   onToggleSelect?: (folder: DocumentCategory) => void;
   onOpen: (folder: DocumentCategory) => void;
   onViewDetail?: (folder: DocumentCategory) => void;
@@ -29,6 +30,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   isSharedSection = false,
   isActive = false,
   isSelected = false,
+  onSelect,
   onToggleSelect,
   onOpen,
   onViewDetail,
@@ -180,23 +182,38 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         } catch (err) {}
       }}
       onClick={(e) => {
+        e.stopPropagation();
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          e.stopPropagation();
           onToggleSelect?.(folder);
           return;
         }
+        if (onSelect) {
+          onSelect(folder);
+        } else {
+          onToggleSelect?.(folder);
+        }
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
         onOpen(folder);
       }}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          onOpen(folder);
+        }
+      }}
       className={cn(
-        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
+        'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150 outline-none',
         isSelected
-          ? 'bg-primary/15 border-primary shadow-xs ring-2 ring-primary/60 text-primary'
+          ? 'bg-primary/10 border-primary ring-2 ring-primary ring-offset-2 ring-offset-white shadow-sm text-primary font-medium'
           : isActive
           ? 'bg-primary/10 border-primary shadow-xs ring-1 ring-primary/30'
           : isDragOver
           ? 'bg-primary/20 border-primary ring-2 ring-primary/50'
-          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs focus-visible:ring-2 focus-visible:ring-primary/50',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={folder.name}
