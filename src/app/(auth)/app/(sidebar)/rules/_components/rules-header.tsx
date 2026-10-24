@@ -25,7 +25,7 @@ export const RulesHeader: React.FC<RulesHeaderProps> = ({
   onViewModeChange,
   onCreate,
 }) => (
-  <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-4">
+  <div className="flex flex-wrap items-center justify-between gap-3 px-6 pt-5 pb-1">
     <div className="flex items-center gap-3 min-w-0">
       <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
         <ScrollText size={20} />

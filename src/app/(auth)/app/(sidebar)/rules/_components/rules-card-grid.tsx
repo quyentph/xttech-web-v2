@@ -63,7 +63,7 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-slate-50/30">
       <div
-        className="flex-1 overflow-auto px-4 pt-3 custom-scrollbar"
+        className="flex-1 overflow-auto px-6 py-4 custom-scrollbar"
         onClick={() => setFocusedDocId(null)}
       >
         {isLoading && items.length === 0 ? (
@@ -93,7 +93,7 @@ export const RulesCardGrid: React.FC<RulesCardGridProps> = ({
           </div>
         )}
       </div>
-      <div className="p-4 border-t border-slate-100 bg-white">
+      <div className="px-6 py-4 border-t border-slate-100 bg-white">
         <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}

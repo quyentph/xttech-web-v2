@@ -65,7 +65,7 @@ export const RulesTabs: React.FC<RulesTabsProps> = ({
   const readRate = summary?.readRate ?? 100;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 mt-3">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-6 mt-3">
       <div className="flex gap-1 overflow-x-auto -mb-px" role="tablist">
         {visibleTabs.map((tab) => {
           const isActive = tab.value === activeTab;

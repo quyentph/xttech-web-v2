@@ -91,8 +91,8 @@ export const RulesFilterBar: React.FC<RulesFilterBarProps> = (props) => {
 
   if (!isCurrentTab) {
     return (
-      <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/50">
-        <span className="text-[11px] font-semibold text-slate-500 mr-1">Loại cơ chế:</span>
+      <div className="flex flex-wrap items-center gap-2 px-6 py-3.5 border-b border-slate-100 bg-slate-50/50">
+        <span className="text-[11px] font-semibold text-slate-500 mr-1.5">Loại cơ chế:</span>
         <button
           type="button"
           onClick={() => props.onDocumentTypeChange('')}
@@ -115,7 +115,7 @@ export const RulesFilterBar: React.FC<RulesFilterBarProps> = (props) => {
   }
 
   return (
-    <div className="flex flex-col gap-2.5 px-4 py-3 border-b border-slate-200/80 bg-slate-50/60">
+    <div className="flex flex-col gap-2.5 px-6 py-3.5 border-b border-slate-200/80 bg-slate-50/60">
       {/* Row 1: Phạm vi áp dụng + Bộ lọc Phòng ban & Cá nhân dành cho Manager */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1.5">

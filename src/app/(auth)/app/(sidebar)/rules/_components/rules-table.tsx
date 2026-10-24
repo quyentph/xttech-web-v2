@@ -212,7 +212,7 @@ export const RulesTable: React.FC<RulesTableProps> = ({
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
-      <div className="flex-1 overflow-auto px-4 custom-scrollbar">
+      <div className="flex-1 overflow-auto px-6 py-4 custom-scrollbar">
         <div className="w-full bg-white border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
           <div className="overflow-x-auto w-full">
             <table className="table w-full border-collapse">
@@ -243,7 +243,7 @@ export const RulesTable: React.FC<RulesTableProps> = ({
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-100">
+      <div className="px-6 py-4 border-t border-slate-100">
         <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}
