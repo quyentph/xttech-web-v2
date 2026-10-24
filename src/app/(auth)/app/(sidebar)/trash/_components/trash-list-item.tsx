@@ -75,7 +75,7 @@ export const TrashListItem: React.FC<TrashListItemProps> = ({
     e.stopPropagation();
     clearCloseTimeout();
     setIsMenuOpen((prev) => !prev);
-  };
+  };  
 
   useEffect(() => {
     if (!isMenuOpen) return;

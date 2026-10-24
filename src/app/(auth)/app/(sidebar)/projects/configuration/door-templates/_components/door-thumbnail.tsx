@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import {
   DoorCadRenderer,
   DEFAULT_FRAME_CONFIG,
@@ -12,8 +12,8 @@ import {
 } from '@/components';
 
 interface DoorThumbnailProps {
-  door?: { systemConfig?: any } | null;
-  systemConfig?: Record<string, any> | null;
+  door?: { systemConfig?: Record<string, unknown> | null } | null;
+  systemConfig?: Record<string, unknown> | null;
   hideDimensions?: boolean;
   className?: string;
 }
@@ -27,12 +27,13 @@ export function DoorThumbnail({
   hideDimensions = true,
   className = '',
 }: DoorThumbnailProps) {
+  const svgId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const sc = (directConfig || door?.systemConfig || {}) as Record<string, any>;
 
   const w: number = sc.w || 800;
   const h: number = sc.h || 1200;
-  const aluminumColor: string = sc.aluminumColor || sc.surface_color || '#C6A869';
-  const hardwareColor: string = sc.hardwareColor || sc.accessory_color || '#1E293B';
+  const aluminumColor: string = sc.aluminumColor || '#C6A869';
+  const hardwareColor: string = sc.hardwareColor || '#1E293B';
   const frameShape: FrameShape = (sc.frameShape as FrameShape) || 'rect';
 
   const frameConfig: FrameConfig = sc.frameConfig
@@ -50,7 +51,6 @@ export function DoorThumbnail({
     ? { ...DEFAULT_SASH_CONFIG, ...sc.sashConfig }
     : DEFAULT_SASH_CONFIG;
 
-  // rootCell từ systemConfig — đây là SceneCellNode đã được lưu sẵn
   const rootCell: SceneCellNode | null = sc.rootCell ?? null;
 
   if (!rootCell) {
@@ -64,6 +64,7 @@ export function DoorThumbnail({
   return (
     <div className={`w-full h-full ${className}`}>
       <DoorCadRenderer
+        id={svgId}
         hideDimensions={hideDimensions}
         w={w}
         h={h}
