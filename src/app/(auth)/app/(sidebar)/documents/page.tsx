@@ -40,6 +40,9 @@ function MyDocumentsContent() {
     toggleSelectItem,
     selectSingleItem,
     clearSelection,
+    isAllSelected,
+    handleToggleSelectAll,
+    totalDisplayCount,
     cutItemKeys,
     clipboard,
     clearClipboard,
@@ -70,6 +73,7 @@ function MyDocumentsContent() {
 
     // Actions
     handleConfirmDelete,
+    handleOpenDeleteSelected,
     handleDropItem,
     handleRemoveFromFolder,
   } = useDocumentExplorer({ tab });
@@ -93,6 +97,8 @@ function MyDocumentsContent() {
         canCreate={canCreate}
         onCreateFolder={modals.actions.openCreateFolder}
         onCreateDocument={modals.actions.openCreateDoc}
+        selectedCount={selectedItemKeys.size}
+        onDeleteSelected={handleOpenDeleteSelected}
       />
 
       {/* 2. Scrollable Main Views */}
@@ -106,6 +112,9 @@ function MyDocumentsContent() {
           subFoldersCount={subFolders.length}
           documentsCount={documents.length}
           onGoBack={handleGoBack}
+          totalItemsCount={totalDisplayCount}
+          isAllSelected={isAllSelected}
+          onToggleSelectAll={handleToggleSelectAll}
         />
 
         {/* Danh sách Thư mục và Tài liệu (Grid / Table / Empty state) */}
@@ -151,6 +160,7 @@ function MyDocumentsContent() {
         onClearSelection={clearSelection}
         clipboard={clipboard}
         onClearClipboard={clearClipboard}
+        onDeleteSelected={handleOpenDeleteSelected}
       />
     </div>
   );

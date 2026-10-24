@@ -25,6 +25,10 @@ export function useDocumentSelection(currentFolderId: number | null, tab: string
     setSelectedItemKeys(new Set());
   }, []);
 
+  const selectAllItems = useCallback((keys: string[]) => {
+    setSelectedItemKeys(new Set(keys));
+  }, []);
+
   // Xóa selection khi đổi tab
   useEffect(() => {
     clearSelection();
@@ -50,6 +54,7 @@ export function useDocumentSelection(currentFolderId: number | null, tab: string
     selectedItemKeys,
     toggleSelectItem,
     selectSingleItem,
+    selectAllItems,
     clearSelection,
   };
 }

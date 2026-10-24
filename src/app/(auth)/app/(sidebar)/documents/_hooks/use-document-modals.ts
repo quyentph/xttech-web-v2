@@ -3,12 +3,19 @@
 import { useState, useCallback } from 'react';
 import type { DocumentCategory, DocumentItem } from '@/types';
 
-export interface DeleteModalState {
-  isOpen: boolean;
+export interface DeleteModalItem {
   type: 'folder' | 'document';
   id: number;
   name: string;
+}
+
+export interface DeleteModalState {
+  isOpen: boolean;
+  type: 'folder' | 'document' | 'multiple';
+  id: number;
+  name: string;
   loading: boolean;
+  items?: DeleteModalItem[];
 }
 
 export interface ItemToMoveState {
@@ -147,6 +154,17 @@ export function useDocumentModals() {
     });
   }, []);
 
+  const openDeleteMultiple = useCallback((items: DeleteModalItem[]) => {
+    setDeleteModal({
+      isOpen: true,
+      type: 'multiple',
+      id: 0,
+      name: `${items.length} mục`,
+      loading: false,
+      items,
+    });
+  }, []);
+
   return {
     // States
     state: {
@@ -208,6 +226,7 @@ export function useDocumentModals() {
       openDeleteFolder,
       openDeleteDoc,
       openDeleteModal,
+      openDeleteMultiple,
     },
   };
 }

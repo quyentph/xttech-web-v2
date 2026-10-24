@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Trash2 } from 'lucide-react';
 import type { ClipboardState } from '../_hooks/use-document-clipboard';
 
 interface FloatingSelectionBarProps {
@@ -8,6 +9,7 @@ interface FloatingSelectionBarProps {
   onClearSelection: () => void;
   clipboard?: ClipboardState | null;
   onClearClipboard?: () => void;
+  onDeleteSelected?: () => void;
 }
 
 export const FloatingSelectionBar: React.FC<FloatingSelectionBarProps> = ({
@@ -15,6 +17,7 @@ export const FloatingSelectionBar: React.FC<FloatingSelectionBarProps> = ({
   onClearSelection,
   clipboard,
   onClearClipboard,
+  onDeleteSelected,
 }) => {
   const isCutting = clipboard?.action === 'cut' && clipboard.items.length > 0;
   const isCopying = clipboard?.action === 'copy' && clipboard.items.length > 0;
@@ -68,6 +71,20 @@ export const FloatingSelectionBar: React.FC<FloatingSelectionBarProps> = ({
         </kbd>{' '}
         cắt
       </span>
+      {onDeleteSelected && (
+        <>
+          <div className="h-3 w-px bg-slate-700" />
+          <button
+            type="button"
+            onClick={onDeleteSelected}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-medium text-xs transition-all cursor-pointer shadow-xs hover:shadow active:scale-95"
+            title="Xóa các mục đã chọn (Delete)"
+          >
+            <Trash2 size={13} />
+            <span>Xóa ({selectedCount})</span>
+          </button>
+        </>
+      )}
       <div className="h-3 w-px bg-slate-700" />
       <button
         type="button"

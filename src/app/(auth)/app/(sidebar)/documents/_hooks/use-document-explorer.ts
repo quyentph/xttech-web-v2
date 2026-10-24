@@ -56,7 +56,8 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
   }, [tab, defaultFolderId]);
 
   // 2. Selection Hook
-  const { selectedItemKeys, toggleSelectItem, selectSingleItem, clearSelection } = useDocumentSelection(currentFolderId, tab);
+  const { selectedItemKeys, toggleSelectItem, selectSingleItem, selectAllItems, clearSelection } =
+    useDocumentSelection(currentFolderId, tab);
 
   // 3. Search & Filters (Đồng bộ URL qua useQueryParam)
   const [rawSearch, setRawSearch] = useQueryParam('search', '');
@@ -297,6 +298,40 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     try {
       modals.setters.setDeleteModal((prev) => ({ ...prev, loading: true }));
 
+      // Xóa nhiều mục liên tiếp bằng vòng lặp for
+      if (deleteModal.type === 'multiple' && deleteModal.items && deleteModal.items.length > 0) {
+        const toastId = toast.loading(`Đang xóa ${deleteModal.items.length} mục...`);
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (const item of deleteModal.items) {
+          try {
+            if (item.type === 'folder') {
+              await deleteDocumentCategory(item.id);
+            } else {
+              await deleteDocument(item.id);
+            }
+            successCount++;
+          } catch {
+            errorCount++;
+          }
+        }
+
+        if (successCount > 0) {
+          const errorMsg = errorCount > 0 ? ` (${errorCount} mục thất bại)` : '';
+          toast.success(`Đã xóa thành công ${successCount} mục!${errorMsg}`, { id: toastId });
+          invalidateDocumentQueries(queryClient);
+          clearSelection();
+          if (currentFolderId && deleteModal.items.some((it) => it.type === 'folder' && it.id === currentFolderId)) {
+            handleGoBack();
+          }
+        } else {
+          toast.error('Không thể xóa các mục đã chọn', { id: toastId });
+        }
+        modals.setters.setDeleteModal((prev) => ({ ...prev, isOpen: false, loading: false }));
+        return;
+      }
+
       if (deleteModal.type === 'folder') {
         await deleteDocumentCategory(deleteModal.id);
         toast.success(`Đã xóa thư mục "${deleteModal.name}"`);
@@ -336,8 +371,84 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     documents,
     currentUser,
     queryClient,
+    clearSelection,
     handleGoBack,
   ]);
+
+  // Mở modal xóa các mục đang chọn
+  const handleOpenDeleteSelected = useCallback(() => {
+    if (selectedItemKeys.size === 0) return;
+    if (isSharedSection && !canManageDocuments) {
+      toast.error('Bạn không có quyền xóa trong mục Được chia sẻ với tôi');
+      return;
+    }
+
+    const items: Array<{ type: 'folder' | 'document'; id: number; name: string }> = [];
+    selectedItemKeys.forEach((key) => {
+      const [type, idStr] = key.split('-');
+      const id = Number(idStr);
+      if (type === 'folder') {
+        const f = foldersToDisplay.find((item) => item.id === id);
+        items.push({ type: 'folder', id, name: f?.name || `Thư mục #${id}` });
+      } else {
+        const d = documents.find((item) => item.id === id);
+        items.push({ type: 'document', id, name: d?.title || `Tài liệu #${id}` });
+      }
+    });
+
+    if (items.length === 1) {
+      const single = items[0];
+      modals.actions.openDeleteModal(single.type, single.id, single.name);
+    } else if (items.length > 1) {
+      modals.actions.openDeleteMultiple(items);
+    }
+  }, [selectedItemKeys, isSharedSection, canManageDocuments, foldersToDisplay, documents, modals.actions]);
+
+  // Tập hợp tất cả các key mục đang hiển thị trên giao diện
+  const allDisplayKeys = useMemo(() => {
+    const keys: string[] = [];
+    foldersToDisplay.forEach((f) => keys.push(`folder-${f.id}`));
+    displayedDocuments.forEach((d) => keys.push(`doc-${d.id}`));
+    return keys;
+  }, [foldersToDisplay, displayedDocuments]);
+
+  const isAllSelected = useMemo(
+    () => allDisplayKeys.length > 0 && allDisplayKeys.every((k) => selectedItemKeys.has(k)),
+    [allDisplayKeys, selectedItemKeys],
+  );
+
+  const handleToggleSelectAll = useCallback(() => {
+    if (isAllSelected) {
+      clearSelection();
+    } else {
+      selectAllItems(allDisplayKeys);
+    }
+  }, [isAllSelected, allDisplayKeys, selectAllItems, clearSelection]);
+
+  // Lắng nghe phím Delete/Backspace để mở xác nhận xóa các mục đang chọn, Ctrl+A để chọn tất cả
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeElement = document.activeElement;
+      const isInput =
+        activeElement instanceof HTMLInputElement ||
+        activeElement instanceof HTMLTextAreaElement ||
+        (activeElement as HTMLElement)?.isContentEditable;
+      if (isInput) return;
+
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A') && allDisplayKeys.length > 0) {
+        e.preventDefault();
+        selectAllItems(allDisplayKeys);
+        return;
+      }
+
+      if ((e.key === 'Delete' || e.key === 'Del') && selectedItemKeys.size > 0 && !modals.state.deleteModal.isOpen) {
+        e.preventDefault();
+        handleOpenDeleteSelected();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedItemKeys, allDisplayKeys, modals.state.deleteModal.isOpen, handleOpenDeleteSelected, selectAllItems]);
 
   // Drag & Drop move item handler
   const handleDropItem = useCallback(
@@ -446,7 +557,11 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
     selectedItemKeys,
     toggleSelectItem,
     selectSingleItem,
+    selectAllItems,
     clearSelection,
+    isAllSelected,
+    handleToggleSelectAll,
+    totalDisplayCount: allDisplayKeys.length,
     cutItemKeys,
     clipboard,
     clearClipboard,
@@ -481,6 +596,7 @@ export function useDocumentExplorer({ tab = 'my', defaultFolderId = null }: UseD
 
     // Actions
     handleConfirmDelete,
+    handleOpenDeleteSelected,
     handleDropItem,
     handleRemoveFromFolder,
   };

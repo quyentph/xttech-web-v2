@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, TableSearch } from '@/components';
-import { FolderPlus, Upload, LayoutGrid, List, RotateCcw } from 'lucide-react';
+import { FolderPlus, Upload, LayoutGrid, List, RotateCcw, Trash2 } from 'lucide-react';
 
 interface DocumentsToolbarProps {
   search?: string;
@@ -18,6 +18,8 @@ interface DocumentsToolbarProps {
   canCreate: boolean;
   onCreateFolder: () => void;
   onCreateDocument: () => void;
+  selectedCount?: number;
+  onDeleteSelected?: () => void;
 }
 
 export const DocumentsToolbar: React.FC<DocumentsToolbarProps> = ({
@@ -30,6 +32,8 @@ export const DocumentsToolbar: React.FC<DocumentsToolbarProps> = ({
   canCreate,
   onCreateFolder,
   onCreateDocument,
+  selectedCount = 0,
+  onDeleteSelected,
 }) => {
   return (
     <div className="bg-white border-b border-slate-200/80 p-4 shrink-0 shadow-2xs">
@@ -94,29 +98,43 @@ export const DocumentsToolbar: React.FC<DocumentsToolbarProps> = ({
         </div>
 
         {/* Right: Action buttons */}
-        {canCreate && (
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {selectedCount > 0 && onDeleteSelected && (
             <Button
-              variant="outline"
+              variant="danger"
               size="sm"
-              className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
-              onClick={onCreateFolder}
-              leftIcon={<FolderPlus className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+              className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0 animate-in fade-in zoom-in-95 duration-100"
+              onClick={onDeleteSelected}
+              leftIcon={<Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />}
             >
-              Thư mục mới
+              Xóa ({selectedCount})
             </Button>
+          )}
 
-            <Button
-              variant="primary"
-              size="sm"
-              className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
-              onClick={onCreateDocument}
-              leftIcon={<Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />}
-            >
-              Tải lên tài liệu
-            </Button>
-          </div>
-        )}
+          {canCreate && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
+                onClick={onCreateFolder}
+                leftIcon={<FolderPlus className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+              >
+                Thư mục mới
+              </Button>
+
+              <Button
+                variant="primary"
+                size="sm"
+                className="h-7 px-2.5 text-xs md:h-9 md:px-3 md:text-sm shrink-0"
+                onClick={onCreateDocument}
+                leftIcon={<Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+              >
+                Tải lên tài liệu
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

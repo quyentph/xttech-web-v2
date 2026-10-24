@@ -143,9 +143,37 @@ export const DocumentsModals: React.FC<DocumentsModalsProps> = ({
       <DeleteConfirmModal
         isOpen={state.deleteModal.isOpen}
         onClose={() => setters.setDeleteModal((prev) => ({ ...prev, isOpen: false }))}
-        title={state.deleteModal.type === 'folder' ? 'Xác nhận xóa thư mục' : 'Xác nhận xóa tài liệu'}
+        title={
+          state.deleteModal.type === 'multiple'
+            ? `Xác nhận xóa ${state.deleteModal.items?.length || ''} mục`
+            : state.deleteModal.type === 'folder'
+            ? 'Xác nhận xóa thư mục'
+            : 'Xác nhận xóa tài liệu'
+        }
         description={
-          state.deleteModal.type === 'folder' ? (
+          state.deleteModal.type === 'multiple' ? (
+            <div className="flex flex-col gap-2">
+              <p>
+                Bạn có chắc chắn muốn chuyển{' '}
+                <strong className="text-gray-900 font-semibold">{state.deleteModal.items?.length} mục đã chọn</strong> vào thùng rác?
+              </p>
+              {state.deleteModal.items && state.deleteModal.items.length > 0 && (
+                <div className="max-h-36 overflow-y-auto rounded-md bg-slate-50 p-2 border border-slate-200 text-xs text-slate-700 divide-y divide-slate-100">
+                  {state.deleteModal.items.slice(0, 5).map((it, idx) => (
+                    <div key={idx} className="py-1 flex items-center gap-1.5 truncate">
+                      <span className="text-slate-400 font-mono text-[11px]">&bull;</span>
+                      <span className="truncate">{it.name}</span>
+                    </div>
+                  ))}
+                  {state.deleteModal.items.length > 5 && (
+                    <div className="pt-1 text-slate-400 italic">
+                      ... và {state.deleteModal.items.length - 5} mục khác
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : state.deleteModal.type === 'folder' ? (
             <>
               Bạn có chắc chắn muốn xóa thư mục{' '}
               <strong className="text-gray-900 font-semibold">{state.deleteModal.name}</strong>?

@@ -12,6 +12,9 @@ interface TrashCardProps {
   onPurge: (item: TrashItem) => void;
   isRestoring?: boolean;
   isPurging?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (item: TrashItem) => void;
+  onSelect?: (item: TrashItem) => void;
 }
 
 export const TrashCard: React.FC<TrashCardProps> = ({
@@ -20,6 +23,9 @@ export const TrashCard: React.FC<TrashCardProps> = ({
   onPurge,
   isRestoring = false,
   isPurging = false,
+  isSelected = false,
+  onToggleSelect,
+  onSelect,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -99,9 +105,24 @@ export const TrashCard: React.FC<TrashCardProps> = ({
 
   return (
     <div
+      onClick={(e) => {
+        e.stopPropagation();
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          onToggleSelect?.(item);
+          return;
+        }
+        if (onSelect) {
+          onSelect(item);
+        } else {
+          onToggleSelect?.(item);
+        }
+      }}
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
-        'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
+        isSelected
+          ? 'bg-blue-50/80 border-primary shadow-xs ring-1 ring-primary/40'
+          : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}
       title={`${displayName} ${item.code ? `(${item.code})` : ''}`}

@@ -13,6 +13,9 @@ interface TrashListItemProps {
   onPurge: (item: TrashItem) => void;
   isRestoring?: boolean;
   isPurging?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (item: TrashItem) => void;
+  onSelect?: (item: TrashItem) => void;
 }
 
 const AVATAR_COLORS = [
@@ -40,6 +43,9 @@ export const TrashListItem: React.FC<TrashListItemProps> = ({
   onPurge,
   isRestoring = false,
   isPurging = false,
+  isSelected = false,
+  onToggleSelect,
+  onSelect,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -119,8 +125,24 @@ export const TrashListItem: React.FC<TrashListItemProps> = ({
 
   return (
     <div
+      onClick={(e) => {
+        e.stopPropagation();
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          onToggleSelect?.(item);
+          return;
+        }
+        if (onSelect) {
+          onSelect(item);
+        } else {
+          onToggleSelect?.(item);
+        }
+      }}
       className={cn(
-        'group relative flex items-center justify-between py-3 px-3.5 border-b border-gray-100 hover:bg-[#f1f3f4] transition-colors cursor-pointer text-xs text-slate-800 select-none',
+        'group relative flex items-center justify-between py-3 px-3.5 border-b transition-colors cursor-pointer text-xs text-slate-800 select-none',
+        isSelected
+          ? 'bg-blue-50/80 border-primary/30'
+          : 'border-gray-100 hover:bg-[#f1f3f4]',
         isMenuOpen && 'z-40 bg-[#f1f3f4]',
       )}
       title={`${displayName} ${item.code ? `(${item.code})` : ''}`}

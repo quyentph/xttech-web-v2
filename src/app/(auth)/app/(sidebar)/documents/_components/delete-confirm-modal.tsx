@@ -28,10 +28,10 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       className="m-2 max-w-md w-full"
     >
       <div className="flex gap-4 items-center py-2">
-        <div className="flex flex-col gap-1.5">
-          <p className="text-gray-600 text-sm leading-relaxed">
+        <div className="flex flex-col gap-1.5 w-full">
+          <div className="text-gray-600 text-sm leading-relaxed">
             {description}
-          </p>
+          </div>
         </div>
       </div>
       <div className="flex gap-3 justify-end w-full mt-6">
