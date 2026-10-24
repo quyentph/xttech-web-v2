@@ -70,39 +70,49 @@ export const DocumentsFolderHeader: React.FC<DocumentsFolderHeaderProps> = ({
         </div>
       </div>
 
-      {onToggleSelectAll && (
-        <button
-          type="button"
-          disabled={totalItemsCount === 0}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (totalItemsCount > 0) {
-              onToggleSelectAll();
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-slate-400 select-none">
+          <span>Giữ</span>
+          <kbd className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 font-mono text-[10px] font-semibold text-slate-600 shadow-2xs">
+            Ctrl
+          </kbd>
+          <span>để chọn nhiều</span>
+        </span>
+
+        {onToggleSelectAll && (
+          <button
+            type="button"
+            disabled={totalItemsCount === 0}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (totalItemsCount > 0) {
+                onToggleSelectAll();
+              }
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shadow-2xs border shrink-0 ${
+              totalItemsCount === 0
+                ? 'opacity-50 cursor-not-allowed bg-slate-50 border-slate-200 text-slate-400'
+                : isAllSelected
+                ? 'bg-primary/10 border-primary/30 text-primary hover:bg-primary/15 cursor-pointer'
+                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 cursor-pointer'
+            }`}
+            title={
+              totalItemsCount === 0
+                ? 'Không có mục nào để chọn'
+                : isAllSelected
+                ? 'Bỏ chọn tất cả (Esc)'
+                : 'Chọn tất cả (Ctrl + A)'
             }
-          }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shadow-2xs border shrink-0 ${
-            totalItemsCount === 0
-              ? 'opacity-50 cursor-not-allowed bg-slate-50 border-slate-200 text-slate-400'
-              : isAllSelected
-              ? 'bg-primary/10 border-primary/30 text-primary hover:bg-primary/15 cursor-pointer'
-              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 cursor-pointer'
-          }`}
-          title={
-            totalItemsCount === 0
-              ? 'Không có mục nào để chọn'
-              : isAllSelected
-              ? 'Bỏ chọn tất cả (Esc)'
-              : 'Chọn tất cả (Ctrl + A)'
-          }
-        >
-          {isAllSelected ? (
-            <CheckSquare size={14} className="text-primary" />
-          ) : (
-            <Square size={14} className="text-slate-400" />
-          )}
-          <span>{isAllSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}</span>
-        </button>
-      )}
+          >
+            {isAllSelected ? (
+              <CheckSquare size={14} className="text-primary" />
+            ) : (
+              <Square size={14} className="text-slate-400" />
+            )}
+            <span>{isAllSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 };

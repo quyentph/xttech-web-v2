@@ -118,15 +118,6 @@ export const FloatingSelectionBar: React.FC<FloatingSelectionBarProps> = ({
           <span>Xóa ({selectedCount})</span>
         </button>
       )}
-
-      <div className="h-3 w-px bg-slate-700" />
-      <button
-        type="button"
-        onClick={onClearSelection}
-        className="text-slate-300 hover:text-white transition-colors cursor-pointer text-xs font-semibold shrink-0"
-      >
-        Bỏ chọn (Esc)
-      </button>
     </div>
   );
 };

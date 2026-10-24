@@ -121,7 +121,7 @@ export const TrashCard: React.FC<TrashCardProps> = ({
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150',
         isSelected
-          ? 'bg-blue-50/80 border-primary shadow-xs ring-1 ring-primary/40'
+          ? 'bg-primary/[0.08] border border-primary/40 shadow-xs text-primary font-medium'
           : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
       )}

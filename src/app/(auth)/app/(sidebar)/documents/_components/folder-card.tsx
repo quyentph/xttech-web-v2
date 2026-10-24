@@ -233,11 +233,11 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       className={cn(
         'group relative flex items-center justify-between gap-4 p-4 rounded-lg cursor-pointer select-none transition-all duration-150 outline-none',
         isSelected
-          ? 'bg-primary/10 border-primary ring-2 ring-primary ring-offset-2 ring-offset-white shadow-sm text-primary font-medium'
+          ? 'bg-primary/[0.08] border border-primary/40 shadow-xs text-primary font-medium'
           : isActive
-          ? 'bg-primary/10 border-primary shadow-xs ring-1 ring-primary/30'
+          ? 'bg-primary/10 border border-primary/30 shadow-xs'
           : isDragOver
-          ? 'bg-primary/20 border-primary ring-2 ring-primary/50'
+          ? 'bg-primary/20 border border-primary/50'
           : 'bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-transparent hover:border-slate-200/60 shadow-2xs hover:shadow-xs focus-visible:ring-2 focus-visible:ring-primary/50',
         isCut && 'opacity-50 border-dashed border-slate-400',
         isMenuOpen ? 'z-40 bg-[#e4ebf5] border-slate-200/80 shadow-xs' : 'active:scale-[0.99]',
