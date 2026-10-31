@@ -33,13 +33,13 @@ export const TechnicianDashboard = () => {
       title: 'Trạng thái ca kỹ thuật',
       value: isCheckedIn ? 'Đang thực địa' : 'Chưa điểm danh',
       icon: <Clock size={18} />,
-      onClick: () => router.push('/app/attendances'),
+      onClick: () => router.push('/app/attendances/payroll'),
     },
     {
       title: 'Giờ check-in hôm nay',
       value: checkInText,
       icon: <CheckCircle2 size={18} />,
-      onClick: () => router.push('/app/attendances'),
+      onClick: () => router.push('/app/attendances/payroll'),
     },
     {
       title: 'Đồng nghiệp online GPS',
