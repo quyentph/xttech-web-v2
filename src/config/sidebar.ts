@@ -64,7 +64,6 @@ export const acceptedSections = [
   'quotations',
   'extra-options',
   'formulas',
-  'shifts',
   'attendances-reports',
   'live-map',
   'app-versions',
@@ -82,7 +81,6 @@ export const acceptedSections = [
   'inbox',
   'news',
 ];
-
 
 export interface SidebarItemWithRoles extends Omit<SidebarItemType, 'subItems'> {
   roles?: UserRole[];
@@ -176,12 +174,6 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
             href: '/app/attendances/reports',
             roles: ['super', 'admin', 'hr'],
           },
-          {
-            id: 'shifts',
-            label: 'Ca làm việc',
-            href: '/app/shifts',
-            roles: ['super', 'admin', 'hr'],
-          },
         ],
       },
       {
@@ -234,7 +226,6 @@ export const rawSidebarSections: SidebarSectionWithRoles[] = [
       },
       {
         id: 'configurations-root',
-
         label: 'Cấu hình dự án',
         icon: React.createElement(SlidersHorizontal, { size: 18 }),
         href: '/app/projects/configuration',
