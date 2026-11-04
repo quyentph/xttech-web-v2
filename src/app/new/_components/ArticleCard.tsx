@@ -55,11 +55,22 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
 
       {/* Card Footer / Meta */}
       <div className="px-5 pb-5 pt-0 text-[11px] text-slate-400 flex items-center gap-1.5 border-t border-slate-100/80 mt-1 pt-3">
-        <span className="font-medium text-slate-600">{article.author.name}</span>
+        <span className="font-medium text-slate-600">
+          {article.author?.displayName || article.author?.name || 'XTTech'}
+        </span>
         <span>·</span>
-        <span>{article.date || article.publishedAt}</span>
+        <span>
+          {article.date ||
+            (article.publishedAt
+              ? new Date(article.publishedAt).toLocaleDateString('vi-VN')
+              : '')}
+        </span>
         <span>·</span>
-        <span>{article.readingTime}</span>
+        <span>
+          {article.readingMinutes
+            ? `${article.readingMinutes} phút đọc`
+            : article.readingTime || '5 phút đọc'}
+        </span>
       </div>
     </article>
   );

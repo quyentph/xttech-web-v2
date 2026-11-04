@@ -1,0 +1,625 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+      "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham",
+      "summary": "Hệ thống giám sát nhiệt độ phôi theo thời gian thực giúp thanh nhôm định hình đồng đều hơn.",
+      "content": "<p>Hệ thống ép đùn thông minh thế hệ mới tích hợp cảm biến hồng ngoại và thuật toán điều khiển PID tự động điều chỉnh tốc độ đùn ép theo thời gian thực. Điều này giúp loại bỏ hiện tượng nứt xé cạnh, bóng khí bề mặt và tối ưu hóa độ dày thành nhôm.</p><p>Nhờ đó, tỷ lệ phế phẩm trong giai đoạn định hình giảm từ mức trung bình 22% xuống còn dưới 4%, giúp tiết kiệm hàng trăm triệu đồng chi phí nguyên liệu thô mỗi tháng cho nhà máy.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+        "alt": "Dây chuyền ép đùn nhôm hiện đại"
+      },
+      "category": {
+        "id": 1,
+        "name": "Công nghệ sản xuất",
+        "slug": "cong-nghe-san-xuat"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 1, "name": "Ép đùn nhôm", "slug": "ep-dun-nhom" },
+        { "id": 2, "name": "Công nghệ sản xuất", "slug": "cong-nghe-san-xuat" }
+      ],
+      "viewCount": 5420,
+      "commentCount": 24,
+      "readingMinutes": 5,
+      "isFeatured": true,
+      "isBreaking": true,
+      "publishedAt": "2026-11-02T08:30:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Giá nhôm thế giới tuần này: nhà thầu nên chốt đơn sớm?",
+      "slug": "gia-nhom-the-gioi-tuan-nay-nha-thau-nen-chot-don-som",
+      "summary": "Biến động giá nhôm LME ảnh hưởng trực tiếp đến báo giá của nhôm kính trong quý tới.",
+      "content": "<p>Theo cập nhật mới nhất từ sàn giao dịch kim loại London (LME), giá nhôm nguyên liệu giao ngay đang có dấu hiệu tăng nhiệt trở lại do nguồn cung bauxite khan hiếm và chi phí điện năng tăng tại một số quốc gia chế biến.</p><p>Các chuyên gia tài chính khuyến nghị các nhà thầu thi công nhôm kính nên chủ động đàm phán hợp đồng cung ứng và chốt đơn đặt hàng phôi sớm để đảm bảo biên lợi nhuận cho các dự án quý tới.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
+        "alt": "Biến động thị trường giá nhôm"
+      },
+      "category": {
+        "id": 2,
+        "name": "Thị trường",
+        "slug": "thi-truong"
+      },
+      "author": {
+        "id": 2,
+        "displayName": "Quang Huy",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 3, "name": "Giá nhôm LME", "slug": "gia-nhom-lme" },
+        { "id": 4, "name": "Thị trường", "slug": "thi-truong" }
+      ],
+      "viewCount": 4120,
+      "commentCount": 16,
+      "readingMinutes": 4,
+      "isFeatured": true,
+      "isBreaking": false,
+      "publishedAt": "2026-11-01T14:20:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Kính cường lực và kính dán an toàn: chọn loại nào cho mặt dựng?",
+      "slug": "kinh-cuong-luc-va-kinh-dan-an-toan-chon-loai-nao-cho-mat-dung",
+      "summary": "So sánh độ bền, khả năng chịu va đập và chi phí của hai loại kính phổ biến.",
+      "content": "<p>Kính cường lực có khả năng chịu lực uốn và sốc nhiệt cao gấp 4-5 lần kính thường, trong khi kính dán nhiều lớp laminated glass lại có ưu thế tuyệt đối về khả năng chống rơi vỡ nhờ lớp màng PVB giữ chặt các mảnh kính khi có sự cố.</p><p>Khi lựa chọn cho các hệ mặt dựng cao tầng, giải pháp kết hợp giữa kính tôi cường lực và dán an toàn hai lớp đang trở thành tiêu chuẩn vàng được các kiến trúc sư tin dùng.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+        "alt": "Mặt dựng kính cường lực và an toàn"
+      },
+      "category": {
+        "id": 3,
+        "name": "Vật liệu",
+        "slug": "vat-lieu"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 5, "name": "Kính an toàn", "slug": "kinh-an-toan" },
+        { "id": 6, "name": "Vật liệu kiến trúc", "slug": "vat-lieu-kien-truc" }
+      ],
+      "viewCount": 3890,
+      "commentCount": 12,
+      "readingMinutes": 6,
+      "isFeatured": true,
+      "isBreaking": false,
+      "publishedAt": "2026-10-30T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Tòa văn phòng 25 tầng hoàn thiện mặt dựng kính Low-E",
+      "slug": "toa-van-phong-25-tang-hoan-thien-mat-dung-kinh-low-e",
+      "summary": "Công trình sử dụng hệ curtain wall giúp giảm đáng kể điện năng cho điều hòa.",
+      "content": "<p>Dự án tổ hợp văn phòng cao cấp vừa chính thức bàn giao gói thầu bao che nhôm kính sau 6 tháng thi công khẩn trương.</p><p>Việc áp dụng kính hộp Low-E kết hợp nhôm cầu cách nhiệt và hệ phụ kiện đồng bộ rãnh C Châu Âu giúp công trình giảm tới 35% nhiệt lượng hấp thụ từ bức xạ mặt trời, góp phần đạt chứng nhận tiêu chuẩn công trình xanh LEED Gold.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=800&auto=format&fit=crop&q=80",
+        "alt": "Tòa nhà mặt dựng kính Low-E"
+      },
+      "category": {
+        "id": 4,
+        "name": "Dự án",
+        "slug": "du-an"
+      },
+      "author": {
+        "id": 4,
+        "displayName": "Đức Long",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 7, "name": "Curtain Wall", "slug": "curtain-wall" },
+        { "id": 8, "name": "Kính Low-E", "slug": "kinh-low-e" }
+      ],
+      "viewCount": 2980,
+      "commentCount": 9,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-28T16:00:00Z"
+    },
+    {
+      "id": 5,
+      "title": "5 lỗi thường gặp khi lắp cửa nhôm kính và cách tránh",
+      "slug": "5-loi-thuong-gap-khi-lap-cua-nhom-kinh-va-cach-tranh",
+      "summary": "Từ chọn ron, bắt vít đến chống thấm: checklist ngắn gọn cho thợ thi công.",
+      "content": "<p>Sai sót khi lắp đặt cửa nhôm kính không chỉ khiến cửa bị xệ cánh, kẹt phụ kiện mà còn gây thấm dột nước mưa nguy hiểm.</p><p>5 lỗi phổ biến nhất bao gồm: không bắt ke tăng cứng góc, bơm keo bọt và keo silicone sai kỹ thuật, căn chỉnh khe hở bản lề không đều, thiếu rãnh thoát nước đáy khung bao và dùng sai ốc vít inox chống rỉ sét. Nắm vững checklist này giúp đảm bảo độ bền công trình lên đến hàng chục năm.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=800&auto=format&fit=crop&q=80",
+        "alt": "Kỹ thuật thi công lắp cửa nhôm"
+      },
+      "category": {
+        "id": 5,
+        "name": "Hướng dẫn kỹ thuật",
+        "slug": "huong-dan-ky-thuat"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 9, "name": "Lắp đặt cửa", "slug": "lap-dat-cua" },
+        { "id": 10, "name": "Checklist thi công", "slug": "checklist-thi-cong" }
+      ],
+      "viewCount": 6120,
+      "commentCount": 35,
+      "readingMinutes": 7,
+      "isFeatured": true,
+      "isBreaking": true,
+      "publishedAt": "2026-10-26T10:45:00Z"
+    },
+    {
+      "id": 6,
+      "title": "Nhôm Xingfa, nhôm Việt Pháp: khác nhau ở đâu?",
+      "slug": "nhom-xingfa-nhom-viet-phap-khac-nhau-o-dau",
+      "summary": "Phân biệt hệ nhôm theo độ dày, bề mặt sơn tĩnh điện và phụ kiện đồng bộ.",
+      "content": "<p>Nhôm Xingfa và nhôm Việt Pháp là hai thương hiệu quen thuộc nhất với thị trường người tiêu dùng Việt Nam.</p><p>Tuy nhiên, hai dòng nhôm này có sự khác biệt rõ rệt về cấu trúc gân gia cường, độ dày thành profile (Xingfa thường dày 1.4mm - 2.0mm, Việt Pháp thường từ 1.1mm - 1.3mm), độ bóng của lớp sơn tĩnh điện và mức giá thành dự toán trên mỗi mét vuông cửa thành phẩm.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80",
+        "alt": "Mẫu mặt cắt profile nhôm"
+      },
+      "category": {
+        "id": 3,
+        "name": "Vật liệu",
+        "slug": "vat-lieu"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 11, "name": "Nhôm Xingfa", "slug": "nhom-xingfa" },
+        { "id": 12, "name": "Nhôm Việt Pháp", "slug": "nhom-viet-phap" }
+      ],
+      "viewCount": 5100,
+      "commentCount": 19,
+      "readingMinutes": 6,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-24T08:00:00Z"
+    },
+    {
+      "id": 7,
+      "title": "Ứng dụng phần mềm XTTech quản lý toàn diện xưởng nhôm kính",
+      "slug": "ung-dung-phan-mem-xttech-quan-ly-toan-dien-xuong-nhom-kinh",
+      "summary": "Tối ưu hóa từ khảo sát kích thước công trình đến lập dự toán, bóc tách và phân bổ phôi nhôm.",
+      "content": "<p>Nền tảng XTTech hỗ trợ đồng bộ dữ liệu đa nền tảng, giúp giải phóng hoàn toàn thời gian ghi chép sổ sách thủ công cho các chủ xưởng và kỹ thuật viên.</p><p>Hệ thống tự động tính toán kích thước cắt nhôm trừ khe hở, tạo sơ đồ cắt tối ưu và theo dõi tồn kho theo thời gian thực.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=80",
+        "alt": "Phần mềm quản trị sản xuất XTTech"
+      },
+      "category": {
+        "id": 1,
+        "name": "Công nghệ sản xuất",
+        "slug": "cong-nghe-san-xuat"
+      },
+      "author": {
+        "id": 2,
+        "displayName": "Quang Huy",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 13, "name": "XTTech", "slug": "xttech" },
+        { "id": 14, "name": "Chuyển đổi số", "slug": "chuyen-doi-so" }
+      ],
+      "viewCount": 3450,
+      "commentCount": 14,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-20T11:30:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Kỹ thuật thi công vách kính spider không khung cho showroom",
+      "slug": "ky-thuat-thi-cong-vach-kinh-spider-khong-khung",
+      "summary": "Chi tiết liên kết chân nhện chịu lực và keo kết cấu silicone cho không gian mở tối đa.",
+      "content": "<p>Vách kính Spider tạo vẻ đẹp sang trọng, thông thoáng tối đa cho các đại sảnh khách sạn và showroom ô tô.</p><p>Điểm cốt lõi là cân chỉnh lực căng bu-lông chân nhện chính xác bằng cờ-lê lực và xử lý keo kết cấu silicone kháng tia UV để tránh ngả màu theo thời gian.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80",
+        "alt": "Vách kính Spider đại sảnh"
+      },
+      "category": {
+        "id": 5,
+        "name": "Hướng dẫn kỹ thuật",
+        "slug": "huong-dan-ky-thuat"
+      },
+      "author": {
+        "id": 4,
+        "displayName": "Đức Long",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 15, "name": "Vách kính Spider", "slug": "vach-kinh-spider" },
+        { "id": 16, "name": "Chân nhện inox", "slug": "chan-nhen-inox" }
+      ],
+      "viewCount": 2780,
+      "commentCount": 8,
+      "readingMinutes": 6,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-18T15:00:00Z"
+    },
+    {
+      "id": 9,
+      "title": "Bí quyết bảo dưỡng hệ phụ kiện cửa nhôm mở quay và mở lùa",
+      "slug": "bi-quyet-bao-duong-he-phu-kien-cua-nhom",
+      "summary": "Tăng tuổi thọ bản lề 3D, bánh xe và tay nắm đa điểm bằng quy trình tra dầu mỡ định kỳ.",
+      "content": "<p>Phụ kiện kim khí tiếp xúc trực tiếp với độ ẩm không khí rất dễ bị khô mỡ hoặc oxy hóa nếu không được kiểm tra, vệ sinh định kỳ 6 tháng một lần.</p><p>Nên sử dụng các loại dầu xịt mỡ bôi trơn chuyên dụng gốc silicone để vừa bảo vệ gioăng cao su EPDM vừa giúp đóng mở êm ái, nhẹ nhàng.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+        "alt": "Bảo dưỡng phụ kiện kim khí"
+      },
+      "category": {
+        "id": 5,
+        "name": "Hướng dẫn kỹ thuật",
+        "slug": "huong-dan-ky-thuat"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 17, "name": "Phụ kiện cửa", "slug": "phu-kien-cua" },
+        { "id": 18, "name": "Bảo dưỡng", "slug": "bao-duong" }
+      ],
+      "viewCount": 2340,
+      "commentCount": 7,
+      "readingMinutes": 4,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-15T09:30:00Z"
+    },
+    {
+      "id": 10,
+      "title": "Top 5 mẫu cửa nhôm hệ Slim được ưa chuộng nhất cho nội thất căn hộ hiện đại",
+      "slug": "top-5-mau-cua-nhom-he-slim-duoc-ua-chuong-nhat",
+      "summary": "Thiết kế thanh mảnh, tối giản nhưng vững chắc mang lại không gian sang trọng và đón sáng tự nhiên.",
+      "content": "<p>Cửa nhôm Slim không chỉ là giải pháp phân chia không gian linh hoạt mà còn là điểm nhấn thẩm mỹ cho phòng khách và phòng làm việc theo phong cách Minimalism.</p><p>Hệ cửa trượt treo không ray dưới hoặc ray âm sàn siêu mỏng giúp mặt sàn liền mạch và tuyệt đối an toàn cho trẻ nhỏ và người cao tuổi.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
+        "alt": "Cửa nhôm hệ Slim nội thất"
+      },
+      "category": {
+        "id": 3,
+        "name": "Vật liệu",
+        "slug": "vat-lieu"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 19, "name": "Cửa nhôm Slim", "slug": "cua-nhom-slim" },
+        { "id": 20, "name": "Nội thất hiện đại", "slug": "noi-that-hien-dai" }
+      ],
+      "viewCount": 4580,
+      "commentCount": 22,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-12T14:00:00Z"
+    },
+    {
+      "id": 11,
+      "title": "Dự báo nhu cầu tiêu thụ nhôm xây dựng tại Việt Nam giai đoạn 2026 - 2030",
+      "slug": "du-bao-nhu-cau-tieu-thu-nhom-xay-dung-viet-nam-2026-2030",
+      "summary": "Tốc độ đô thị hóa nhanh và xu hướng công trình xanh thúc đẩy sản lượng nhôm định hình tăng trưởng 12%/năm.",
+      "content": "<p>Báo cáo ngành vật liệu xây dựng chỉ ra rằng nhu cầu sử dụng cửa nhôm kính cao cấp và mặt dựng tiết kiệm năng lượng đang thay thế mạnh mẽ các vật liệu truyền thống như gỗ hay sắt hộp.</p><p>Các nhà máy đùn ép nhôm trong nước đang tích cực đầu tư dây chuyền anode hóa và sơn phủ PVDF để đáp ứng tiêu chuẩn khắt khe từ các dự án FDI.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=800&auto=format&fit=crop&q=80",
+        "alt": "Dự báo thị trường nhôm xây dựng"
+      },
+      "category": {
+        "id": 2,
+        "name": "Thị trường",
+        "slug": "thi-truong"
+      },
+      "author": {
+        "id": 2,
+        "displayName": "Quang Huy",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 4, "name": "Thị trường", "slug": "thi-truong" },
+        { "id": 21, "name": "Báo cáo ngành", "slug": "bao-cao-nganh" }
+      ],
+      "viewCount": 3120,
+      "commentCount": 11,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-10T08:15:00Z"
+    },
+    {
+      "id": 12,
+      "title": "Giải pháp kính hộp cách âm 3 lớp cho công trình gần sân bay và đường cao tốc",
+      "slug": "giai-phap-kinh-hop-cach-am-3-lop-cho-cong-trinh-gan-san-bay",
+      "summary": "Giảm độ ồn lên tới 42dB nhờ cấu trúc kính nhiều lớp kết hợp khí trơ Argon bên trong.",
+      "content": "<p>Ô nhiễm tiếng ồn tại các đô thị lớn là vấn đề nan giải ảnh hưởng đến sức khỏe cư dân. Giải pháp cửa kính hộp 3 lớp (Triple Glazing) với các độ dày kính lệch nhau giúp triệt tiêu hiện tượng cộng hưởng âm thanh hiệu quả.</p><p>Khoảng chân không bơm khí Argon cùng hệ gioăng cao su ép đa tầng mang lại không gian sống yên tĩnh tuyệt đối.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+        "alt": "Kính hộp cách âm 3 lớp"
+      },
+      "category": {
+        "id": 3,
+        "name": "Vật liệu",
+        "slug": "vat-lieu"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 22, "name": "Kính hộp cách âm", "slug": "kinh-hop-cach-am" },
+        { "id": 6, "name": "Vật liệu kiến trúc", "slug": "vat-lieu-kien-truc" }
+      ],
+      "viewCount": 2890,
+      "commentCount": 10,
+      "readingMinutes": 6,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-08T10:00:00Z"
+    },
+    {
+      "id": 13,
+      "title": "Dự án khu nghỉ dưỡng biển Nha Trang ứng dụng hệ cửa nhôm chống ăn mòn muối biển",
+      "slug": "du-an-khu-nghi-duong-bien-nha-trang-nhom-chong-an-mon",
+      "summary": "Công nghệ mạ Anode bề mặt đạt tiêu chuẩn Qualanod giúp phụ kiện và thanh nhôm bền bỉ trước hơi muối.",
+      "content": "<p>Môi trường hơi mặn ven biển là thử thách khắc nghiệt nhất đối với bề mặt kim loại. Tại dự án resort 5 sao tại Bãi Dài, toàn bộ 450 căn biệt thự biển được trang bị cửa lùa nhôm mạ Anode dày 25 micron.</p><p>Khung cửa chống ăn mòn điện hóa, không bong tróc bề mặt sau hơn 10 năm tiếp xúc trực tiếp với gió biển.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80",
+        "alt": "Resort ven biển với cửa kính nhôm anode"
+      },
+      "category": {
+        "id": 4,
+        "name": "Dự án",
+        "slug": "du-an"
+      },
+      "author": {
+        "id": 4,
+        "displayName": "Đức Long",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 23, "name": "Nhôm Anode", "slug": "nhom-anode" },
+        { "id": 24, "name": "Dự án resort", "slug": "du-an-resort" }
+      ],
+      "viewCount": 3670,
+      "commentCount": 15,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-05T13:45:00Z"
+    },
+    {
+      "id": 14,
+      "title": "Hướng dẫn chi tiết cách trừ khe hở phụ kiện rãnh C tiêu chuẩn Châu Âu",
+      "slug": "huong-dan-chi-tiet-cach-tru-khe-ho-phu-kien-ranh-c",
+      "summary": "Công thức tính toán chuẩn xác cho các hệ nhôm rãnh C kết hợp phụ kiện Sobinco, Cmech, Sigico.",
+      "content": "<p>Phụ kiện rãnh C Châu Âu mang lại độ chính xác cơ học cao và kín khít vượt trội. Tuy nhiên, sai số khi trừ độ hở cánh hoặc rãnh gài chỉ 1mm cũng có thể khiến cửa bị kẹt hoặc khó khóa.</p><p>Bài viết cung cấp bảng thông số trừ chuẩn cho cửa đi mở quay trong, mở quay ngoài và hệ cửa sổ hất góc 90 độ.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80",
+        "alt": "Kỹ thuật lắp phụ kiện rãnh C"
+      },
+      "category": {
+        "id": 5,
+        "name": "Hướng dẫn kỹ thuật",
+        "slug": "huong-dan-ky-thuat"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 25, "name": "Rãnh C Châu Âu", "slug": "ranh-c-chau-au" },
+        { "id": 26, "name": "Công thức trừ cửa", "slug": "cong-thuc-tru-cua" }
+      ],
+      "viewCount": 4890,
+      "commentCount": 27,
+      "readingMinutes": 7,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-10-02T16:20:00Z"
+    },
+    {
+      "id": 15,
+      "title": "Robot hàn và cắt laser tự động trong dây chuyền gia công cửa nhôm công nghiệp",
+      "slug": "robot-han-va-cat-laser-tu-dong-trong-gia-cong-cua-nhom",
+      "summary": "Nâng cao năng suất gấp 3 lần và đảm bảo độ chính xác góc ghép khít tuyệt đối không vết hàn hở.",
+      "content": "<p>Tự động hóa phân xưởng gia công cơ khí nhôm kính đang là xu thế tất yếu. Việc ứng dụng cánh tay robot và máy cắt 2 đầu CNC laser giúp thời gian gia công một bộ cửa thành phẩm giảm từ 45 phút xuống chỉ còn 12 phút.</p><p>Góc ghép mòi 45 độ đạt độ phẳng tuyệt đối, đảm bảo độ kín nước khi thử nghiệm áp lực bão cấp 12.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+        "alt": "Robot tự động trong nhà máy nhôm"
+      },
+      "category": {
+        "id": 1,
+        "name": "Công nghệ sản xuất",
+        "slug": "cong-nghe-san-xuat"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 27, "name": "Robot CNC", "slug": "robot-cnc" },
+        { "id": 2, "name": "Công nghệ sản xuất", "slug": "cong-nghe-san-xuat" }
+      ],
+      "viewCount": 3560,
+      "commentCount": 18,
+      "readingMinutes": 6,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-28T09:10:00Z"
+    },
+    {
+      "id": 16,
+      "title": "Xuất khẩu nhôm định hình Việt Nam sang thị trường EU tăng trưởng mạnh",
+      "slug": "xuat-khau-nhom-dinh-hinh-viet-nam-sang-eu-tang-truong",
+      "summary": "Các doanh nghiệp trong nước đạt chứng chỉ carbon CBAM mở rộng thị phần tại Đức, Pháp và Hà Lan.",
+      "content": "<p>Nhờ chủ động chuyển đổi sang sử dụng năng lượng tái tạo và vật liệu nhôm tái chế thân thiện với môi trường, các lô hàng thanh nhôm định hình Việt Nam đã vượt qua các rào cản thuế carbon của liên minh Châu Âu.</p><p>Tổng kim ngạch xuất khẩu trong quý vừa qua ghi nhận mức tăng trưởng ấn tượng 28% so với cùng kỳ năm trước.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&auto=format&fit=crop&q=80",
+        "alt": "Xuất khẩu thanh nhôm định hình"
+      },
+      "category": {
+        "id": 2,
+        "name": "Thị trường",
+        "slug": "thi-truong"
+      },
+      "author": {
+        "id": 2,
+        "displayName": "Quang Huy",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 4, "name": "Thị trường", "slug": "thi-truong" },
+        { "id": 28, "name": "Xuất khẩu nhôm", "slug": "xuat-khau-nhom" }
+      ],
+      "viewCount": 2670,
+      "commentCount": 8,
+      "readingMinutes": 4,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-25T14:30:00Z"
+    },
+    {
+      "id": 17,
+      "title": "Khám phá trung tâm thương mại 5 tầng sử dụng mái kính thông minh lấy sáng",
+      "slug": "kham-pha-trung-tam-thuong-mai-mai-kinh-thong-minh",
+      "summary": "Hệ thống giếng trời mái kính dạng vòm parabol diện tích hơn 2.000m2 tự động điều chỉnh độ mờ.",
+      "content": "<p>Công trình biểu tượng mới tại trung tâm thành phố vừa khánh thành với điểm nhấn là mái kính vòm khổng lồ.</p><p>Hệ kính tích hợp phim cảm quang điện hóa giúp tự động giảm độ xuyên sáng vào buổi trưa nắng gắt và mở sáng tối đa vào sáng sớm và chiều tà, tạo không gian mua sắm tràn ngập ánh sáng tự nhiên.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?w=800&auto=format&fit=crop&q=80",
+        "alt": "Mái kính lấy sáng giếng trời"
+      },
+      "category": {
+        "id": 4,
+        "name": "Dự án",
+        "slug": "du-an"
+      },
+      "author": {
+        "id": 4,
+        "displayName": "Đức Long",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 29, "name": "Mái kính giếng trời", "slug": "mai-kinh-gieng-troi" },
+        { "id": 30, "name": "Trung tâm thương mại", "slug": "trung-tam-thuong-mai" }
+      ],
+      "viewCount": 3890,
+      "commentCount": 13,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-20T11:00:00Z"
+    },
+    {
+      "id": 18,
+      "title": "Tiêu chuẩn an toàn khi thi công kính trên cao và biện pháp chống rơi rụng",
+      "slug": "tieu-chuan-an-toan-thi-cong-kinh-tren-cao",
+      "summary": "Quy trình kiểm tra hít kính chân không điện tử, dây cứu sinh và phương án cứu hộ khẩn cấp.",
+      "content": "<p>Lắp dựng các tấm kính nặng hàng trăm kilogram ở độ cao hàng chục mét đòi hỏi tính kỷ luật và sự chuẩn bị kỹ thuật nghiêm ngặt nhất.</p><p>Tất cả giác hút chân không phải có hệ thống cảnh báo pin kép và dây đai an toàn phụ trợ chống tuột kính khi mất nguồn điện đột ngột.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1541888946425-d0fbb186156f?w=800&auto=format&fit=crop&q=80",
+        "alt": "An toàn lao động thi công kính trên cao"
+      },
+      "category": {
+        "id": 5,
+        "name": "Hướng dẫn kỹ thuật",
+        "slug": "huong-dan-ky-thuat"
+      },
+      "author": {
+        "id": 4,
+        "displayName": "Đức Long",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 31, "name": "An toàn lao động", "slug": "an-toan-lao-dong" },
+        { "id": 32, "name": "Hít kính chân không", "slug": "hit-kinh-chan-khong" }
+      ],
+      "viewCount": 2450,
+      "commentCount": 9,
+      "readingMinutes": 6,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-15T08:30:00Z"
+    },
+    {
+      "id": 19,
+      "title": "Thuật toán bóc tách phôi nhôm tự động giúp tiết kiệm 200 triệu tiền phế liệu mỗi tháng",
+      "slug": "thuat-toan-boc-tach-phoi-nhom-tu-dong-tiet-kiem-phe-lieu",
+      "summary": "Giải pháp sắp xếp sơ đồ cắt tối ưu trên cây nhôm 5.8m - 6.0m áp dụng cho các nhà máy quy mô lớn.",
+      "content": "<p>Với việc tích hợp thuật toán phân bổ phôi thông minh của XTTech, các đơn hàng gia công cửa được ghép nối liên hoàn.</p><p>Hệ thống tự động tính toán đưa các đoạn nhôm cắt thừa vào đơn hàng sau, giúp tỷ lệ sử dụng hữu ích của cây nhôm đạt tới 98.2%.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+        "alt": "Sơ đồ tối ưu cắt nhôm tự động"
+      },
+      "category": {
+        "id": 1,
+        "name": "Công nghệ sản xuất",
+        "slug": "cong-nghe-san-xuat"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 33, "name": "Tối ưu cắt nhôm", "slug": "toi-uu-cat-nhom" },
+        { "id": 13, "name": "XTTech", "slug": "xttech" }
+      ],
+      "viewCount": 4980,
+      "commentCount": 21,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-10T10:15:00Z"
+    },
+    {
+      "id": 20,
+      "title": "Kính điện thông minh đổi màu (Smart Tint): Xu hướng mới trong thiết kế văn phòng",
+      "slug": "kinh-dien-thong-minh-doi-mau-smart-tint",
+      "summary": "Chuyển đổi trạng thái trong suốt sang mờ đục chỉ bằng một nút bấm hoặc điều khiển qua điện thoại.",
+      "content": "<p>Vách ngăn kính điện thông minh ứng dụng công nghệ tinh thể lỏng PDLC (Polymer Dispersed Liquid Crystal) đang là giải pháp thay thế hoàn hảo cho rèm vải truyền thống trong các phòng họp hội đồng và phòng làm việc giám đốc.</p><p>Sự kết hợp giữa công nghệ hiện đại và sự tiện nghi mang lại không gian làm việc chuyên nghiệp, đẳng cấp.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=80",
+        "alt": "Vách kính điện thông minh văn phòng"
+      },
+      "category": {
+        "id": 3,
+        "name": "Vật liệu",
+        "slug": "vat-lieu"
+      },
+      "author": {
+        "id": 3,
+        "displayName": "Thu Hà",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 34, "name": "Kính thông minh", "slug": "kinh-thong-minh" },
+        { "id": 20, "name": "Nội thất hiện đại", "slug": "noi-that-hien-dai" }
+      ],
+      "viewCount": 3920,
+      "commentCount": 14,
+      "readingMinutes": 5,
+      "isFeatured": false,
+      "isBreaking": false,
+      "publishedAt": "2026-09-05T15:20:00Z"
+    }
+  ]
+}
+

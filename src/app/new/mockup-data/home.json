@@ -1,0 +1,360 @@
+{
+  "data": {
+    "hero": {
+      "id": 1,
+      "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+      "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham",
+      "summary": "Hệ thống giám sát nhiệt độ phôi theo thời gian thực giúp thanh nhôm định hình đồng đều hơn.",
+      "content": "<p>Hệ thống ép đùn thông minh thế hệ mới tích hợp cảm biến hồng ngoại và thuật toán điều khiển PID tự động điều chỉnh tốc độ đùn ép theo thời gian thực.</p>",
+      "thumbnail": {
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+        "alt": "Dây chuyền ép đùn nhôm hiện đại"
+      },
+      "category": {
+        "id": 1,
+        "name": "Công nghệ sản xuất",
+        "slug": "cong-nghe-san-xuat"
+      },
+      "author": {
+        "id": 1,
+        "displayName": "Minh Anh",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+      },
+      "tags": [
+        { "id": 1, "name": "Ép đùn nhôm", "slug": "ep-dun-nhom" }
+      ],
+      "viewCount": 5420,
+      "commentCount": 24,
+      "readingMinutes": 5,
+      "isFeatured": true,
+      "isBreaking": true,
+      "publishedAt": "2026-11-02T08:30:00Z"
+    },
+    "featured": [
+      {
+        "id": 2,
+        "title": "Giá nhôm thế giới tuần này: nhà thầu nên chốt đơn sớm?",
+        "slug": "gia-nhom-the-gioi-tuan-nay-nha-thau-nen-chot-don-som",
+        "summary": "Biến động giá nhôm LME ảnh hưởng trực tiếp đến báo giá của nhôm kính trong quý tới.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
+          "alt": "Biến động thị trường giá nhôm"
+        },
+        "category": {
+          "id": 2,
+          "name": "Thị trường",
+          "slug": "thi-truong"
+        },
+        "author": {
+          "id": 2,
+          "displayName": "Quang Huy",
+          "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+        },
+        "viewCount": 4120,
+        "readingMinutes": 4,
+        "isFeatured": true,
+        "publishedAt": "2026-11-01T14:20:00Z"
+      },
+      {
+        "id": 3,
+        "title": "Kính cường lực và kính dán an toàn: chọn loại nào cho mặt dựng?",
+        "slug": "kinh-cuong-luc-va-kinh-dan-an-toan-chon-loai-nao-cho-mat-dung",
+        "summary": "So sánh độ bền, khả năng chịu va đập và chi phí của hai loại kính phổ biến.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+          "alt": "Mặt dựng kính cường lực và an toàn"
+        },
+        "category": {
+          "id": 3,
+          "name": "Vật liệu",
+          "slug": "vat-lieu"
+        },
+        "author": {
+          "id": 3,
+          "displayName": "Thu Hà",
+          "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+        },
+        "viewCount": 3890,
+        "readingMinutes": 6,
+        "isFeatured": true,
+        "publishedAt": "2026-10-30T09:15:00Z"
+      },
+      {
+        "id": 5,
+        "title": "5 lỗi thường gặp khi lắp cửa nhôm kính và cách tránh",
+        "slug": "5-loi-thuong-gap-khi-lap-cua-nhom-kinh-va-cach-tranh",
+        "summary": "Từ chọn ron, bắt vít đến chống thấm: checklist ngắn gọn cho thợ thi công.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=800&auto=format&fit=crop&q=80",
+          "alt": "Kỹ thuật thi công lắp cửa nhôm"
+        },
+        "category": {
+          "id": 5,
+          "name": "Hướng dẫn kỹ thuật",
+          "slug": "huong-dan-ky-thuat"
+        },
+        "author": {
+          "id": 3,
+          "displayName": "Thu Hà",
+          "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80"
+        },
+        "viewCount": 6120,
+        "readingMinutes": 7,
+        "isFeatured": true,
+        "publishedAt": "2026-10-26T10:45:00Z"
+      }
+    ],
+    "latest": [
+      {
+        "id": 1,
+        "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+        "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham",
+        "summary": "Hệ thống giám sát nhiệt độ phôi theo thời gian thực giúp thanh nhôm định hình đồng đều hơn.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+          "alt": "Dây chuyền ép đùn nhôm hiện đại"
+        },
+        "category": { "id": 1, "name": "Công nghệ sản xuất", "slug": "cong-nghe-san-xuat" },
+        "author": { "id": 1, "displayName": "Minh Anh" },
+        "readingMinutes": 5,
+        "publishedAt": "2026-11-02T08:30:00Z"
+      },
+      {
+        "id": 2,
+        "title": "Giá nhôm thế giới tuần này: nhà thầu nên chốt đơn sớm?",
+        "slug": "gia-nhom-the-gioi-tuan-nay-nha-thau-nen-chot-don-som",
+        "summary": "Biến động giá nhôm LME ảnh hưởng trực tiếp đến báo giá của nhôm kính trong quý tới.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
+          "alt": "Biến động thị trường giá nhôm"
+        },
+        "category": { "id": 2, "name": "Thị trường", "slug": "thi-truong" },
+        "author": { "id": 2, "displayName": "Quang Huy" },
+        "readingMinutes": 4,
+        "publishedAt": "2026-11-01T14:20:00Z"
+      },
+      {
+        "id": 3,
+        "title": "Kính cường lực và kính dán an toàn: chọn loại nào cho mặt dựng?",
+        "slug": "kinh-cuong-luc-va-kinh-dan-an-toan-chon-loai-nao-cho-mat-dung",
+        "summary": "So sánh độ bền, khả năng chịu va đập và chi phí của hai loại kính phổ biến.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+          "alt": "Mặt dựng kính cường lực và an toàn"
+        },
+        "category": { "id": 3, "name": "Vật liệu", "slug": "vat-lieu" },
+        "author": { "id": 3, "displayName": "Thu Hà" },
+        "readingMinutes": 6,
+        "publishedAt": "2026-10-30T09:15:00Z"
+      },
+      {
+        "id": 4,
+        "title": "Tòa văn phòng 25 tầng hoàn thiện mặt dựng kính Low-E",
+        "slug": "toa-van-phong-25-tang-hoan-thien-mat-dung-kinh-low-e",
+        "summary": "Công trình sử dụng hệ curtain wall giúp giảm đáng kể điện năng cho điều hòa.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=800&auto=format&fit=crop&q=80",
+          "alt": "Tòa nhà mặt dựng kính Low-E"
+        },
+        "category": { "id": 4, "name": "Dự án", "slug": "du-an" },
+        "author": { "id": 4, "displayName": "Đức Long" },
+        "readingMinutes": 5,
+        "publishedAt": "2026-10-28T16:00:00Z"
+      },
+      {
+        "id": 5,
+        "title": "5 lỗi thường gặp khi lắp cửa nhôm kính và cách tránh",
+        "slug": "5-loi-thuong-gap-khi-lap-cua-nhom-kinh-va-cach-tranh",
+        "summary": "Từ chọn ron, bắt vít đến chống thấm: checklist ngắn gọn cho thợ thi công.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=800&auto=format&fit=crop&q=80",
+          "alt": "Kỹ thuật thi công lắp cửa nhôm"
+        },
+        "category": { "id": 5, "name": "Hướng dẫn kỹ thuật", "slug": "huong-dan-ky-thuat" },
+        "author": { "id": 3, "displayName": "Thu Hà" },
+        "readingMinutes": 7,
+        "publishedAt": "2026-10-26T10:45:00Z"
+      },
+      {
+        "id": 6,
+        "title": "Nhôm Xingfa, nhôm Việt Pháp: khác nhau ở đâu?",
+        "slug": "nhom-xingfa-nhom-viet-phap-khac-nhau-o-dau",
+        "summary": "Phân biệt hệ nhôm theo độ dày, bề mặt sơn tĩnh điện và phụ kiện đồng bộ.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80",
+          "alt": "Mẫu mặt cắt profile nhôm"
+        },
+        "category": { "id": 3, "name": "Vật liệu", "slug": "vat-lieu" },
+        "author": { "id": 1, "displayName": "Minh Anh" },
+        "readingMinutes": 6,
+        "publishedAt": "2026-10-24T08:00:00Z"
+      },
+      {
+        "id": 7,
+        "title": "Ứng dụng phần mềm XTTech quản lý toàn diện xưởng nhôm kính",
+        "slug": "ung-dung-phan-mem-xttech-quan-ly-toan-dien-xuong-nhom-kinh",
+        "summary": "Tối ưu hóa từ khảo sát kích thước công trình đến lập dự toán, bóc tách và phân bổ phôi nhôm.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=80",
+          "alt": "Phần mềm quản trị sản xuất XTTech"
+        },
+        "category": { "id": 1, "name": "Công nghệ sản xuất", "slug": "cong-nghe-san-xuat" },
+        "author": { "id": 2, "displayName": "Quang Huy" },
+        "readingMinutes": 5,
+        "publishedAt": "2026-10-20T11:30:00Z"
+      },
+      {
+        "id": 8,
+        "title": "Kỹ thuật thi công vách kính spider không khung cho showroom",
+        "slug": "ky-thuat-thi-cong-vach-kinh-spider-khong-khung",
+        "summary": "Chi tiết liên kết chân nhện chịu lực và keo kết cấu silicone cho không gian mở tối đa.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80",
+          "alt": "Vách kính Spider đại sảnh"
+        },
+        "category": { "id": 5, "name": "Hướng dẫn kỹ thuật", "slug": "huong-dan-ky-thuat" },
+        "author": { "id": 4, "displayName": "Đức Long" },
+        "readingMinutes": 6,
+        "publishedAt": "2026-10-18T15:00:00Z"
+      },
+      {
+        "id": 9,
+        "title": "Bí quyết bảo dưỡng hệ phụ kiện cửa nhôm mở quay và mở lùa",
+        "slug": "bi-quyet-bao-duong-he-phu-kien-cua-nhom",
+        "summary": "Tăng tuổi thọ bản lề 3D, bánh xe và tay nắm đa điểm bằng quy trình tra dầu mỡ định kỳ.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+          "alt": "Bảo dưỡng phụ kiện kim khí"
+        },
+        "category": { "id": 5, "name": "Hướng dẫn kỹ thuật", "slug": "huong-dan-ky-thuat" },
+        "author": { "id": 3, "displayName": "Thu Hà" },
+        "readingMinutes": 4,
+        "publishedAt": "2026-10-15T09:30:00Z"
+      },
+      {
+        "id": 10,
+        "title": "Top 5 mẫu cửa nhôm hệ Slim được ưa chuộng nhất cho nội thất căn hộ hiện đại",
+        "slug": "top-5-mau-cua-nhom-he-slim-duoc-ua-chuong-nhat",
+        "summary": "Thiết kế thanh mảnh, tối giản nhưng vững chắc mang lại không gian sang trọng và đón sáng tự nhiên.",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
+          "alt": "Cửa nhôm hệ Slim nội thất"
+        },
+        "category": { "id": 3, "name": "Vật liệu", "slug": "vat-lieu" },
+        "author": { "id": 1, "displayName": "Minh Anh" },
+        "readingMinutes": 5,
+        "publishedAt": "2026-10-12T14:00:00Z"
+      }
+    ],
+    "trending": [
+      {
+        "id": 5,
+        "rank": 1,
+        "title": "5 lỗi thường gặp khi lắp cửa nhôm kính và cách tránh",
+        "slug": "5-loi-thuong-gap-khi-lap-cua-nhom-kinh-va-cach-tranh",
+        "viewCount": 6120
+      },
+      {
+        "id": 1,
+        "rank": 2,
+        "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+        "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham",
+        "viewCount": 5420
+      },
+      {
+        "id": 6,
+        "rank": 3,
+        "title": "Nhôm Xingfa, nhôm Việt Pháp: khác nhau ở đâu?",
+        "slug": "nhom-xingfa-nhom-viet-phap-khac-nhau-o-dau",
+        "viewCount": 5100
+      },
+      {
+        "id": 2,
+        "rank": 4,
+        "title": "Giá nhôm thế giới tuần này: nhà thầu nên chốt đơn sớm?",
+        "slug": "gia-nhom-the-gioi-tuan-nay-nha-thau-nen-chot-don-som",
+        "viewCount": 4120
+      },
+      {
+        "id": 10,
+        "rank": 5,
+        "title": "Top 5 mẫu cửa nhôm hệ Slim được ưa chuộng nhất cho nội thất căn hộ hiện đại",
+        "slug": "top-5-mau-cua-nhom-he-slim-duoc-ua-chuong-nhat",
+        "viewCount": 4580
+      }
+    ],
+    "breaking": [
+      {
+        "id": 1,
+        "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+        "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham"
+      },
+      {
+        "id": 5,
+        "title": "5 lỗi thường gặp khi lắp cửa nhôm kính và cách tránh",
+        "slug": "5-loi-thuong-gap-khi-lap-cua-nhom-kinh-va-cach-tranh"
+      }
+    ],
+    "sections": [
+      {
+        "category": { "id": 1, "name": "Công nghệ sản xuất", "slug": "cong-nghe-san-xuat" },
+        "articles": [
+          {
+            "id": 1,
+            "title": "Dây chuyền ép đùn nhôm thế hệ mới giảm 18% phế phẩm",
+            "slug": "day-chuyen-ep-dun-nhom-the-he-moi-giam-18-phe-pham",
+            "summary": "Hệ thống giám sát nhiệt độ phôi theo thời gian thực giúp thanh nhôm định hình đồng đều hơn."
+          },
+          {
+            "id": 7,
+            "title": "Ứng dụng phần mềm XTTech quản lý toàn diện xưởng nhôm kính",
+            "slug": "ung-dung-phan-mem-xttech-quan-ly-toan-dien-xuong-nhom-kinh",
+            "summary": "Tối ưu hóa từ khảo sát kích thước công trình đến lập dự toán, bóc tách và phân bổ phôi nhôm."
+          },
+          {
+            "id": 15,
+            "title": "Robot hàn và cắt laser tự động trong dây chuyền gia công cửa nhôm công nghiệp",
+            "slug": "robot-han-va-cat-laser-tu-dong-trong-gia-cong-cua-nhom",
+            "summary": "Nâng cao năng suất gấp 3 lần và đảm bảo độ chính xác góc ghép khít tuyệt đối không vết hàn hở."
+          },
+          {
+            "id": 19,
+            "title": "Thuật toán bóc tách phôi nhôm tự động giúp tiết kiệm 200 triệu tiền phế liệu mỗi tháng",
+            "slug": "thuat-toan-boc-tach-phoi-nhom-tu-dong-tiet-kiem-phe-lieu",
+            "summary": "Giải pháp sắp xếp sơ đồ cắt tối ưu trên cây nhôm 5.8m - 6.0m áp dụng cho các nhà máy quy mô lớn."
+          }
+        ]
+      },
+      {
+        "category": { "id": 3, "name": "Vật liệu", "slug": "vat-lieu" },
+        "articles": [
+          {
+            "id": 3,
+            "title": "Kính cường lực và kính dán an toàn: chọn loại nào cho mặt dựng?",
+            "slug": "kinh-cuong-luc-va-kinh-dan-an-toan-chon-loai-nao-cho-mat-dung",
+            "summary": "So sánh độ bền, khả năng chịu va đập và chi phí của hai loại kính phổ biến."
+          },
+          {
+            "id": 6,
+            "title": "Nhôm Xingfa, nhôm Việt Pháp: khác nhau ở đâu?",
+            "slug": "nhom-xingfa-nhom-viet-phap-khac-nhau-o-dau",
+            "summary": "Phân biệt hệ nhôm theo độ dày, bề mặt sơn tĩnh điện và phụ kiện đồng bộ."
+          },
+          {
+            "id": 10,
+            "title": "Top 5 mẫu cửa nhôm hệ Slim được ưa chuộng nhất cho nội thất căn hộ hiện đại",
+            "slug": "top-5-mau-cua-nhom-he-slim-duoc-ua-chuong-nhat",
+            "summary": "Thiết kế thanh mảnh, tối giản nhưng vững chắc mang lại không gian sang trọng và đón sáng tự nhiên."
+          },
+          {
+            "id": 12,
+            "title": "Giải pháp kính hộp cách âm 3 lớp cho công trình gần sân bay và đường cao tốc",
+            "slug": "giai-phap-kinh-hop-cach-am-3-lop-cho-cong-trinh-gan-san-bay",
+            "summary": "Giảm độ ồn lên tới 42dB nhờ cấu trúc kính nhiều lớp kết hợp khí trơ Argon bên trong."
+          }
+        ]
+      }
+    ]
+  }
+}
+

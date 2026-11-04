@@ -38,7 +38,7 @@ export default function PublicNewsPage() {
         (article) =>
           article.title.toLowerCase().includes(q) ||
           article.summary.toLowerCase().includes(q) ||
-          article.author.name.toLowerCase().includes(q),
+          (article.author?.displayName || article.author?.name || '').toLowerCase().includes(q),
       );
     }
 

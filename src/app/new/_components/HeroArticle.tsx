@@ -4,27 +4,33 @@ import React from 'react';
 import Link from 'next/link';
 
 export interface ArticleItem {
-  id: string;
+  id: string | number;
   title: string;
   slug: string;
   summary: string;
-  thumbnail?: string;
+  content?: string;
+  thumbnail?: string | { url: string; alt?: string };
   coverImage?: string;
   bannerGradient?: string;
   category: {
-    id: string;
+    id: string | number;
     name: string;
     slug: string;
   };
   author: {
-    name: string;
+    id?: number;
+    name?: string;
+    displayName?: string;
     avatar?: string;
+    avatarUrl?: string | null;
     role?: string;
   };
   publishedAt: string;
   date?: string;
-  readingTime: string;
+  readingTime?: string;
+  readingMinutes?: number;
   views?: number;
+  viewCount?: number;
 }
 
 interface HeroArticleProps {
@@ -33,6 +39,21 @@ interface HeroArticleProps {
 
 export const HeroArticle: React.FC<HeroArticleProps> = ({ article }) => {
   if (!article) return null;
+
+  const thumbnailUrl =
+    typeof article.thumbnail === 'object' && article.thumbnail !== null
+      ? article.thumbnail.url
+      : article.thumbnail;
+
+  const authorName = article.author?.displayName || article.author?.name || 'XTTech';
+
+  const formattedDate =
+    article.date ||
+    (article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('vi-VN') : '');
+
+  const readTime = article.readingMinutes
+    ? `${article.readingMinutes} phút đọc`
+    : article.readingTime || '5 phút đọc';
 
   return (
     <article className="group bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full">
@@ -46,9 +67,9 @@ export const HeroArticle: React.FC<HeroArticleProps> = ({ article }) => {
           className="absolute inset-0 opacity-40 bg-[linear-gradient(to_right,#94a3b8_1px,transparent_1px),linear-gradient(to_bottom,#94a3b8_1px,transparent_1px)] bg-[size:24px_24px]"
         />
 
-        {article.thumbnail ? (
+        {thumbnailUrl ? (
           <img
-            src={article.thumbnail}
+            src={thumbnailUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 mix-blend-multiply opacity-80"
           />
@@ -86,11 +107,11 @@ export const HeroArticle: React.FC<HeroArticleProps> = ({ article }) => {
 
         {/* Meta Info */}
         <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-400">
-          <span>{article.author.name}</span>
+          <span>{authorName}</span>
           <span>·</span>
-          <span>{article.date || article.publishedAt}</span>
+          <span>{formattedDate}</span>
           <span>·</span>
-          <span>{article.readingTime}</span>
+          <span>{readTime}</span>
         </div>
       </div>
     </article>
