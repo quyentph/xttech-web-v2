@@ -25,6 +25,30 @@ function generateSlug(str: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// Chuyển HTML sẵn có thành text thuần để người dùng gõ văn bản tự nhiên
+function htmlToPlainText(html: string): string {
+  if (!html) return '';
+  return html
+    .replace(/<\/p>\s*<p>/gi, '\n\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/?(p|div|span|h[1-6]|b|i|u|strong|em)[^>]*>/gi, '')
+    .trim();
+}
+
+// Tự động đóng gói văn bản thuần (có xuống dòng) thành các đoạn văn <p>
+function plainTextToHtml(text: string): string {
+  if (!text) return '';
+  if (/<[a-z][\s\S]*>/i.test(text)) {
+    return text;
+  }
+  return text
+    .split(/\n\s*\n/)
+    .map((para) => para.trim())
+    .filter(Boolean)
+    .map((para) => `<p>${para.replace(/\n/g, '<br />')}</p>`)
+    .join('');
+}
+
 interface NewsArticleModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -75,7 +99,7 @@ export const NewsArticleModal: React.FC<NewsArticleModalProps> = ({
         setCategoryId(articleToEdit.categoryId);
         setSelectedTagIds(articleToEdit.tags ? articleToEdit.tags.map((t) => t.id) : []);
         setSummary(articleToEdit.summary || '');
-        setContent(articleToEdit.content || '');
+        setContent(htmlToPlainText(articleToEdit.content || ''));
         setThumbnailUrl(articleToEdit.thumbnailUrl || '');
         setThumbnailAlt(articleToEdit.thumbnailAlt || '');
         setIsFeatured(articleToEdit.isFeatured);
@@ -157,7 +181,7 @@ export const NewsArticleModal: React.FC<NewsArticleModalProps> = ({
       categoryId: Number(categoryId),
       tagIds: selectedTagIds,
       summary: summary.trim(),
-      content: content.trim(),
+      content: plainTextToHtml(content.trim()),
       thumbnailUrl: thumbnailUrl.trim() || null,
       thumbnailAlt: thumbnailAlt.trim() || title.trim(),
       isFeatured,
@@ -375,17 +399,17 @@ export const NewsArticleModal: React.FC<NewsArticleModalProps> = ({
         {/* Nội dung bài viết */}
         <div className="flex flex-col gap-1">
           <label className="text-xs font-semibold text-slate-700">
-            Nội dung bài viết (HTML) <span className="text-red-500">*</span>
+            Nội dung bài viết <span className="text-red-500">*</span>
           </label>
           <textarea
-            rows={6}
+            rows={7}
             value={content}
             onChange={(e) => {
               setContent(e.target.value);
               if (errors.content) setErrors((prev) => ({ ...prev, content: '' }));
             }}
-            placeholder="<p>Nhập nội dung bài viết định dạng văn bản hoặc HTML...</p>"
-            className="w-full p-2.5 text-xs sm:text-sm font-mono rounded-lg border border-slate-200 bg-white outline-none focus:border-primary text-slate-800"
+            placeholder="Nhập nội dung bài viết (xuống dòng bằng phím Enter để tạo các đoạn văn)..."
+            className="w-full p-3 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-primary text-slate-800 leading-relaxed resize-y"
           />
           {errors.content && <span className="text-[11px] text-red-500">{errors.content}</span>}
         </div>

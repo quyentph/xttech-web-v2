@@ -298,9 +298,16 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
         {/* 4. Nội dung bài viết (Sanitize an toàn) */}
         <article
-          className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-slate-800 space-y-4"
+          className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-slate-800 space-y-4 whitespace-pre-line"
           dangerouslySetInnerHTML={{
-            __html: sanitizeRichHtml(article.content),
+            __html: sanitizeRichHtml(
+              article.content?.includes('<p>')
+                ? article.content
+                : article.content
+                    ?.split(/\n\s*\n/)
+                    .map((p) => `<p>${p.trim()}</p>`)
+                    .join('') || ''
+            ),
           }}
         />
 
