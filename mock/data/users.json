@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "role_id": 1,
+    "username": "admin_xt",
+    "email": "admin@xttech.vn",
+    "password_hash": "$2a$12$e6mZ8b12...hashed...",
+    "full_name": "Nguyễn Hoàng Nam",
+    "display_name": "Ban Quản Trị XTTech",
+    "avatar_url": null,
+    "bio": "Quản trị viên cổng thông tin công nghệ và giải pháp nhôm kính XTTech",
+    "is_active": true,
+    "created_at": "2026-01-10T08:00:00Z",
+    "updated_at": "2026-01-10T08:00:00Z"
+  },
+  {
+    "id": 2,
+    "role_id": 2,
+    "username": "editor_minhanh",
+    "email": "minhanh@xttech.vn",
+    "password_hash": "$2a$12$k2l8x901...hashed...",
+    "full_name": "Phạm Minh Anh",
+    "display_name": "Minh Anh",
+    "avatar_url": null,
+    "bio": "Biên tập viên chuyên trách mảng công nghệ sản xuất và thị trường vật liệu kiến trúc",
+    "is_active": true,
+    "created_at": "2026-01-15T09:30:00Z",
+    "updated_at": "2026-01-15T09:30:00Z"
+  },
+  {
+    "id": 3,
+    "role_id": 3,
+    "username": "author_thuha",
+    "email": "thuha@xttech.vn",
+    "password_hash": "$2a$12$j91m45z1...hashed...",
+    "full_name": "Vũ Thu Hà",
+    "display_name": "Thu Hà",
+    "avatar_url": null,
+    "bio": "Kỹ sư vật liệu và tư vấn giải pháp cửa nhôm kính cao cấp",
+    "is_active": true,
+    "created_at": "2026-02-01T10:00:00Z",
+    "updated_at": "2026-02-01T10:00:00Z"
+  },
+  {
+    "id": 4,
+    "role_id": 3,
+    "username": "author_duclong",
+    "email": "duclong@xttech.vn",
+    "password_hash": "$2a$12$a19c72q5...hashed...",
+    "full_name": "Trần Đức Long",
+    "display_name": "Đức Long",
+    "avatar_url": null,
+    "bio": "Chỉ huy trưởng công trình mặt dựng tòa nhà và hệ thống vách kính curtain wall",
+    "is_active": true,
+    "created_at": "2026-02-10T14:00:00Z",
+    "updated_at": "2026-02-10T14:00:00Z"
+  }
+]
+

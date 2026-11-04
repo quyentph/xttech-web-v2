@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Button } from '@/components/button';
+import { Article } from '@/types/news';
 import { ArticleCard } from './ArticleCard';
-import { ArticleItem } from './HeroArticle';
 
 interface ArticleGridProps {
-  articles: ArticleItem[];
+  articles: Article[];
   onLoadMore?: () => void;
   hasMore?: boolean;
 }

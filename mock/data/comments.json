@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "article_id": 1,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Nguyễn Văn Hùng",
+    "author_email": "hung.nv@gmail.com",
+    "content": "Dây chuyền này có áp dụng được cho các profile nhôm rãnh C nhập khẩu không anh?",
+    "status": "approved",
+    "created_at": "2026-11-04T07:10:00Z",
+    "updated_at": "2026-11-04T07:10:00Z"
+  },
+  {
+    "id": 2,
+    "article_id": 1,
+    "user_id": 2,
+    "parent_id": 1,
+    "author_name": "Minh Anh",
+    "author_email": "minhanh@xttech.vn",
+    "content": "Chào anh Hùng, hệ thống hoàn toàn tương thích với các khuôn đùn nhôm tiêu chuẩn Châu Âu và rãnh C ạ.",
+    "status": "approved",
+    "created_at": "2026-11-04T07:35:00Z",
+    "updated_at": "2026-11-04T07:35:00Z"
+  },
+  {
+    "id": 3,
+    "article_id": 1,
+    "user_id": null,
+    "parent_id": 2,
+    "author_name": "Nguyễn Văn Hùng",
+    "author_email": "hung.nv@gmail.com",
+    "content": "Cảm ơn bạn, để mình liên hệ đội ngũ kỹ thuật XTTech xin bản demo.",
+    "status": "approved",
+    "created_at": "2026-11-04T07:50:00Z",
+    "updated_at": "2026-11-04T07:50:00Z"
+  },
+  {
+    "id": 4,
+    "article_id": 1,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Trần Quốc Tuấn",
+    "author_email": "tuantran.al@gmail.com",
+    "content": "Bài viết rất thực tế. Giảm được 18% phế phẩm thì mỗi tháng tiết kiệm được rất nhiều tiền phôi.",
+    "status": "approved",
+    "created_at": "2026-11-04T08:15:00Z",
+    "updated_at": "2026-11-04T08:15:00Z"
+  },
+  {
+    "id": 5,
+    "article_id": 2,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Lê Văn Thắng",
+    "author_email": "thang.le@xaydung.vn",
+    "content": "Giá nhôm LME đang có xu hướng lập đỉnh mới do chi phí năng lượng toàn cầu tăng.",
+    "status": "approved",
+    "created_at": "2026-11-03T15:00:00Z",
+    "updated_at": "2026-11-03T15:00:00Z"
+  },
+  {
+    "id": 6,
+    "article_id": 2,
+    "user_id": 2,
+    "parent_id": 5,
+    "author_name": "Quang Huy",
+    "author_email": "quanghuy@xttech.vn",
+    "content": "Chính xác anh Thắng, các nhà thầu nên chốt sớm hợp đồng phôi nhôm trong tuần này.",
+    "status": "approved",
+    "created_at": "2026-11-03T15:30:00Z",
+    "updated_at": "2026-11-03T15:30:00Z"
+  },
+  {
+    "id": 7,
+    "article_id": 5,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Phan Đình Trọng",
+    "author_email": "trong.phan@cuanhom.com",
+    "content": "Checklist rất chi tiết. Thợ bên mình trước đây hay quên rãnh thoát nước đáy nên bị đọng nước.",
+    "status": "approved",
+    "created_at": "2026-10-31T11:30:00Z",
+    "updated_at": "2026-10-31T11:30:00Z"
+  },
+  {
+    "id": 8,
+    "article_id": 5,
+    "user_id": 3,
+    "parent_id": 7,
+    "author_name": "Thu Hà",
+    "author_email": "thuha@xttech.vn",
+    "content": "Đúng rồi anh Trọng, rãnh thoát nước kèm nắp van một chiều chống gió lùa là cực kỳ quan trọng.",
+    "status": "approved",
+    "created_at": "2026-10-31T12:00:00Z",
+    "updated_at": "2026-10-31T12:00:00Z"
+  },
+  {
+    "id": 9,
+    "article_id": 5,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Bùi Mai Anh",
+    "author_email": "maianh.arch@gmail.com",
+    "content": "Keo kết cấu silicone nên dùng loại trung tính hay axit cho nhôm sơn tĩnh điện vậy chuyên gia?",
+    "status": "approved",
+    "created_at": "2026-10-31T14:15:00Z",
+    "updated_at": "2026-10-31T14:15:00Z"
+  },
+  {
+    "id": 10,
+    "article_id": 5,
+    "user_id": 3,
+    "parent_id": 9,
+    "author_name": "Thu Hà",
+    "author_email": "thuha@xttech.vn",
+    "content": "Bắt buộc phải dùng keo silicone trung tính bạn nhé! Keo axit sẽ ăn mòn lớp sơn tĩnh điện và oxi hóa kim loại.",
+    "status": "approved",
+    "created_at": "2026-10-31T14:40:00Z",
+    "updated_at": "2026-10-31T14:40:00Z"
+  },
+  {
+    "id": 11,
+    "article_id": 10,
+    "user_id": null,
+    "parent_id": null,
+    "author_name": "Vũ Đăng Khoa",
+    "author_email": "khoa.design@gmail.com",
+    "content": "Cửa Slim trượt ray âm sàn nhìn rất tinh tế và thoáng không gian.",
+    "status": "approved",
+    "created_at": "2026-10-26T15:20:00Z",
+    "updated_at": "2026-10-26T15:20:00Z"
+  }
+]
+

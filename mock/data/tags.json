@@ -1,0 +1,75 @@
+[
+  {
+    "id": 1,
+    "name": "Nhôm Xingfa",
+    "slug": "nhom-xingfa",
+    "description": "Các thông tin và kỹ thuật liên quan đến nhôm Xingfa hệ 55, 93",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Kính Low-E",
+    "slug": "kinh-low-e",
+    "description": "Kính cản nhiệt tiết kiệm năng lượng cho tòa nhà cao tầng",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Bóc tách tự động",
+    "slug": "boc-tach-tu-dong",
+    "description": "Giải pháp bóc tách khối lượng và dự toán nhôm kính trên XTTech",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Tối ưu cắt nhôm",
+    "slug": "toi-uu-cat-nhom",
+    "description": "Thuật toán sắp xếp thanh nhôm giảm hao hụt dưới 2%",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 5,
+    "name": "Curtain Wall",
+    "slug": "curtain-wall",
+    "description": "Hệ mặt dựng nhôm kính tòa nhà văn phòng và trung tâm thương mại",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 6,
+    "name": "Phụ kiện rãnh C",
+    "slug": "phu-kien-ranh-c",
+    "description": "Hệ phụ kiện tiêu chuẩn Châu Âu Sobinco, Cmech, Sigico",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 7,
+    "name": "Chuyển đổi số",
+    "slug": "chuyen-doi-so",
+    "description": "Ứng dụng phần mềm trong quản trị xưởng và thi công công trình",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 8,
+    "name": "An toàn lao động",
+    "slug": "an-toan-lao-dong",
+    "description": "Quy chuẩn an toàn khi lắp dựng kính và thi công trên cao",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 9,
+    "name": "Kính thông minh",
+    "slug": "kinh-thong-minh",
+    "description": "Kính điện thông minh đổi màu và kính hộp cách âm",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  }
+]
+

@@ -1,0 +1,5 @@
+[
+  { "id": 1, "email": "contact@nhomkinhviet.com", "is_active": true, "subscribed_at": "2026-02-01T08:00:00Z", "unsubscribed_at": null },
+  { "id": 2, "email": "xaydung.thanglong@gmail.com", "is_active": true, "subscribed_at": "2026-02-15T09:30:00Z", "unsubscribed_at": null }
+]
+

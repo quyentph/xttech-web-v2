@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "admin",
+    "display_name": "Quản trị viên",
+    "description": "Toàn quyền quản trị hệ thống, duyệt bài, cấu hình và quản lý người dùng",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "editor",
+    "display_name": "Biên tập viên",
+    "description": "Có quyền duyệt bài, xuất bản bài, gỡ bài và chỉnh sửa nội dung",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "author",
+    "display_name": "Tác giả",
+    "description": "Chỉ có quyền tạo, sửa và quản lý bài viết do chính mình viết",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "reader",
+    "display_name": "Độc giả",
+    "description": "Đọc bài, bình luận và lưu các bài viết yêu thích",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  }
+]
+

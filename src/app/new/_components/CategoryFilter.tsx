@@ -21,7 +21,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <div className="w-full overflow-x-auto py-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+    <div className="w-full overflow-x-auto py-1.5 scrollbar-none">
       <div className="flex items-center gap-2 min-w-max pb-1">
         {categories.map((cat) => {
           const isActive = activeCategoryId === cat.id;

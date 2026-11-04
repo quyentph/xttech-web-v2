@@ -95,3 +95,4 @@ export * from './document-rule';
 export * from './trash';
 
 export * from './warehouse';
+export * from './news';

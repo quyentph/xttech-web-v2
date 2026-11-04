@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArticleItem } from './HeroArticle';
+import { Article } from '@/types/news';
 
 interface ArticleCardProps {
-  article: ArticleItem;
+  article: Article;
 }
 
 const CATEGORY_GRADIENTS: Record<string, string> = {
@@ -18,9 +18,30 @@ const CATEGORY_GRADIENTS: Record<string, string> = {
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   const gradientClass =
-    article.bannerGradient ||
-    CATEGORY_GRADIENTS[article.category.slug] ||
+    (article as any).bannerGradient ||
+    (article.category?.slug ? CATEGORY_GRADIENTS[article.category.slug] : undefined) ||
     'bg-gradient-to-br from-slate-600 to-slate-700';
+
+  const authorName =
+    article.author?.displayName ||
+    article.author?.fullName ||
+    (article.author as any)?.name ||
+    'XTTech';
+
+  const formattedDate = React.useMemo(() => {
+    if ((article as any).date) return (article as any).date;
+    if (!article.publishedAt) return 'Mới đăng';
+    try {
+      const d = new Date(article.publishedAt);
+      return isNaN(d.getTime()) ? 'Mới đăng' : d.toLocaleDateString('vi-VN');
+    } catch {
+      return 'Mới đăng';
+    }
+  }, [article.publishedAt, (article as any).date]);
+
+  const readingTime = article.readingMinutes
+    ? `${article.readingMinutes} phút đọc`
+    : (article as any)?.readingTime || '5 phút đọc';
 
   return (
     <article className="group bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between">
@@ -32,7 +53,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         >
           {/* Category Badge overlay on banner */}
           <span className="relative z-10 inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-white text-slate-800 shadow-sm">
-            {article.category.name}
+            {article.category?.name || 'Tin tức'}
           </span>
 
           {/* Decorative subtle pattern */}
@@ -56,20 +77,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
       {/* Card Footer / Meta */}
       <div className="px-5 pb-5 pt-0 text-[11px] text-slate-400 flex items-center gap-1.5 border-t border-slate-100/80 mt-1 pt-3">
         <span className="font-medium text-slate-600">
-          {article.author?.displayName || article.author?.name || 'XTTech'}
+          {authorName}
         </span>
         <span>·</span>
         <span>
-          {article.date ||
-            (article.publishedAt
-              ? new Date(article.publishedAt).toLocaleDateString('vi-VN')
-              : '')}
+          {formattedDate}
         </span>
         <span>·</span>
         <span>
-          {article.readingMinutes
-            ? `${article.readingMinutes} phút đọc`
-            : article.readingTime || '5 phút đọc'}
+          {readingTime}
         </span>
       </div>
     </article>

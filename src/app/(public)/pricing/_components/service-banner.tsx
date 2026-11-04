@@ -31,7 +31,7 @@ const ServiceBanner = ({ activeMainTab = 'bang-gia', onMainTabChange }: ServiceB
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           {/* Top Badge */}
           <span className="text-xs font-bold uppercase text-primary sm:text-sm">
-            XT Tech • Mindmap Pricing • Google One Style
+            XT Tech 
           </span>
 
           {/* Main Title */}
