@@ -150,9 +150,6 @@ export function PillarsSection() {
           })}
         </div>
 
-        <p className="mt-2 text-center text-[11px] font-medium text-slate-400 md:hidden">
-          Vuốt ngang để xem thêm các giải pháp →
-        </p>
       </div>
     </section>
   );
