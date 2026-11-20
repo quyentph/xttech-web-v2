@@ -224,8 +224,8 @@ export function IntroduceVideoSection() {
         </motion.div>
       </div>
 
-      {/* Khung video kích thước lớn choáng ngợp chiếm gần trọn khung nhìn y hệt Ảnh 1 */}
-      <div className="mx-auto w-full max-w-[97vw] 2xl:max-w-[1720px] px-1 sm:px-2 lg:px-4">
+      {/* Khung video: Trên mobile hiển thị chuẩn khung ngang 16:9 (aspect-video), trên desktop mở rộng choáng ngợp */}
+      <div className="mx-auto w-full max-w-[97vw] 2xl:max-w-[1720px] px-3 sm:px-4 lg:px-6">
         <motion.div
           ref={wrapperRef}
           style={{ scale, opacity }}
@@ -245,7 +245,7 @@ export function IntroduceVideoSection() {
             }
           }}
           aria-label="Xem video giới thiệu"
-          className={`group relative mx-auto h-[82vh] sm:h-[88vh] lg:h-[94vh] min-h-[520px] sm:min-h-[620px] lg:min-h-[760px] max-h-[1080px] w-full origin-center overflow-hidden rounded-2xl bg-slate-950 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/10 sm:rounded-3xl lg:rounded-[36px] ${
+          className={`group relative mx-auto aspect-video sm:aspect-auto h-auto sm:h-[88vh] lg:h-[94vh] min-h-0 sm:min-h-[620px] lg:min-h-[760px] max-h-[1080px] w-full origin-center overflow-hidden rounded-2xl bg-slate-950 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/10 sm:rounded-3xl lg:rounded-[36px] ${
             isHovering && !isMobile ? 'cursor-none' : 'cursor-pointer'
           }`}
         >
@@ -308,7 +308,7 @@ export function IntroduceVideoSection() {
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.3, ease: INTRODUCE_EASE_OUT }}
               onClick={(e) => e.stopPropagation()}
-              className="relative flex h-[86vh] w-[95vw] max-w-7xl items-center justify-center overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/15"
+              className="relative flex aspect-video sm:aspect-auto h-auto sm:h-[86vh] w-full sm:w-[95vw] max-w-7xl max-h-[90vh] items-center justify-center overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/15"
             >
               {/* Nút đóng modal */}
               <button

@@ -39,7 +39,7 @@ export function IntroduceHeroSection() {
   let charGlobalIdx = 0;
 
   return (
-    <section className="relative flex min-h-[540px] lg:min-h-[580px] items-center justify-center overflow-hidden bg-white py-14 sm:py-18 lg:py-20 xl:py-24">
+    <section className="relative flex min-h-[440px] sm:min-h-[500px] lg:min-h-[560px] items-center justify-center overflow-hidden bg-white py-10 sm:py-16 lg:py-20 xl:py-24">
       {/* Nền Dark Teal Gradient mượt mà khi trượt sang chế độ form đăng ký (y hệt hero.tsx) */}
       <div
         className={`pointer-events-none absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -231,20 +231,20 @@ export function IntroduceHeroSection() {
               </span>
             </div>
 
-            {/* Slogan chạy mượt từng chữ cái in hoa, giữ nguyên dấu và từ tiếng Việt */}
+            {/* Slogan chạy mượt từng chữ cái in hoa, luôn giữ đúng 2 dòng trên mọi thiết bị */}
             <h1
               aria-label="KIẾN TẠO GIÁ TRỊ CHUYỂN HÓA TƯƠNG LAI"
-              className={`${beVietnamPro.className} mt-4 sm:mt-6 font-semibold tracking-[-0.02em] uppercase`}
+              className={`${beVietnamPro.className} mt-3.5 sm:mt-5 lg:mt-6 font-semibold tracking-[-0.02em] uppercase`}
               style={{
-                fontSize: 'clamp(30px, 4.8vw, 68px)',
-                lineHeight: 1.22,
+                fontSize: 'clamp(18px, 5.4vw, 68px)',
+                lineHeight: 1.25,
               }}
             >
               {SLOGAN_LINES.map((line, lineIdx) => (
                 <span
                   key={lineIdx}
                   aria-hidden="true"
-                  className="flex flex-wrap items-center justify-center gap-x-[0.24em] sm:gap-x-[0.26em]"
+                  className="flex flex-nowrap items-center justify-center gap-x-[0.2em] sm:gap-x-[0.26em] whitespace-nowrap"
                 >
                   {line.map((word, wordIdx) => (
                     <span
@@ -277,7 +277,7 @@ export function IntroduceHeroSection() {
             </h1>
 
             {/* 2 nút CTA */}
-            <div className="xttech-hero-reveal mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5">
+            <div className="xttech-hero-reveal mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5">
               <button
                 type="button"
                 onClick={() => setIsRegisterMode(true)}
