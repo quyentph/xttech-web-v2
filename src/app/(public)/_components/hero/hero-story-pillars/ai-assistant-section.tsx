@@ -24,15 +24,15 @@ export function AiAssistantSection({ onOpenDemo }: HeroSectionDemoProps) {
         {/* Toàn bộ hình ảnh Robot 3D, sóng âm Voice Note, Viewfinder AI Vision và 3 Card đều được CODE 100% */}
         <HeroAiAssistantVisual />
 
-        {/* Nút ĐĂNG KÝ NHẬN DEMO: Bình thường bg trắng border primary text primary, hover bg primary text trắng border primary */}
-        <div className="mt-4 flex justify-center">
+        {/* Nút ĐĂNG KÝ NHẬN DEMO: Tối ưu kích thước gọn đẹp trên mobile, không bị tràn/xuống dòng */}
+        <div className="mt-3.5 sm:mt-4 flex justify-center px-4 sm:px-0">
           <button
             type="button"
             onClick={() => onOpenDemo()}
             aria-label="Đăng ký nhận demo phần mềm XTTech"
-            className="group inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-primary bg-white px-10 py-3.5 text-base font-bold uppercase tracking-wider text-primary shadow-md shadow-primary/10 transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white hover:border-primary hover:shadow-xl hover:shadow-primary/25 cursor-pointer"
+            className="group inline-flex max-w-full items-center justify-center gap-1.5 sm:gap-2.5 rounded-full border border-primary sm:border-2 bg-white px-4 py-2 sm:px-8 sm:py-3 md:px-10 md:py-3.5 text-[11px] xs:text-xs sm:text-sm md:text-base font-bold uppercase tracking-wide sm:tracking-wider text-primary shadow-xs sm:shadow-md shadow-primary/10 transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white hover:border-primary hover:shadow-xl hover:shadow-primary/25 cursor-pointer whitespace-nowrap"
           >
-            <Sparkles className="h-5 w-5 text-primary transition-all duration-300 group-hover:text-white group-hover:rotate-12" />
+            <Sparkles className="h-3.5 w-3.5 sm:h-5 sm:w-5 shrink-0 text-primary transition-all duration-300 group-hover:text-white group-hover:rotate-12" />
             <span>ĐĂNG KÝ SỬ DỤNG MIỄN PHÍ</span>
           </button>
         </div>
