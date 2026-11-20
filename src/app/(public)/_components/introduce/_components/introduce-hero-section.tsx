@@ -100,10 +100,28 @@ export function IntroduceHeroSection() {
           animation: xttechLogoEnter 0.65s cubic-bezier(.16, 1, .3, 1) 0.05s both;
         }
 
+        .xttech-hero-word {
+          display: inline-flex;
+          white-space: nowrap;
+          cursor: default;
+          transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .xttech-hero-word:hover {
+          transform: translateY(-4px) scale(1.12);
+        }
+
         .xttech-hero-char {
           display: inline-block;
           will-change: transform, opacity;
           animation: xttechLetterRun 0.72s cubic-bezier(.16, 1, .3, 1) var(--d) both;
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+          cursor: default;
+        }
+
+        .xttech-hero-char:hover {
+          transform: translateY(-2px) scale(1.14) !important;
+          color: #0b6b63 !important;
         }
 
         .xttech-hero-reveal {
@@ -209,21 +227,21 @@ export function IntroduceHeroSection() {
                 : 'opacity-100 translate-x-0 pointer-events-auto relative z-10'
             }`}
           >
-            {/* Logo XTTECH lớn nổi bật, chạy ngay khi vừa vào trang */}
-            <div className="xttech-logo-enter inline-flex items-center justify-center gap-3 sm:gap-5 lg:gap-6">
+            {/* Logo XTTECH tinh tế, nhỏ gọn vừa vặn */}
+            <div className="xttech-logo-enter inline-flex items-center justify-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-105 cursor-default">
               <img
                 src="/image-xttech/logo-xttech.svg"
                 alt="XTTECH Logo"
                 className="object-contain"
                 style={{
-                  width: 'clamp(36px, 5.8vw, 84px)',
-                  height: 'clamp(36px, 5.8vw, 84px)',
+                  width: 'clamp(24px, 3.4vw, 44px)',
+                  height: 'clamp(24px, 3.4vw, 44px)',
                 }}
               />
               <span
                 className={`${beVietnamPro.className} font-semibold tracking-tight text-primary`}
                 style={{
-                  fontSize: 'clamp(28px, 4.8vw, 68px)',
+                  fontSize: 'clamp(18px, 2.6vw, 34px)',
                   lineHeight: 1.1,
                 }}
               >
@@ -249,7 +267,7 @@ export function IntroduceHeroSection() {
                   {line.map((word, wordIdx) => (
                     <span
                       key={`${lineIdx}-${wordIdx}`}
-                      className="inline-flex whitespace-nowrap"
+                      className="xttech-hero-word inline-flex whitespace-nowrap"
                       style={{ color: word.accent ? '#0b6b63' : '#0f1b2d' }}
                     >
                       {Array.from(word.text).map((char, cIdx) => {

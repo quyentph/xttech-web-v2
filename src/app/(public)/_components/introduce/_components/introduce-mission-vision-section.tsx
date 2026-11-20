@@ -64,9 +64,9 @@ export function IntroduceMissionVisionSection() {
         }
       `}</style>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[94vw] 2xl:max-w-[1680px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ===================== PHẦN 1: SỨ MỆNH (Chữ bên Trái - Ảnh bên Phải) ===================== */}
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16 xl:gap-24 2xl:gap-32">
           {/* Cột trái: Nội dung Sứ mệnh - Trượt từ bên trái sang */}
           <motion.div
             initial={{ opacity: 0, x: -70 }}
@@ -75,10 +75,6 @@ export function IntroduceMissionVisionSection() {
             transition={{ duration: 0.7, ease: INTRODUCE_EASE_OUT }}
             className="space-y-6 lg:col-span-6"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
-              <Compass className="h-3.5 w-3.5" />
-              <span>Sứ mệnh XTTECH</span>
-            </div>
 
             <div>
               <div className="flex items-center justify-between gap-3">
@@ -158,10 +154,10 @@ export function IntroduceMissionVisionSection() {
         </div>
 
         {/* ===================== ĐƯỜNG PHÂN CÁCH ===================== */}
-        <div className="my-16 border-t border-slate-200/80 sm:my-24" />
+        <div className="my-20 border-t border-slate-200/80 sm:my-28 lg:my-36" />
 
         {/* ===================== PHẦN 2: TẦM NHÌN (Ảnh bên Trái - Chữ bên Phải) ===================== */}
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16 xl:gap-24 2xl:gap-32">
           {/* Cột trái: Hình ảnh Tầm nhìn (vision.jpg) - Trượt từ bên trái sang */}
           <motion.div
             initial={{ opacity: 0, x: -70 }}
@@ -197,10 +193,7 @@ export function IntroduceMissionVisionSection() {
             transition={{ duration: 0.7, delay: 0.1, ease: INTRODUCE_EASE_OUT }}
             className="order-1 space-y-6 lg:order-2 lg:col-span-6"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
-              <Target className="h-3.5 w-3.5" />
-              <span>Tầm nhìn XTTECH</span>
-            </div>
+            
 
             <div>
               <div className="flex items-center justify-between gap-3">
