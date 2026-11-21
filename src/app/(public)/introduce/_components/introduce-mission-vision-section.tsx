@@ -94,7 +94,7 @@ function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
   );
 
   return (
-    <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16">
+    <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-20">
       {block.imageFirst ? (
         <>
           {imageCol}
@@ -113,10 +113,10 @@ function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
 export function IntroduceMissionVisionSection() {
   return (
     <section className="overflow-hidden bg-white py-16 sm:py-24 lg:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1536px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {MISSION_VISION_BLOCKS.map((block, index) => (
           <React.Fragment key={block.id}>
-            {index > 0 && <div className="my-16 border-t border-slate-200/80 sm:my-24" />}
+            {index > 0 && <div className="my-20 border-t border-slate-200/80 sm:my-28 lg:my-32" />}
             <MissionVisionRow block={block} />
           </React.Fragment>
         ))}
