@@ -29,7 +29,7 @@ export function IntroduceBenefitsSection() {
             <span>Lợi ích vận hành thực tế</span>
           </span>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
-            Giá trị thực tế khi <span className="text-primary">vận hành trên XTTECH</span>
+            Giá trị cốt lõi khi <span className="text-primary">vận hành trên XTTECH</span>
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
             Chuẩn hóa quy trình sản xuất, bóc tách và giám sát công trình giúp loại bỏ hao hụt và tối ưu hóa lợi nhuận.

@@ -110,7 +110,7 @@ const PlanButton = ({ plan }: { plan: Plan }) => {
   const styles: Record<ButtonVariant, string> = {
     outline: 'border-2 border-primary bg-white text-primary group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white',
     solid: 'border-2 border-primary bg-white text-primary group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white',
-    accent: 'border-2 border-transparent bg-gradient-to-r from-[var(--hero-accent-from)] to-[var(--hero-accent-to)] text-white shadow-sm group-hover:shadow-md',
+    accent: 'border-2 border-primary bg-white text-primary group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white',
   };
   return (
     <button
