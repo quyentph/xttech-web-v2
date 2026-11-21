@@ -21,6 +21,12 @@ export interface ModalProps {
   containerClassName?: string;
   bodyClassName?: string;
   fullScreenMobile?: boolean;
+  /**
+   * Ẩn thanh header mặc định của Modal.
+   * Lưu ý: `fullScreenMobile` mặc định là `true`, nên khi truyền `hideHeader={true}`
+   * caller bắt buộc tự render nút đóng trong `children` hoặc truyền `fullScreenMobile={false}`
+   * để người dùng mobile không bị kẹt màn hình.
+   */
   hideHeader?: boolean;
 }
 

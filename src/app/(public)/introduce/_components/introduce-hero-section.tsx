@@ -2,51 +2,33 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Be_Vietnam_Pro } from 'next/font/google';
 import { ArrowLeft, ArrowRight, CheckCircle2, FileSpreadsheet } from 'lucide-react';
-import { HeroRegisterInlineForm } from '@/app/(public)/_components/register-inline-form';
-import { ECOSYSTEM_MODULES } from './introduce.constants';
-
-const beVietnamPro = Be_Vietnam_Pro({
-  weight: ['600'],
-  subsets: ['vietnamese', 'latin'],
-  display: 'swap',
-});
-
-interface SloganWord {
-  text: string;
-  accent?: boolean;
-}
-
-const SLOGAN_LINES: SloganWord[][] = [
-  [
-    { text: 'KIẾN' },
-    { text: 'TẠO' },
-    { text: 'GIÁ', accent: true },
-    { text: 'TRỊ', accent: true },
-  ],
-  [
-    { text: 'CHUYỂN' },
-    { text: 'HÓA' },
-    { text: 'TƯƠNG', accent: true },
-    { text: 'LAI', accent: true },
-  ],
-];
+import { RegisterInlineForm } from '@/components';
+import { ECOSYSTEM_MODULES, SLOGAN_LINES } from '../_constants/introduce.constants';
 
 export function IntroduceHeroSection() {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
 
   let charGlobalIdx = 0;
 
+  const handleOpenRegister = () => {
+    setFormResetKey((prev) => prev + 1);
+    setIsRegisterMode(true);
+  };
+
+  const handleCloseRegister = () => {
+    setIsRegisterMode(false);
+    setFormResetKey((prev) => prev + 1);
+  };
+
   return (
-    <section className="relative flex min-h-[440px] sm:min-h-[500px] lg:min-h-[560px] items-center justify-center overflow-hidden bg-white py-10 sm:py-16 lg:py-20 xl:py-24">
-      {/* Nền Dark Teal Gradient mượt mà khi trượt sang chế độ form đăng ký (y hệt hero.tsx) */}
+    <section className="relative flex min-h-[540px] lg:min-h-[580px] items-center justify-center overflow-hidden bg-white py-14 sm:py-18 lg:py-20 xl:py-24">
       <div
         className={`pointer-events-none absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isRegisterMode ? 'opacity-100' : 'opacity-0'
         } bg-linear-to-br from-[#072b28] via-[#094843] to-[#0d1e2e]`}
       >
-        {/* Lưới kỹ thuật tinh tế */}
         <div
           className="absolute inset-0 opacity-15"
           style={{
@@ -55,94 +37,13 @@ export function IntroduceHeroSection() {
             backgroundSize: '36px 36px',
           }}
         />
-        {/* Quầng sáng phát quang công nghệ (Glow orbs) */}
         <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-emerald-400/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-teal-300/15 blur-3xl" />
         <div className="absolute top-1/2 left-1/3 h-80 w-80 -translate-y-1/2 rounded-full bg-cyan-400/10 blur-3xl" />
       </div>
 
-      <style>{`
-        @keyframes xttechLetterRun {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 14px, 0) scale(0.96);
-          }
-          100% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-        }
-
-        @keyframes xttechLogoEnter {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 18px, 0) scale(0.92);
-          }
-          100% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-        }
-
-        @keyframes xttechHeroReveal {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 14px, 0);
-          }
-          100% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-
-        .xttech-logo-enter {
-          will-change: transform, opacity;
-          animation: xttechLogoEnter 0.65s cubic-bezier(.16, 1, .3, 1) 0.05s both;
-        }
-
-        .xttech-hero-word {
-          display: inline-flex;
-          white-space: nowrap;
-          cursor: default;
-          transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .xttech-hero-word:hover {
-          transform: translateY(-4px) scale(1.12);
-        }
-
-        .xttech-hero-char {
-          display: inline-block;
-          will-change: transform, opacity;
-          animation: xttechLetterRun 0.72s cubic-bezier(.16, 1, .3, 1) var(--d) both;
-          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
-          cursor: default;
-        }
-
-        .xttech-hero-char:hover {
-          transform: translateY(-2px) scale(1.14) !important;
-          color: #0b6b63 !important;
-        }
-
-        .xttech-hero-reveal {
-          will-change: transform, opacity;
-          animation: xttechHeroReveal 0.65s cubic-bezier(.16, 1, .3, 1) 1.95s both;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .xttech-logo-enter,
-          .xttech-hero-char,
-          .xttech-hero-reveal {
-            animation: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-          }
-        }
-      `}</style>
-
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative">
-          {/* CHẾ ĐỘ ĐĂNG KÝ: Cột trái (Form) + Cột phải (Hệ sinh thái) - Animation y hệt hero.tsx */}
           <div
             className={`grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isRegisterMode
@@ -150,7 +51,6 @@ export function IntroduceHeroSection() {
                 : 'opacity-0 pointer-events-none absolute inset-0 z-0'
             }`}
           >
-            {/* Cột trái: Form đăng ký trượt mượt từ trái sang (y hệt hero.tsx) */}
             <div
               className={`lg:col-span-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 isRegisterMode
@@ -158,13 +58,13 @@ export function IntroduceHeroSection() {
                   : 'opacity-0 translate-x-12 lg:-translate-x-12 pointer-events-none absolute top-0 left-0 w-full z-0'
               }`}
             >
-              <HeroRegisterInlineForm
+              <RegisterInlineForm
+                key={`intro-inline-${formResetKey}`}
                 isOpen={isRegisterMode}
-                onBack={() => setIsRegisterMode(false)}
+                onBack={handleCloseRegister}
               />
             </div>
 
-            {/* Cột phải: Thông tin hệ sinh thái trượt từ phải sang (y hệt hero.tsx) */}
             <div
               className={`hidden space-y-6 lg:col-span-6 lg:block transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 isRegisterMode
@@ -179,10 +79,12 @@ export function IntroduceHeroSection() {
                 </span>
                 <h2 className="text-3xl font-black tracking-tight text-white uppercase xl:text-4xl xl:leading-[1.18]">
                   Phần mềm quản trị sản xuất cho{' '}
-                  <span className="text-emerald-400">Xưởng Nhôm Kính & Nhà Thầu</span>
+                  <span className="text-emerald-400">Xưởng Nhôm Kính &amp; Nhà Thầu</span>
                 </h2>
                 <p className="text-sm leading-relaxed text-slate-200 sm:text-base">
-                  <strong className="text-white">XTTECH</strong> đồng bộ toàn bộ quy trình từ khảo sát ô chờ, thiết kế cửa CAD 2D/3D, bóc tách vật tư và xuất thẻ cắt A4 đến quản lý kho, chấm công tại công trình và báo cáo lãi/lỗ trên một hệ thống duy nhất.
+                  <strong className="text-white">XTTECH</strong> đồng bộ toàn bộ quy trình từ khảo sát ô chờ, thiết kế
+                  cửa CAD 2D/3D, bóc tách vật tư và xuất thẻ cắt A4 đến quản lý kho, chấm công tại công trình và báo
+                  cáo lãi/lỗ trên một hệ thống duy nhất.
                 </p>
               </div>
 
@@ -191,7 +93,9 @@ export function IntroduceHeroSection() {
                   <li key={mod.code} className="flex items-start gap-3">
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
                     <span>
-                      <strong className="font-bold text-white">{mod.code} — {mod.name}:</strong>{' '}
+                      <strong className="font-bold text-white">
+                        {mod.code} — {mod.name}:
+                      </strong>{' '}
                       {mod.desc}
                     </span>
                   </li>
@@ -209,7 +113,7 @@ export function IntroduceHeroSection() {
 
                 <button
                   type="button"
-                  onClick={() => setIsRegisterMode(false)}
+                  onClick={handleCloseRegister}
                   className="group inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3.5 text-sm font-bold text-white backdrop-blur-xs transition-all hover:bg-white/20 hover:border-white/50"
                 >
                   <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
@@ -219,7 +123,6 @@ export function IntroduceHeroSection() {
             </div>
           </div>
 
-          {/* NỘI DUNG HERO BAN ĐẦU: Logo, Slogan, 2 nút (trượt mượt sang phải khi mở form) */}
           <div
             className={`mx-auto max-w-5xl text-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isRegisterMode
@@ -227,8 +130,7 @@ export function IntroduceHeroSection() {
                 : 'opacity-100 translate-x-0 pointer-events-auto relative z-10'
             }`}
           >
-            {/* Logo XTTECH tinh tế, nhỏ gọn vừa vặn */}
-            <div className="xttech-logo-enter inline-flex items-center justify-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-105 cursor-default">
+            <div className="xttech-logo-enter inline-flex items-center justify-center gap-3 sm:gap-5 lg:gap-6">
               <img
                 src="/image-xttech/logo-xttech.svg"
                 alt="XTTECH Logo"
@@ -239,7 +141,7 @@ export function IntroduceHeroSection() {
                 }}
               />
               <span
-                className={`${beVietnamPro.className} font-semibold tracking-tight text-primary`}
+                className="font-sans font-semibold tracking-tight text-primary"
                 style={{
                   fontSize: 'clamp(18px, 2.6vw, 34px)',
                   lineHeight: 1.1,
@@ -249,10 +151,9 @@ export function IntroduceHeroSection() {
               </span>
             </div>
 
-            {/* Slogan chạy mượt từng chữ cái in hoa, luôn giữ đúng 2 dòng trên mọi thiết bị */}
             <h1
               aria-label="KIẾN TẠO GIÁ TRỊ CHUYỂN HÓA TƯƠNG LAI"
-              className={`${beVietnamPro.className} mt-3.5 sm:mt-5 lg:mt-6 font-semibold tracking-[-0.02em] uppercase`}
+              className="mt-4 sm:mt-6 font-sans font-semibold tracking-[-0.02em] uppercase"
               style={{
                 fontSize: 'clamp(18px, 5.4vw, 68px)',
                 lineHeight: 1.25,
@@ -272,17 +173,12 @@ export function IntroduceHeroSection() {
                     >
                       {Array.from(word.text).map((char, cIdx) => {
                         const idx = charGlobalIdx++;
-
                         return (
                           <span
                             key={`${idx}-${cIdx}`}
                             aria-hidden="true"
                             className="xttech-hero-char"
-                            style={
-                              {
-                                '--d': `${(0.28 + idx * 0.055).toFixed(3)}s`,
-                              } as React.CSSProperties
-                            }
+                            style={{ '--d': `${(0.28 + idx * 0.055).toFixed(3)}s` } as React.CSSProperties}
                           >
                             {char}
                           </span>
@@ -294,11 +190,10 @@ export function IntroduceHeroSection() {
               ))}
             </h1>
 
-            {/* 2 nút CTA */}
-            <div className="xttech-hero-reveal mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5">
+            <div className="xttech-hero-reveal mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5">
               <button
                 type="button"
-                onClick={() => setIsRegisterMode(true)}
+                onClick={handleOpenRegister}
                 className="group inline-flex w-full sm:w-auto max-w-xs sm:max-w-none cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-primary via-teal-600 to-emerald-500 px-5 py-3 sm:px-6 sm:py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:brightness-105 hover:shadow-xl hover:shadow-primary/30"
               >
                 <FileSpreadsheet className="h-4 w-4 shrink-0" />

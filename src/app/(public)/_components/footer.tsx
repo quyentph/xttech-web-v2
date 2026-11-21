@@ -3,9 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, CheckCircle2, Phone } from 'lucide-react';
-import { Modal, XTLogo } from '@/components';
-import { HeroRegisterInlineForm } from './register-inline-form';
+import { ArrowUpRight, Phone } from 'lucide-react';
+import { Modal, RegisterInlineForm, XTLogo } from '@/components';
 import { CONTACT_INFO } from '@/config/contact';
 import {
   FOOTER_BOTTOM_LINKS,
@@ -215,7 +214,8 @@ export const Footer = () => {
         className="max-w-lg border border-primary/20"
         bodyClassName="p-5 sm:p-6"
       >
-        <HeroRegisterInlineForm
+        <RegisterInlineForm
+          key={`footer-reg-${isRegisterModalOpen}`}
           variant="modal"
           onBack={() => setIsRegisterModalOpen(false)}
         />

@@ -19,6 +19,8 @@ export function useHeroMarquee(
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const pausedRef = useRef(false);
+  const steppingRef = useRef(false);
+  const stepRafRef = useRef(0);
   const dragRef = useRef<{
     active: boolean;
     moved: boolean;
@@ -51,6 +53,8 @@ export function useHeroMarquee(
   const step = useCallback((direction: -1 | 1, distancePx: number = 380) => {
     const track = trackRef.current;
     if (!track) return;
+    if (stepRafRef.current) cancelAnimationFrame(stepRafRef.current);
+    steppingRef.current = true;
     const targetOffset = offsetRef.current - direction * distancePx;
     const startOffset = offsetRef.current;
     const startTime = performance.now();
@@ -61,10 +65,13 @@ export function useHeroMarquee(
       const ease = 1 - Math.pow(1 - progress, 3);
       applyOffset(startOffset + (targetOffset - startOffset) * ease);
       if (progress < 1) {
-        requestAnimationFrame(animateStep);
+        stepRafRef.current = requestAnimationFrame(animateStep);
+      } else {
+        steppingRef.current = false;
+        stepRafRef.current = 0;
       }
     };
-    requestAnimationFrame(animateStep);
+    stepRafRef.current = requestAnimationFrame(animateStep);
   }, [applyOffset]);
 
   useEffect(() => {
@@ -75,13 +82,16 @@ export function useHeroMarquee(
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      if (!reduceMotion && !pausedRef.current && !dragRef.current.active && !isPaused) {
+      if (!reduceMotion && !pausedRef.current && !dragRef.current.active && !steppingRef.current && !isPaused) {
         applyOffset(offsetRef.current - speedPxPerSec * dt);
       }
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (stepRafRef.current) cancelAnimationFrame(stepRafRef.current);
+    };
   }, [applyOffset, speedPxPerSec, isPaused]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {

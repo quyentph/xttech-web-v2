@@ -64,7 +64,7 @@ export const ALUMINUM_PRICING_DATA: PricingSectionData = {
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
-        { bold: '20 bộ cửa', rest: 'gói trải nghiệm G0' },
+        { bold: '20 bộ cửa', rest: 'gói trải nghiệm Miễn phí' },
         { bold: '3 nhân sự', rest: '' },
         { bold: '3 GB', rest: 'lưu trữ' },
         { bold: 'Thử 3 hệ nhôm', rest: 'Xingfa, PMA, Việt Pháp' },
@@ -75,12 +75,12 @@ export const ALUMINUM_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'silver-ag',
-      name: 'Bạc ',
+      name: 'Bạc',
       monthly: 590000,
       yearly: 5900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Bạc ',
+      buttonText: 'Chọn Bạc',
       buttonVariant: 'solid',
       isPopular: false,
       highlights: [
@@ -95,12 +95,12 @@ export const ALUMINUM_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'gold-au',
-      name: 'Vàng ',
+      name: 'Vàng',
       monthly: 1290000,
       yearly: 12900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Vàng  ',
+      buttonText: 'Chọn Vàng',
       buttonVariant: 'accent',
       isPopular: true,
       highlights: [
@@ -115,12 +115,12 @@ export const ALUMINUM_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'diamond-c',
-      name: 'Kim cương   ',
+      name: 'Kim cương',
       monthly: 2490000,
       yearly: 29900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Kim cương ',
+      buttonText: 'Chọn Kim cương',
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
@@ -139,7 +139,7 @@ export const ALUMINUM_PRICING_DATA: PricingSectionData = {
     { text: '+10 nhân sự', price: '99k' },
     { text: '+20GB', price: '99k' },
   ],
-  footerNote: '* Áp dụng cho G1/G2, tự động cộng vào tháng sau',
+  footerNote: '* Áp dụng cho gói Bạc / Vàng, tự động cộng vào tháng sau',
 };
 
 /* ---------- 2. DỮ LIỆU NGÀNH XÂY DỰNG & ĐỘI THỢ ---------- */
@@ -163,7 +163,7 @@ export const BUILDER_PRICING_DATA: PricingSectionData = {
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
-        { bold: '10 công trình', rest: 'gói trải nghiệm G0' },
+        { bold: '10 công trình', rest: 'gói trải nghiệm Miễn phí' },
         { bold: '3 nhân sự', rest: '' },
         { bold: '3 GB', rest: 'lưu trữ' },
         { bold: '10 dự án', rest: 'và kho vật tư' },
@@ -174,12 +174,12 @@ export const BUILDER_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'silver-ag',
-      name: 'Bạc ',
+      name: 'Bạc',
       monthly: 490000,
       yearly: 4900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Bạc ',
+      buttonText: 'Chọn Bạc',
       buttonVariant: 'solid',
       isPopular: false,
       highlights: [
@@ -194,12 +194,12 @@ export const BUILDER_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'gold-au',
-      name: 'Vàng ',
+      name: 'Vàng',
       monthly: 990000,
       yearly: 9900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Vàng ',
+      buttonText: 'Chọn Vàng',
       buttonVariant: 'accent',
       isPopular: true,
       highlights: [
@@ -214,12 +214,12 @@ export const BUILDER_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'diamond-c',
-      name: 'Kim cương ',
+      name: 'Kim cương',
       monthly: null,
       yearly: 24900000,
       yearlyOnly: true,
       priceSubText: null,
-      buttonText: 'Chọn Kim cương ',
+      buttonText: 'Chọn Kim cương',
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
@@ -238,7 +238,7 @@ export const BUILDER_PRICING_DATA: PricingSectionData = {
     { text: '+10 nhân sự', price: '99k' },
     { text: '+20GB', price: '99k' },
   ],
-  footerNote: '* Áp dụng cho gói 1 gói 2 tự động cộng vào tháng sau',
+  footerNote: '* Áp dụng cho gói Bạc / Vàng, tự động cộng vào tháng sau',
 };
 
 /* ---------- 3. DỮ LIỆU NGÀNH HCNS, KẾ TOÁN, KINH DOANH ---------- */
@@ -262,7 +262,7 @@ export const BUSINESS_PRICING_DATA: PricingSectionData = {
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
-        { bold: '10 công trình', rest: 'gói trải nghiệm G0' },
+        { bold: '10 công trình', rest: 'gói trải nghiệm Miễn phí' },
         { bold: '3 nhân sự', rest: '' },
         { bold: '3 GB', rest: 'lưu trữ' },
         { bold: '10 dự án', rest: 'và kho vật tư' },
@@ -273,12 +273,12 @@ export const BUSINESS_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'silver-ag',
-      name: 'Bạc ',
+      name: 'Bạc',
       monthly: 390000,
       yearly: 3900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Bạc ',
+      buttonText: 'Chọn Bạc',
       buttonVariant: 'solid',
       isPopular: false,
       highlights: [
@@ -293,12 +293,12 @@ export const BUSINESS_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'gold-au',
-      name: 'Vàng ',
+      name: 'Vàng',
       monthly: 790000,
       yearly: 7900000,
       yearlyOnly: false,
       priceSubText: null,
-      buttonText: 'Chọn Vàng ',
+      buttonText: 'Chọn Vàng',
       buttonVariant: 'accent',
       isPopular: true,
       highlights: [
@@ -313,12 +313,12 @@ export const BUSINESS_PRICING_DATA: PricingSectionData = {
     },
     {
       id: 'diamond-c',
-      name: 'Kim cương ',
+      name: 'Kim cương',
       monthly: null,
       yearly: 19900000,
       yearlyOnly: true,
       priceSubText: null,
-      buttonText: 'Chọn Kim cương ',
+      buttonText: 'Chọn Kim cương',
       buttonVariant: 'outline',
       isPopular: false,
       highlights: [
@@ -337,7 +337,7 @@ export const BUSINESS_PRICING_DATA: PricingSectionData = {
     { text: '+10 nhân sự', price: '99k' },
     { text: '+20GB', price: '99k' },
   ],
-  footerNote: '* Áp dụng cho G1/G2, tự động cộng vào tháng sau',
+  footerNote: '* Áp dụng cho gói Bạc / Vàng, tự động cộng vào tháng sau',
 };
 
 /* ---------- 4. DỮ LIỆU CÁC GÓI TRIỂN KHAI & TÁI CẤU TRÚC ---------- */
@@ -367,7 +367,7 @@ export const IMPLEMENTATION_PRICING_PLANS: ImplementationPlan[] = [
     iconBg: 'bg-primary/10',
     iconColor: 'text-primary',
     price: '0đ',
-    unit: '/tài khoản G0',
+    unit: '/gói Miễn phí',
     features: ['Kho video 120+ bài', 'Tài liệu & biểu mẫu', 'Cộng đồng hỗ trợ'],
     cta: 'Bắt đầu học',
   },
@@ -380,7 +380,7 @@ export const IMPLEMENTATION_PRICING_PLANS: ImplementationPlan[] = [
     price: '5tr',
     unit: '/3 tháng',
     subtitle: '12 buổi 1-1 qua Meet, setup hệ thống',
-    features: ['Setup 10 hệ nhóm / 50 công trình', 'Quy trình báo giá → nghiệm thu', 'Bàn giao quản trị viên'],
+    features: ['Setup 10 hệ nhôm / 50 công trình', 'Quy trình báo giá → nghiệm thu', 'Bàn giao quản trị viên'],
     cta: 'Chọn gói Online',
   },
   {
@@ -392,7 +392,7 @@ export const IMPLEMENTATION_PRICING_PLANS: ImplementationPlan[] = [
     price: '8tr',
     unit: '/ngày',
     subtitle: 'Chuyên gia đến tận nơi, cầm tay chỉ việc',
-    features: ['Đào tạo 2 ca: văn phòng + xưởng', 'Chuẩn hóa kho, mã hàng', 'Kèm 1 tháng G2'],
+    features: ['Đào tạo 2 ca: văn phòng + xưởng', 'Chuẩn hóa kho, mã hàng', 'Kèm 1 tháng gói Vàng'],
     cta: 'Đặt lịch xưởng',
   },
   {
@@ -404,17 +404,17 @@ export const IMPLEMENTATION_PRICING_PLANS: ImplementationPlan[] = [
     price: '15tr',
     oldPrice: '30tr',
     unit: '/lần',
-    promo: 'Tặng 1 tháng G2 • Combo G4 = 44.9tr năm đầu',
+    promo: 'Tặng 1 tháng gói Vàng • Combo Kim cương = 44.9tr năm đầu',
     features: [
       'Audit xưởng 3 ngày, vẽ lại flow',
       'Tái cấu trúc nhân sự + KPI',
-      'Bàn giao Tổng Thầu G4 full không giới hạn',
+      'Bàn giao gói Kim cương full không giới hạn',
       'Bảo hành vận hành 12 tháng',
     ],
-    cta: 'Nhận combo 44.9tr ',
+    cta: 'Nhận combo 44.9tr',
     highlight: true,
     badge: 'BEST VALUE • TIẾT KIỆM 50%',
-    note: 'Chỉ 5 suất / tháng • Đã bao gồm G4 1TB + 1 tháng G2',
+    note: 'Chỉ 5 suất / tháng • Đã bao gồm gói Kim cương 1TB + 1 tháng gói Vàng',
   },
 ];
 

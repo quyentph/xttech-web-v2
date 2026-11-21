@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-import { TARGET_AUDIENCES } from './introduce.constants';
+import { TARGET_AUDIENCES } from '../_constants/introduce.constants';
 
 export function IntroduceAudienceSection() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -45,15 +45,17 @@ export function IntroduceAudienceSection() {
                   <div className="flex items-center gap-3.5">
                     <span
                       className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors duration-200 ${
-                        isActive
-                          ? 'bg-primary text-white shadow-xs'
-                          : 'bg-primary/10 text-primary'
+                        isActive ? 'bg-primary text-white shadow-xs' : 'bg-primary/10 text-primary'
                       }`}
                     >
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
-                      <h3 className={`text-base font-extrabold transition-colors duration-200 ${isActive ? 'text-primary' : 'text-slate-900'}`}>
+                      <h3
+                        className={`text-base font-extrabold transition-colors duration-200 ${
+                          isActive ? 'text-primary' : 'text-slate-900'
+                        }`}
+                      >
                         {aud.title}
                       </h3>
                       <p className="text-xs font-medium text-primary/85">{aud.subtitle}</p>

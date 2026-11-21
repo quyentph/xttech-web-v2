@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
-import { INTRODUCE_EASE_OUT, SOFTWARE_BENEFITS } from './introduce.constants';
+import { INTRODUCE_EASE_OUT, SOFTWARE_BENEFITS } from '../_constants/introduce.constants';
 
 const STEP_STYLES = [
   {
