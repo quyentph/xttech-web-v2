@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { NewsArticle } from '@/types';
 import { NewsArticleCard } from '../news-article-card';
@@ -17,20 +17,43 @@ export function NewsFeaturedSlider({ articles, activeIndex, setActiveIndex, onHo
     startY: number;
     lockedAxis: 'x' | 'y' | null;
   }>({ active: false, startX: 0, startY: 0, lockedAxis: null });
+  const dragOffsetRef = useRef(0);
   const didSwipeRef = useRef(false);
   const [dragOffsetPx, setDragOffsetPx] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const stepSlide = (delta: -1 | 1) => {
-    if (articles.length <= 1) return;
-    setActiveIndex((prev) => (prev + delta + articles.length) % articles.length);
-  };
+  const stepSlide = useCallback(
+    (delta: -1 | 1) => {
+      if (articles.length <= 1) return;
+      setActiveIndex((prev) => (prev + delta + articles.length) % articles.length);
+    },
+    [articles.length, setActiveIndex],
+  );
+
+  const finishDrag = useCallback(() => {
+    if (!dragRef.current.active) return;
+    const offset = dragOffsetRef.current;
+    if (offset <= -40) {
+      stepSlide(1);
+    } else if (offset >= 40) {
+      stepSlide(-1);
+    }
+    dragRef.current = { active: false, startX: 0, startY: 0, lockedAxis: null };
+    dragOffsetRef.current = 0;
+    setIsDragging(false);
+    setDragOffsetPx(0);
+    onHoverChange(false);
+    setTimeout(() => {
+      didSwipeRef.current = false;
+    }, 50);
+  }, [stepSlide, onHoverChange]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (articles.length <= 1) return;
     const touch = e.touches[0];
     if (!touch) return;
     dragRef.current = { active: true, startX: touch.clientX, startY: touch.clientY, lockedAxis: null };
+    dragOffsetRef.current = 0;
     didSwipeRef.current = false;
     setIsDragging(true);
     setDragOffsetPx(0);
@@ -51,25 +74,50 @@ export function NewsFeaturedSlider({ articles, activeIndex, setActiveIndex, onHo
 
     if (drag.lockedAxis === 'x') {
       didSwipeRef.current = true;
+      dragOffsetRef.current = dx;
       setDragOffsetPx(dx);
     }
   };
 
   const handleTouchEnd = () => {
-    if (!dragRef.current.active) return;
-    if (dragOffsetPx <= -40) {
-      stepSlide(1);
-    } else if (dragOffsetPx >= 40) {
-      stepSlide(-1);
-    }
-    dragRef.current = { active: false, startX: 0, startY: 0, lockedAxis: null };
-    setIsDragging(false);
-    setDragOffsetPx(0);
-    onHoverChange(false);
-    setTimeout(() => {
-      didSwipeRef.current = false;
-    }, 50);
+    finishDrag();
   };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (articles.length <= 1 || e.button !== 0) return;
+    dragRef.current = { active: true, startX: e.clientX, startY: e.clientY, lockedAxis: 'x' };
+    dragOffsetRef.current = 0;
+    didSwipeRef.current = false;
+    setIsDragging(true);
+    setDragOffsetPx(0);
+    onHoverChange(true);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleWindowMouseMove = (e: MouseEvent) => {
+      if (!dragRef.current.active) return;
+      const dx = e.clientX - dragRef.current.startX;
+      if (Math.abs(dx) > 6) {
+        didSwipeRef.current = true;
+      }
+      dragOffsetRef.current = dx;
+      setDragOffsetPx(dx);
+    };
+
+    const handleWindowMouseUp = () => {
+      finishDrag();
+    };
+
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    window.addEventListener('mouseup', handleWindowMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleWindowMouseMove);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+    };
+  }, [isDragging, finishDrag]);
 
   const handleClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
     if (didSwipeRef.current) {
@@ -123,14 +171,18 @@ export function NewsFeaturedSlider({ articles, activeIndex, setActiveIndex, onHo
       </div>
 
       <div className="space-y-4">
-        {/* Khung trượt Slide ngang mượt mà - hỗ trợ vuốt tay trên mobile */}
+        {/* Khung trượt Slide ngang mượt mà - hỗ trợ vuốt chuột trên desktop & vuốt tay trên mobile */}
         <div
-          className="overflow-hidden rounded-md touch-pan-y select-none"
+          className={`overflow-hidden rounded-md touch-pan-y select-none ${
+            articles.length > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : ''
+          }`}
+          onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           onClickCapture={handleClickCapture}
+          onDragStart={(e) => e.preventDefault()}
         >
           <div
             className="flex will-change-transform"

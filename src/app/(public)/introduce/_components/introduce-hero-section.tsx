@@ -23,7 +23,7 @@ export function IntroduceHeroSection() {
   };
 
   return (
-    <section className="relative flex min-h-[540px] lg:min-h-[580px] items-center justify-center overflow-hidden bg-white py-14 sm:py-18 lg:py-20 xl:py-24">
+    <section className="relative flex min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] items-center justify-center overflow-hidden bg-white py-10 sm:py-14 lg:py-18 xl:py-20">
       <div
         className={`pointer-events-none absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isRegisterMode ? 'opacity-100' : 'opacity-0'

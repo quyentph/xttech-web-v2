@@ -112,7 +112,7 @@ export function IntroduceVideoSection() {
         </motion.div>
       </div>
 
-      <div className="mx-auto w-full max-w-[97vw] 2xl:max-w-[1720px] px-1 sm:px-2 lg:px-4">
+      <div className="mx-auto w-full max-w-[97vw] 2xl:max-w-[1720px] px-3 sm:px-4 lg:px-4">
         <motion.div
           ref={wrapperRef}
           style={{ scale, opacity }}
@@ -132,7 +132,7 @@ export function IntroduceVideoSection() {
             }
           }}
           aria-label="Xem video giới thiệu"
-          className={`group relative mx-auto h-[82vh] sm:h-[88vh] lg:h-[94vh] min-h-[520px] sm:min-h-[620px] lg:min-h-[760px] max-h-[1080px] w-full origin-center overflow-hidden rounded-2xl bg-slate-950 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/10 sm:rounded-3xl lg:rounded-[36px] ${
+          className={`group relative mx-auto w-full aspect-video md:aspect-auto md:h-[88vh] md:min-h-[620px] lg:h-[94vh] lg:min-h-[760px] max-h-[1080px] origin-center overflow-hidden rounded-2xl bg-slate-950 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/10 sm:rounded-3xl lg:rounded-[36px] ${
             isHovering && !isMobile ? 'cursor-none' : 'cursor-pointer'
           }`}
         >

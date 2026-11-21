@@ -155,7 +155,7 @@ export function IntroduceVideoModal({ isOpen, videoUrl, onClose }: IntroduceVide
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.3, ease: INTRODUCE_EASE_OUT }}
             onClick={(e) => e.stopPropagation()}
-            className="relative flex h-[86vh] w-[95vw] max-w-7xl items-center justify-center overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/15"
+            className="relative flex w-[95vw] max-w-7xl aspect-video md:aspect-auto md:h-[86vh] items-center justify-center overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/15"
           >
             <button
               type="button"
