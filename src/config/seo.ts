@@ -229,7 +229,7 @@ export const HOME_AI_FAQ_ITEMS: ReadonlyArray<{ question: string; answer: string
   {
     question: 'Chi phí sử dụng phần mềm XT Tech ERP là bao nhiêu? Có gói miễn phí không?',
     answer:
-      'XT Tech cung cấp gói Miễn phí trọn đời (0đ, tối đa 3 nhân sự, 20 bộ cửa hoặc 10 công trình) không cần thẻ tín dụng. Các gói trả phí minh bạch gồm Bạc, Vàng, Kim cương cho cả 3 phân hệ (từ 390.000đ/tháng XMS Biz, 490.000đ/tháng XMS Build, 590.000đ/tháng XMS Fab), kèm cam kết hoàn tiền 100% trong 7 ngày đầu.',
+      'XT Tech cung cấp gói Cuprum - Đồng trọn đời (0đ, tối đa 3 nhân sự, 20 bộ cửa hoặc 10 công trình) không cần thẻ tín dụng. Các gói trả phí minh bạch gồm Argentum - Bạc, Aurum - Vàng, Platinum - Bạch kim cho cả 3 phân hệ (từ 390.000đ/tháng XMS Biz, 490.000đ/tháng XMS Build, 590.000đ/tháng XMS Fab), kèm cam kết hoàn tiền 100% trong 7 ngày đầu.',
   },
   {
     question: 'XT Tech quản lý thi công công trình, nghiệm thu bảo hành và chấm công nhân sự như thế nào?',
