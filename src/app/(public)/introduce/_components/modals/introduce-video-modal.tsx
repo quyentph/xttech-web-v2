@@ -75,12 +75,13 @@ export function IntroduceVideoModal({ isOpen, videoUrl, onClose }: IntroduceVide
   }, [isOpen, onClose, skipBy]);
 
   useEffect(() => {
+    if (!isOpen) return;
     const onFullscreenChange = () => {
       setIsFullscreen(Boolean(document.fullscreenElement));
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;

@@ -4,18 +4,21 @@ import React, { useCallback, useEffect, useRef, useState, useSyncExternalStore }
 import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { Play } from 'lucide-react';
 import { INTRO_VIDEO_URL } from '@/config';
-import { INTRODUCE_EASE_OUT } from '../_constants/introduce.constants';
 import { IntroduceVideoModal } from './modals';
 
 const MOBILE_MEDIA_QUERY = '(max-width: 768px)';
 
 function subscribeMobileMedia(onChange: () => void): () => void {
+  if (typeof window === 'undefined' || !window.matchMedia) {
+    return () => {};
+  }
   const mql = window.matchMedia(MOBILE_MEDIA_QUERY);
   mql.addEventListener('change', onChange);
   return () => mql.removeEventListener('change', onChange);
 }
 
-const getMobileSnapshot = (): boolean => window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+const getMobileSnapshot = (): boolean =>
+  typeof window !== 'undefined' && Boolean(window.matchMedia?.(MOBILE_MEDIA_QUERY)?.matches);
 const getServerMobileSnapshot = (): boolean => false;
 
 export function IntroduceVideoSection() {

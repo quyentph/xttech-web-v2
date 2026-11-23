@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, FileSpreadsheet } from 'lucide-react';
 import { RegisterInlineForm } from '@/components';
-import { ECOSYSTEM_MODULES, SLOGAN_LINES } from '../_constants/introduce.constants';
+import { ECOSYSTEM_MODULES, PRECOMPUTED_SLOGAN_LINES } from '../_constants/introduce.constants';
 
 export function IntroduceHeroSection() {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
-
-  let charGlobalIdx = 0;
 
   const handleOpenRegister = () => {
     setFormResetKey((prev) => prev + 1);
@@ -123,9 +122,12 @@ export function IntroduceHeroSection() {
             }`}
           >
             <div className="xttech-logo-enter inline-flex items-center justify-center gap-3 sm:gap-5 lg:gap-6">
-              <img
+              <Image
                 src="/image-xttech/logo-xttech.svg"
                 alt="XT TECH Logo"
+                width={44}
+                height={44}
+                priority
                 className="object-contain"
                 style={{
                   width: 'clamp(24px, 3.4vw, 44px)',
@@ -151,31 +153,28 @@ export function IntroduceHeroSection() {
                 lineHeight: 1.25,
               }}
             >
-              {SLOGAN_LINES.map((line, lineIdx) => (
+              {PRECOMPUTED_SLOGAN_LINES.map((line, lineIdx) => (
                 <span
                   key={lineIdx}
                   aria-hidden="true"
                   className="flex flex-nowrap items-center justify-center gap-x-[0.2em] sm:gap-x-[0.26em] whitespace-nowrap"
                 >
-                  {line.map((word, wordIdx) => (
+                  {line.words.map((word, wordIdx) => (
                     <span
                       key={`${lineIdx}-${wordIdx}`}
                       className="xttech-hero-word inline-flex whitespace-nowrap"
-                      style={{ color: word.accent ? '#0b6b63' : '#0f1b2d' }}
+                      style={{ color: word.color }}
                     >
-                      {Array.from(word.text).map((char, cIdx) => {
-                        const idx = charGlobalIdx++;
-                        return (
-                          <span
-                            key={`${idx}-${cIdx}`}
-                            aria-hidden="true"
-                            className="xttech-hero-char"
-                            style={{ '--d': `${(0.28 + idx * 0.055).toFixed(3)}s` } as React.CSSProperties}
-                          >
-                            {char}
-                          </span>
-                        );
-                      })}
+                      {word.chars.map((item, cIdx) => (
+                        <span
+                          key={`${lineIdx}-${wordIdx}-${cIdx}`}
+                          aria-hidden="true"
+                          className="xttech-hero-char"
+                          style={{ '--d': item.delay } as React.CSSProperties}
+                        >
+                          {item.char}
+                        </span>
+                      ))}
                     </span>
                   ))}
                 </span>

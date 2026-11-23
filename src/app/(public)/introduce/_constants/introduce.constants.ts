@@ -1,4 +1,4 @@
-import { Briefcase, Building2, Compass, Eye, HardHat, Layers, Users, Wrench, type LucideIcon } from 'lucide-react';
+import { Building2, Compass, Eye, HardHat, Users, Wrench, type LucideIcon } from 'lucide-react';
 
 export const INTRODUCE_EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -12,11 +12,42 @@ export const SLOGAN_LINES: SloganWord[][] = [
   [{ text: 'CHUYỂN' }, { text: 'HÓA' }, { text: 'TƯƠNG', accent: true }, { text: 'LAI', accent: true }],
 ];
 
+export interface SloganCharToken {
+  char: string;
+  delay: string;
+}
+
+export interface SloganWordToken {
+  color: string;
+  chars: SloganCharToken[];
+}
+
+export interface SloganLineToken {
+  words: SloganWordToken[];
+}
+
+function buildPrecomputedSloganTokens(): SloganLineToken[] {
+  let charGlobalIdx = 0;
+  return SLOGAN_LINES.map((line) => ({
+    words: line.map((word) => ({
+      color: word.accent ? '#0b6b63' : '#0f1b2d',
+      chars: Array.from(word.text).map((char) => {
+        const idx = charGlobalIdx++;
+        return {
+          char,
+          delay: `${(0.28 + idx * 0.055).toFixed(3)}s`,
+        };
+      }),
+    })),
+  }));
+}
+
+export const PRECOMPUTED_SLOGAN_LINES: readonly SloganLineToken[] = buildPrecomputedSloganTokens();
+
 export interface EcosystemModule {
   code: string;
   name: string;
   desc: string;
-  icon: LucideIcon;
 }
 
 export const ECOSYSTEM_MODULES: EcosystemModule[] = [
@@ -24,19 +55,16 @@ export const ECOSYSTEM_MODULES: EcosystemModule[] = [
     code: 'XMS Fab',
     name: 'Xưởng Nhôm Kính & Nội Thất',
     desc: 'Thiết kế CAD 2D/3D, bóc tách BOM tự động, xuất thẻ cắt A4 và quản lý tiến độ sản xuất tại xưởng.',
-    icon: Layers,
   },
   {
     code: 'XMS Build',
     name: 'Xây Dựng & Đội Thợ Thực Địa',
     desc: 'Quản lý công trình, kho vật tư xuất nhập, chấm công tại công trình và nghiệm thu bảo hành QR.',
-    icon: HardHat,
   },
   {
     code: 'XMS Biz',
     name: 'HCNS, Kế Toán & Kinh Doanh',
     desc: 'Quản lý hợp đồng, báo giá, thu chi, nhân sự và báo cáo lãi/lỗ chi tiết theo từng đơn hàng.',
-    icon: Briefcase,
   },
 ];
 

@@ -38,9 +38,9 @@ export function IntroduceAudienceSection() {
             <Users className="h-3.5 w-3.5" />
             <span>Đối tượng sử dụng</span>
           </span>
-          <h1 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
             XT Tech phù hợp với <span className="text-primary">những ai?</span>
-          </h1>
+          </h2>
 
           <p className="mt-2.5 text-sm text-slate-500 sm:text-base">
             Mô hình kết nối liền mạch từ xưởng gia công, nhà thầu thi công đến đội thợ và kế toán điều hành.

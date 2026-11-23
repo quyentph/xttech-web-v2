@@ -47,7 +47,6 @@ export function IntroduceBenefitsSection() {
           <div className="space-y-8 sm:space-y-10 lg:space-y-12">
             {SOFTWARE_BENEFITS.map((benefit, idx) => {
               const stepNumber = benefit.letter || String(idx + 1).padStart(2, '0');
-              const style = UNIFIED_STEP_STYLE;
               const isEven = idx % 2 === 0; // chẵn: bên trái (bên này), lẻ: bên phải (bên kia)
 
               return (
@@ -55,7 +54,7 @@ export function IntroduceBenefitsSection() {
                   {/* Node tròn trung tâm (Desktop) */}
                   <div
                     aria-hidden="true"
-                    className={`hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-black transition-transform duration-300 hover:scale-110 ${style.node}`}
+                    className={`hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-black transition-transform duration-300 hover:scale-110 ${UNIFIED_STEP_STYLE.node}`}
                   >
                     {stepNumber}
                   </div>
@@ -63,7 +62,7 @@ export function IntroduceBenefitsSection() {
                   {/* Node tròn bên trái (Mobile & Tablet) */}
                   <div
                     aria-hidden="true"
-                    className={`flex lg:hidden absolute left-4 top-6 -translate-x-1/2 z-20 h-7 w-7 items-center justify-center rounded-full font-mono text-xs font-black shadow-xs ${style.node}`}
+                    className={`flex lg:hidden absolute left-4 top-6 -translate-x-1/2 z-20 h-7 w-7 items-center justify-center rounded-full font-mono text-xs font-black shadow-xs ${UNIFIED_STEP_STYLE.node}`}
                   >
                     {stepNumber}
                   </div>
@@ -81,7 +80,7 @@ export function IntroduceBenefitsSection() {
                       whileInView={{ opacity: 1, x: 0, y: 0 }}
                       viewport={{ once: true, amount: 0.25, margin: '0px 0px -40px 0px' }}
                       transition={{ duration: 0.52, delay: idx * 0.1, ease: INTRODUCE_EASE_OUT }}
-                      className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 xl:p-8 transition-all duration-300 ease-out hover:-translate-y-1 ${style.card}`}
+                      className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 xl:p-8 transition-all duration-300 ease-out hover:-translate-y-1 ${UNIFIED_STEP_STYLE.card}`}
                     >
                       {/* Đường connector nhánh ngang nối vào trục giữa (Desktop) */}
                       {isEven ? (
@@ -98,11 +97,11 @@ export function IntroduceBenefitsSection() {
 
                       <div>
                         <h3
-                          className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tight leading-snug transition-all duration-200 ${style.title}`}
+                          className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tight leading-snug transition-all duration-200 ${UNIFIED_STEP_STYLE.title}`}
                         >
                           {benefit.title}
                         </h3>
-                        <p className={`mt-2.5 text-xs sm:text-sm lg:text-base leading-relaxed ${style.desc}`}>{benefit.desc}</p>
+                        <p className={`mt-2.5 text-xs sm:text-sm lg:text-base leading-relaxed ${UNIFIED_STEP_STYLE.desc}`}>{benefit.desc}</p>
                       </div>
                     </motion.div>
                   </div>
