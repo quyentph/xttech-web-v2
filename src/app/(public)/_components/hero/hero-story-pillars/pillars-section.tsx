@@ -32,7 +32,7 @@ export function PillarsSection() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary">
             <Layers className="h-3.5 w-3.5" />
-            <span>Giá trị cốt lõi</span>
+            <span>Vì sao chọn chúng tôi</span>
           </div>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-primary sm:text-3xl lg:text-4xl">
             Vì sao doanh nghiệp chọn XTTech?
