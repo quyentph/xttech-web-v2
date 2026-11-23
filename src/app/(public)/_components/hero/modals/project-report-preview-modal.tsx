@@ -55,46 +55,71 @@ export function ProjectReportPreviewModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-100 flex items-center justify-center overscroll-contain bg-slate-950/85 p-3 sm:p-6 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-100 flex items-center justify-center overscroll-contain bg-slate-950/85 p-2 sm:p-3 lg:p-4 backdrop-blur-md animate-in fade-in duration-200"
     >
-      <div className="flex w-full max-w-[96vw] items-center justify-center gap-2 sm:gap-4">
-        <button
-          type="button"
-          onClick={() => onStep(-1)}
-          aria-label="Màn hình trước"
-          className="hidden sm:flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/95 text-slate-800 shadow-xl transition-all hover:scale-110 hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+      <div className="relative flex w-full max-w-[96vw] xl:max-w-[1560px] 2xl:max-w-[1680px] items-center justify-center">
+        {/* Khung Modal chính: Dạng Flex 2 khối (Ảnh 1 flex-1 tự dãn rộng hết cỡ + Ảnh 2 Sidebar cố định gọn gàng), chiều cao gọn gàng giúp triệt tiêu padding trên dưới thừa */}
+        <div className="relative flex flex-col lg:flex-row w-full h-[94vh] lg:h-[72vh] lg:max-h-[660px] lg:min-h-[520px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+          {/* Header trên Mobile */}
+          <div className="flex lg:hidden items-center justify-between border-b border-slate-100 bg-white px-3.5 py-2.5 shrink-0 z-20">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <span className="rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 font-mono text-xs font-black text-primary shrink-0">
+                {previewImage.number} / 0{reports.length}
+              </span>
+              <span className="text-xs font-bold text-slate-800 truncate">
+                {previewImage.title}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Đóng xem ảnh"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer ml-2"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
 
-        <div className="relative grid w-full max-w-[1160px] max-h-[94vh] grid-cols-1 lg:grid-cols-12 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl">
-          <div className="lg:col-span-9 flex flex-col bg-slate-100">
-            <div className="relative flex-1 min-h-[260px] max-h-[62vh] lg:max-h-[92vh] overflow-auto flex items-center justify-center">
-              <div className="absolute top-3 right-3 z-10 flex items-center gap-2 lg:hidden">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  aria-label="Đóng xem ảnh"
-                  className="rounded-lg border border-slate-200 bg-white/95 p-1.5 text-slate-500 shadow-sm hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+          {/* KHỐI Ở ẢNH 1: Hiển thị hình ảnh báo cáo (flex-1 dãn tối đa, padding trên dưới cực nhỏ sát mép) */}
+          <div className="flex-1 min-w-0 flex flex-col bg-slate-100/50 shrink-0 h-[220px] xs:h-[260px] sm:h-[320px] lg:h-full relative items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-200">
+            {/* Nút lùi lại trên Desktop (nổi bên trái khung ảnh) */}
+            <button
+              type="button"
+              onClick={() => onStep(-1)}
+              aria-label="Màn hình trước"
+              className="hidden lg:flex absolute left-3.5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white/95 text-slate-800 shadow-md backdrop-blur-sm transition-all hover:scale-110 hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
 
+            {/* Khung chứa ảnh: padding trên dưới cực nhỏ lg:p-1.5 giúp ảnh ôm sát viền không còn khoảng trống thừa */}
+            <div className="relative w-full h-full flex items-center justify-center p-1 sm:p-1.5 lg:p-1.5 overflow-hidden">
               <img
                 src={previewImage.imageSrc}
                 alt={previewImage.title}
                 onClick={onToggleZoom}
-                className={`block w-full transition-transform duration-300 cursor-zoom-in ${
-                  isZoomed ? 'scale-125 sm:scale-135 origin-center cursor-zoom-out' : 'h-full object-contain'
+                className={`transition-transform duration-300 cursor-zoom-in rounded-sm ${
+                  isZoomed ? 'scale-125 sm:scale-135 origin-center cursor-zoom-out' : 'max-h-full max-w-full w-auto h-auto object-contain'
                 }`}
               />
             </div>
+
+            {/* Nút tiến tới trên Desktop (nổi bên phải khung ảnh) */}
+            <button
+              type="button"
+              onClick={() => onStep(1)}
+              aria-label="Màn hình tiếp theo"
+              className="hidden lg:flex absolute right-3.5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white/95 text-slate-800 shadow-md backdrop-blur-sm transition-all hover:scale-110 hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
 
-          <div className="lg:col-span-3 flex flex-col justify-start border-t lg:border-t-0 lg:border-l border-slate-200 bg-white p-5 sm:p-6 text-slate-900 overflow-y-auto max-h-[32vh] lg:max-h-[94vh]">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-2">
+          {/* KHỐI Ở ẢNH 2: Cột nội dung chi tiết & danh sách chọn nhanh bên phải (flex gọn gàng, cố định chiều rộng) */}
+          <div className="w-full lg:w-[350px] xl:w-[380px] shrink-0 flex-1 lg:h-full overflow-y-auto overscroll-contain bg-white p-4 sm:p-5 text-slate-900 flex flex-col justify-start [scrollbar-width:thin]">
+            <div className="space-y-3.5">
+              {/* Header chi tiết trên Desktop */}
+              <div className="hidden lg:flex items-center justify-between gap-2 pb-1">
                 <div className="flex items-center gap-2">
                   <span className="rounded-lg bg-primary/10 border border-primary/20 px-2.5 py-1 font-mono text-xs font-black text-primary">
                     {previewImage.number} / 0{reports.length}
@@ -108,22 +133,30 @@ export function ProjectReportPreviewModal({
                   type="button"
                   onClick={onClose}
                   aria-label="Đóng xem ảnh"
-                  className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
+                  className="h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer flex"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              <div>
-                <h3 className="text-base sm:text-lg font-black leading-snug text-slate-900">{previewImage.title}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-slate-600">{previewImage.description}</p>
+              {/* Tag phân hệ trên Mobile */}
+              <div className="flex lg:hidden items-center gap-2">
+                <span className="rounded-md bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                  {previewImage.category}
+                </span>
               </div>
 
-              <div className="flex sm:hidden items-center gap-2 pt-1">
+              <div>
+                <h3 className="text-base sm:text-lg lg:text-xl font-black leading-snug text-slate-900">{previewImage.title}</h3>
+                <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-slate-600">{previewImage.description}</p>
+              </div>
+
+              {/* Điều hướng Trước / Tiếp trên Mobile */}
+              <div className="flex lg:hidden items-center gap-2 pt-0.5">
                 <button
                   type="button"
                   onClick={() => onStep(-1)}
-                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   <span>Trước</span>
@@ -131,16 +164,17 @@ export function ProjectReportPreviewModal({
                 <button
                   type="button"
                   onClick={() => onStep(1)}
-                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
                 >
                   <span>Tiếp</span>
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
 
-              <div className="pt-2 space-y-1.5">
-                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Chuyển nhanh màn hình
+              {/* Chuyển nhanh giữa các màn hình */}
+              <div className="pt-3 space-y-2 border-t border-slate-100">
+                <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Chuyển nhanh màn hình ({reports.length})
                 </span>
                 <div className="space-y-1.5">
                   {reports.map((rpt) => {
@@ -150,16 +184,16 @@ export function ProjectReportPreviewModal({
                         key={rpt.id}
                         type="button"
                         onClick={() => onSelectReport(rpt)}
-                        className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs transition-all cursor-pointer ${
+                        className={`w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-xs sm:text-[13px] transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-primary text-white font-bold shadow-sm'
-                            : 'border border-slate-200/80 bg-slate-50/80 text-slate-700 hover:border-primary/30 hover:bg-primary/5 hover:text-primary'
+                            ? 'bg-primary text-white font-bold shadow-xs'
+                            : 'border border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-primary/40 hover:bg-primary/5 hover:text-primary'
                         }`}
                       >
-                        <span className={`font-mono text-[11px] font-black ${isSelected ? 'text-white/90' : 'text-primary'}`}>
+                        <span className={`font-mono text-xs font-black shrink-0 ${isSelected ? 'text-white/90' : 'text-primary'}`}>
                           {rpt.number}
                         </span>
-                        <span className="truncate">{rpt.title}</span>
+                        <span className="leading-snug">{rpt.title}</span>
                       </button>
                     );
                   })}
@@ -168,15 +202,6 @@ export function ProjectReportPreviewModal({
             </div>
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={() => onStep(1)}
-          aria-label="Màn hình tiếp theo"
-          className="hidden sm:flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/95 text-slate-800 shadow-xl transition-all hover:scale-110 hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
       </div>
     </div>,
     document.body,

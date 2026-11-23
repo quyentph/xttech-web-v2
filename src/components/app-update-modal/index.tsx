@@ -21,7 +21,10 @@ interface AppUpdateNativePlugin {
   openInstallPermissionSettings(): Promise<{ success: boolean }>;
   downloadAndInstall(options: { url: string }): Promise<{ success: boolean; needPermission?: boolean; installedTriggered?: boolean }>;
   installDownloadedApk(): Promise<{ success: boolean }>;
-  addListener(eventName: 'downloadProgress', listenerFunc: (data: { percent: number; loaded: number; total: number }) => void): Promise<{ remove: () => void }>;
+  addListener(
+    eventName: 'downloadProgress',
+    listenerFunc: (data: { percent: number; loaded: number; total: number }) => void,
+  ): Promise<{ remove: () => void }>;
   addListener(eventName: 'downloadError', listenerFunc: (data: { message: string }) => void): Promise<{ remove: () => void }>;
 }
 
@@ -262,7 +265,7 @@ export function AppUpdateModal() {
                 <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-amber-800 leading-relaxed">
                   <p className="font-semibold text-amber-900 mb-0.5">Yêu cầu quyền cài đặt:</p>
-                  Hệ điều hành Android yêu cầu bạn cho phép <strong>XTTech</strong> cài đặt ứng dụng từ nguồn này để tiếp tục cập nhật.
+                  Hệ điều hành Android yêu cầu bạn cho phép <strong>XT Tech</strong> cài đặt ứng dụng từ nguồn này để tiếp tục cập nhật.
                 </div>
               </div>
               <div className="flex flex-col gap-2 pt-2">
@@ -315,10 +318,7 @@ export function AppUpdateModal() {
                 >
                   Đóng
                 </button>
-                <button
-                  onClick={handleStartUpdate}
-                  className="flex-1 px-4 py-2 rounded-xl bg-[#045863] text-white text-sm hover:bg-[#03444d]"
-                >
+                <button onClick={handleStartUpdate} className="flex-1 px-4 py-2 rounded-xl bg-[#045863] text-white text-sm hover:bg-[#03444d]">
                   Thử lại
                 </button>
               </div>

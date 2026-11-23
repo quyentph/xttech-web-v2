@@ -77,7 +77,7 @@ gradle.taskGraph.whenReady { taskGraph ->
             def text = configFile.text
             text = text.replaceAll(/"url":\s*"[^"]*"/, "\"url\": \"${targetUrl}\"")
             configFile.text = text
-            println ">> [XTTech Auto-Config] Detected build task -> Switched server.url to: ${targetUrl}"
+            println ">> [XT Tech Auto-Config] Detected build task -> Switched server.url to: ${targetUrl}"
         }
     }
 }

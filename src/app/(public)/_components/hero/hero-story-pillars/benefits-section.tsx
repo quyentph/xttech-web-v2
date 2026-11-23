@@ -31,7 +31,7 @@ export function BenefitsSection() {
             <span>Giải pháp toàn diện</span>
           </div>
           <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-            Cải tiến quản lý sản xuất & thi công với <span className="text-primary">XTTech</span>
+            Cải tiến quản lý sản xuất & thi công với <span className="text-primary">XT Tech</span>
           </h2>
           <p className="text-sm sm:text-base text-slate-600">
             Nền tảng quản trị xưởng nhôm kính từ khảo sát, báo giá, thiết kế bóc tách 2D/3D, xuất thẻ cắt A4 tối ưu nhôm, quản lý kho vật tư đến chấm
@@ -169,7 +169,7 @@ export function BenefitsSection() {
               {/* Hào quang nền phía sau */}
               <div className="pointer-events-none absolute -inset-2 rounded-3xl bg-linear-to-r from-primary/10 via-amber-500/10 to-teal-500/10 blur-xl opacity-70" />
 
-              {/* Khung Window ứng dụng XTTech */}
+              {/* Khung Window ứng dụng XT Tech */}
               <div className="relative overflow-hidden rounded-2xl border border-slate-300/80 bg-white shadow-2xl">
                 {/* Top Header thanh ứng dụng */}
                 <div className="flex items-center justify-between border-b border-slate-200 bg-slate-100/90 px-4 py-2.5 backdrop-blur-xs">
@@ -194,7 +194,7 @@ export function BenefitsSection() {
                 <div className="w-full bg-white overflow-hidden">
                   <Image
                     src="/images/projects/project-production.png"
-                    alt="Giao diện lệnh sản xuất và tiến độ phần mềm XTTech"
+                    alt="Giao diện lệnh sản xuất và tiến độ phần mềm XT Tech"
                     width={1024}
                     height={490}
                     sizes="(max-width: 1024px) 100vw, 58vw"

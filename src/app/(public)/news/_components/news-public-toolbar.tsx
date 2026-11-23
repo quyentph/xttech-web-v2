@@ -16,7 +16,7 @@ export interface NewsPublicToolbarProps {
 export function NewsPublicToolbar({ searchInput, onSearchChange, selectedCategory, onSelectCategory }: NewsPublicToolbarProps) {
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-primary/10 via-primary/4 to-white border-b border-slate-200/80 pt-8 sm:pt-10">
-      {/* Hiệu ứng nền trang trí đồng bộ hệ sinh thái XTTech */}
+      {/* Hiệu ứng nền trang trí đồng bộ hệ sinh thái XT Tech */}
       <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-full max-w-lg -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-8 lg:px-12 xl:px-16">

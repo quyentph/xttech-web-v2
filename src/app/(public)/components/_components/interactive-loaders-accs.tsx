@@ -8,11 +8,12 @@ export function InteractiveLoadersAccs() {
     {
       id: 'faq-1',
       title: 'Làm thế nào để kết nối API hệ thống?',
-      content: 'Bạn chỉ cần khởi tạo khóa API Key trong cấu hình tài khoản cá nhân, sau đó truyền vào header Authorization: Bearer <API_KEY> khi thực hiện cuộc gọi API.',
+      content:
+        'Bạn chỉ cần khởi tạo khóa API Key trong cấu hình tài khoản cá nhân, sau đó truyền vào header Authorization: Bearer <API_KEY> khi thực hiện cuộc gọi API.',
     },
     {
       id: 'faq-2',
-      title: 'XTTech có hỗ trợ xuất báo cáo định dạng nào?',
+      title: 'XT Tech có hỗ trợ xuất báo cáo định dạng nào?',
       content: 'Hệ thống hiện tại hỗ trợ xuất toàn bộ dữ liệu ra định dạng Excel (.xlsx), PDF báo cáo đẹp mắt, hoặc JSON thô cho nhà phát triển.',
     },
     {

@@ -118,7 +118,7 @@ export const Hero = () => {
                     </span>
                   </h1>
                   <p className="text-sm font-semibold tracking-wide text-hero-accent sm:text-base">
-                    XTTech – Giải pháp số hóa toàn diện cho Xưởng Nhôm Kính &amp; Nhà Thầu
+                    XT Tech – Giải pháp số hóa toàn diện cho Xưởng Nhôm Kính &amp; Nhà Thầu
                   </p>
                 </div>
 

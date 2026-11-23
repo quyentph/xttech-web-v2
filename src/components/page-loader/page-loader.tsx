@@ -47,7 +47,15 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Loader2,
 };
 
-export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đang tải dữ liệu', subtitle = 'Vui lòng chờ trong giây lát...', iconName = 'Loader2', progress, onBack, onHome, }) => {
+export const PageLoader: React.FC<PageLoaderProps> = ({
+  isVisible,
+  title = 'Đang tải dữ liệu',
+  subtitle = 'Vui lòng chờ trong giây lát...',
+  iconName = 'Loader2',
+  progress,
+  onBack,
+  onHome,
+}) => {
   const router = useRouter();
 
   // Tự động mô phỏng tiến trình nếu prop progress không được truyền vào từ bên ngoài (e.g. Next.js loading.tsx)
@@ -71,11 +79,7 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
     };
   }, [isVisible, progress]);
 
-  const currentProgress = !isVisible
-    ? 0
-    : progress !== undefined
-      ? Math.min(100, Math.max(0, Math.round(progress)))
-      : internalProgress;
+  const currentProgress = !isVisible ? 0 : progress !== undefined ? Math.min(100, Math.max(0, Math.round(progress))) : internalProgress;
 
   // Chiều cao mặt nước dâng lên tỉ lệ thuận với tiến trình, tối đa đạt 50% màn hình
   const waveHeightPercent = Math.min(50, Math.round(10 + (currentProgress / 100) * 40));
@@ -96,16 +100,14 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
     }
   };
 
-  const IconComponent = (iconName && ICON_MAP[iconName]) ? ICON_MAP[iconName] : Loader2;
+  const IconComponent = iconName && ICON_MAP[iconName] ? ICON_MAP[iconName] : Loader2;
 
   return (
     <div
       aria-hidden={!isVisible}
       className={cn(
         'fixed inset-0 z-[9999] md:hidden flex flex-col bg-white select-none',
-        isVisible
-          ? 'opacity-100 pointer-events-auto visible'
-          : 'opacity-0 pointer-events-none invisible transition-opacity duration-200 ease-out'
+        isVisible ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible transition-opacity duration-200 ease-out',
       )}
       style={{
         paddingTop: 'env(safe-area-inset-top, 0px)',
@@ -123,9 +125,7 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
           >
             <ArrowLeft size={19} />
           </button>
-          <h1 className="text-base font-bold text-slate-800 tracking-tight line-clamp-1">
-            {title}
-          </h1>
+          <h1 className="text-base font-bold text-slate-800 tracking-tight line-clamp-1">{title}</h1>
         </div>
 
         <button
@@ -142,22 +142,14 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
       <main className="relative z-10 flex flex-1 flex-col items-center justify-start px-6 pt-[10vh] sm:pt-[12vh]">
         {/* Icon Frame nhỏ gọn chuẩn mobile */}
         <div className="relative mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-teal-50/90 border border-teal-100/80 shadow-xs ring-4 ring-teal-50/50">
-          <IconComponent
-            size={24}
-            className="text-[#045863] animate-pulse"
-            strokeWidth={2.2}
-          />
+          <IconComponent size={24} className="text-[#045863] animate-pulse" strokeWidth={2.2} />
         </div>
 
         {/* Tên tính năng */}
-        <h2 className="text-base font-bold text-slate-900 tracking-tight text-center sm:text-lg">
-          {title}
-        </h2>
+        <h2 className="text-base font-bold text-slate-900 tracking-tight text-center sm:text-lg">{title}</h2>
 
         {/* Phụ đề mô tả */}
-        <p className="mt-1 text-xs sm:text-sm font-normal text-slate-500 text-center line-clamp-1 max-w-[260px]">
-          {subtitle}
-        </p>
+        <p className="mt-1 text-xs sm:text-sm font-normal text-slate-500 text-center line-clamp-1 max-w-[260px]">{subtitle}</p>
 
         {/* Thanh Progress Bar 0 - 100% (tối giản, không chữ và %, độ dày h-2.5 rõ nét) */}
         <div className="mt-4 h-2.5 w-48 sm:w-56 overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200/70 shadow-inner">
@@ -168,25 +160,17 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
         </div>
       </main>
 
-      {/* 3. Đồ họa Sóng nước dâng theo tiến trình (tối đa 50% màn hình) chuẩn màu chủ đạo XTTech (#045863) */}
+      {/* 3. Đồ họa Sóng nước dâng theo tiến trình (tối đa 50% màn hình) chuẩn màu chủ đạo XT Tech (#045863) */}
       <div
         className="pointer-events-none absolute bottom-0 left-0 right-0 w-full overflow-hidden flex flex-col justify-end transition-all duration-300 ease-out z-0"
         style={{ height: `${waveHeightPercent}%` }}
       >
-        {/* 1 Đỉnh sóng duy nhất cuộn trào mạnh mẽ chuẩn màu chủ đạo XTTech */}
+        {/* 1 Đỉnh sóng duy nhất cuộn trào mạnh mẽ chuẩn màu chủ đạo XT Tech */}
         <div className="relative w-full h-20 sm:h-28 overflow-hidden shrink-0">
           <div className="absolute inset-0 w-[200%] h-full flex animate-[wave-flow_2.8s_linear_infinite]">
-            <svg
-              className="w-1/2 h-full shrink-0 block"
-              viewBox="0 0 1200 120"
-              preserveAspectRatio="none"
-            >
-              {/* Mảng thân sóng đổ màu phẳng đồng nhất chuẩn màu chủ đạo XTTech */}
-              <path
-                fill="#5A949C"
-                stroke="none"
-                d="M0,60 C150,5 300,105 480,95 C620,85 750,10 900,20 C1050,30 1120,95 1200,60 L1200,160 L0,160 Z"
-              />
+            <svg className="w-1/2 h-full shrink-0 block" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              {/* Mảng thân sóng đổ màu phẳng đồng nhất chuẩn màu chủ đạo XT Tech */}
+              <path fill="#5A949C" stroke="none" d="M0,60 C150,5 300,105 480,95 C620,85 750,10 900,20 C1050,30 1120,95 1200,60 L1200,160 L0,160 Z" />
               {/* Chỉ kẻ viền ở mép cong đỉnh sóng, tuyệt đối không kẻ cạnh dọc */}
               <path
                 fill="none"
@@ -196,17 +180,9 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ isVisible, title = 'Đan
                 d="M-2,60 C150,5 300,105 480,95 C620,85 750,10 900,20 C1050,30 1120,95 1202,60"
               />
             </svg>
-            <svg
-              className="w-1/2 h-full shrink-0 block"
-              viewBox="0 0 1200 120"
-              preserveAspectRatio="none"
-            >
-              {/* Mảng thân sóng đổ màu phẳng đồng nhất chuẩn màu chủ đạo XTTech */}
-              <path
-                fill="#5A949C"
-                stroke="none"
-                d="M0,60 C150,5 300,105 480,95 C620,85 750,10 900,20 C1050,30 1120,95 1200,60 L1200,160 L0,160 Z"
-              />
+            <svg className="w-1/2 h-full shrink-0 block" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              {/* Mảng thân sóng đổ màu phẳng đồng nhất chuẩn màu chủ đạo XT Tech */}
+              <path fill="#5A949C" stroke="none" d="M0,60 C150,5 300,105 480,95 C620,85 750,10 900,20 C1050,30 1120,95 1200,60 L1200,160 L0,160 Z" />
               {/* Chỉ kẻ viền ở mép cong đỉnh sóng, tuyệt đối không kẻ cạnh dọc */}
               <path
                 fill="none"

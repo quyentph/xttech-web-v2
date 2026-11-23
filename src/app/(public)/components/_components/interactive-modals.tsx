@@ -50,7 +50,7 @@ export function InteractiveModals() {
             isOpen={activeModal === sizeTyped}
             onClose={() => setActiveModal(null)}
             size={sizeTyped}
-            title={`XTTech Modal Shell (${sizeTyped.toUpperCase()})`}
+            title={`XT Tech Modal Shell (${sizeTyped.toUpperCase()})`}
             footer={
               <>
                 <Button variant="outline" onClick={() => setActiveModal(null)}>
@@ -64,12 +64,14 @@ export function InteractiveModals() {
           >
             <div className="space-y-4">
               <p>
-                Đây là nội dung được render linh động truyền qua prop <strong>children</strong>. 
-                Khung bên ngoài của Modal chịu trách nhiệm xử lý các tính năng dùng chung (độ rộng tối đa, đóng khi bấm ESC, khóa cuộn trang, căn giữa màn hình, overlay mờ).
+                Đây là nội dung được render linh động truyền qua prop <strong>children</strong>. Khung bên ngoài của Modal chịu trách nhiệm xử lý các
+                tính năng dùng chung (độ rộng tối đa, đóng khi bấm ESC, khóa cuộn trang, căn giữa màn hình, overlay mờ).
               </p>
               <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg text-xs font-mono text-gray-500">
-                &lt;Modal size="{sizeTyped}" isOpen=&#123;isOpen&#125; onClose=&#123;onClose&#125;&gt;<br />
-                &nbsp;&nbsp;&lt;div&gt;Nội dung trang nghiệp vụ&lt;/div&gt;<br />
+                &lt;Modal size="{sizeTyped}" isOpen=&#123;isOpen&#125; onClose=&#123;onClose&#125;&gt;
+                <br />
+                &nbsp;&nbsp;&lt;div&gt;Nội dung trang nghiệp vụ&lt;/div&gt;
+                <br />
                 &lt;/Modal&gt;
               </div>
             </div>

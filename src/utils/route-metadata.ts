@@ -7,7 +7,7 @@ export interface RouteMeta {
 export const ROUTE_METADATA_MAP: Record<string, RouteMeta> = {
   '/app/dashboard': {
     title: 'Tổng quan hệ thống',
-    subtitle: 'XTTech Management',
+    subtitle: 'XT Tech Management',
     iconName: 'LayoutDashboard',
   },
   '/app/live-map': {
@@ -99,9 +99,7 @@ export function getRouteMetadata(pathname: string): RouteMeta {
   }
 
   // 2. Khớp tiền tố (Prefix match)
-  const matchingKey = Object.keys(ROUTE_METADATA_MAP).find(
-    (key) => key !== '/app' && pathname.startsWith(key)
-  );
+  const matchingKey = Object.keys(ROUTE_METADATA_MAP).find((key) => key !== '/app' && pathname.startsWith(key));
 
   if (matchingKey && ROUTE_METADATA_MAP[matchingKey]) {
     return ROUTE_METADATA_MAP[matchingKey];

@@ -32,7 +32,7 @@ export const CONTACT_ACTIONS: ContactAction[] = [
   {
     key: 'facebook',
     href: CONTACT_INFO.facebookUrl,
-    title: 'Fanpage XTTech',
+    title: 'Fanpage XT Tech',
     tooltip: 'Facebook Fanpage',
     icon: FacebookIcon,
     iconClassName: 'h-5 w-5 fill-current',

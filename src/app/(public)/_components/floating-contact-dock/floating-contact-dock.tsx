@@ -18,11 +18,8 @@ export function FloatingContactDock({ className = '' }: FloatingContactDockProps
 
   return (
     <aside
-      aria-label="Thanh liên hệ nhanh XTTech"
-      className={cn(
-        'fixed right-3 sm:right-5 bottom-6 z-50 flex flex-col items-center gap-2.5 select-none',
-        className,
-      )}
+      aria-label="Thanh liên hệ nhanh XT Tech"
+      className={cn('fixed right-3 sm:right-5 bottom-6 z-50 flex flex-col items-center gap-2.5 select-none', className)}
     >
       {/* Nhóm các nút liên kết mạng xã hội & hotline (cố định trên màn hình, không bị trôi khi cuộn chuột) */}
       <div
@@ -51,12 +48,7 @@ export function FloatingContactDock({ className = '' }: FloatingContactDockProps
               style={{ animationDelay: `${index * 450}ms`, animationDuration: '2.4s' }}
               className="pointer-events-none absolute inset-0 -z-10 animate-ping rounded-full bg-inherit opacity-40 motion-reduce:animate-none"
             />
-            <Icon
-              className={cn(
-                iconClassName,
-                'transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110',
-              )}
-            />
+            <Icon className={cn(iconClassName, 'transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110')} />
             <span
               className={cn(
                 'pointer-events-none absolute right-14 translate-x-2 whitespace-nowrap rounded-lg px-2.5 py-1 text-xs text-white opacity-0 shadow-md transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100',
@@ -81,9 +73,7 @@ export function FloatingContactDock({ className = '' }: FloatingContactDockProps
             : 'bg-primary text-white ring-4 ring-primary/20 hover:bg-primary/90 motion-safe:animate-bounce',
         )}
       >
-        <ChevronDown
-          className={cn('h-5 w-5 transition-transform duration-500', dockOpen ? 'rotate-0' : 'rotate-180')}
-        />
+        <ChevronDown className={cn('h-5 w-5 transition-transform duration-500', dockOpen ? 'rotate-0' : 'rotate-180')} />
       </button>
 
       {/* Nút Cuộn lên đầu trang */}

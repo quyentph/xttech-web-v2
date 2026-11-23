@@ -390,7 +390,7 @@ public class TrackingLocationService extends Service implements LocationListener
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager == null) return;
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
-                PowerManager.PARTIAL_WAKE_LOCK, "XTTech::HeartbeatAlarmWakeLock");
+                PowerManager.PARTIAL_WAKE_LOCK, "XT Tech::HeartbeatAlarmWakeLock");
         wakeLock.setReferenceCounted(false);
         wakeLock.acquire(HEARTBEAT_WAKELOCK_TIMEOUT_MS);
     }
@@ -664,7 +664,7 @@ public class TrackingLocationService extends Service implements LocationListener
             PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wakeLock = null;
             if (powerManager != null) {
-                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XTTech::TrackingPingWakeLock");
+                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XT Tech::TrackingPingWakeLock");
                 wakeLock.acquire(15000);
             }
 
@@ -807,7 +807,7 @@ public class TrackingLocationService extends Service implements LocationListener
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_REMINDER_ID)
                     .setContentTitle("⚠️ Cảnh báo ca làm việc!")
-                    .setContentText("Đang trong ca làm việc, vui lòng vào lại app XTTech và không đóng app!")
+                    .setContentText("Đang trong ca làm việc, vui lòng vào lại app XT Tech và không đóng app!")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentIntent(pendingOpen)
                     .setAutoCancel(true)
@@ -868,7 +868,7 @@ public class TrackingLocationService extends Service implements LocationListener
         );
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("XTTech đang hoạt động")
+                .setContentTitle("XT Tech đang hoạt động")
                 .setContentText("Hệ thống đang ghi nhận vị trí trong ca làm việc...")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
@@ -882,7 +882,7 @@ public class TrackingLocationService extends Service implements LocationListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "XTTech Vị trí ca làm việc",
+                    "XT Tech Vị trí ca làm việc",
                     NotificationManager.IMPORTANCE_LOW
             );
             channel.setDescription("Duy trì cập nhật vị trí trực tiếp trong ca làm việc");
@@ -901,7 +901,7 @@ public class TrackingLocationService extends Service implements LocationListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_REMINDER_ID,
-                    "XTTech Cảnh báo đóng app",
+                    "XT Tech Cảnh báo đóng app",
                     NotificationManager.IMPORTANCE_HIGH
             );
             channel.setDescription("Nhắc nhân viên mở lại app khi lỡ tắt trong ca làm việc");

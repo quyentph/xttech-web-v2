@@ -1,6 +1,6 @@
 # HƯỚNG DẪN QUY TRÌNH ĐẨY ỨNG DỤNG IOS LÊN APPLE APP STORE (TỪ A - Z)
 
-> **Dành cho dự án:** `XTTech Mobile App` (Capacitor / Next.js Hybrid)  
+> **Dành cho dự án:** `XT Tech Mobile App` (Capacitor / Next.js Hybrid)  
 > **Bundle Identifier:** `com.xttech.app2`  
 > **Phương thức triển khai:** Hỗ trợ cả **Git CI/CD (GitHub Actions macOS Runner)** và **Xcode trên máy Mac Local**  
 > **Thời gian cập nhật:** 2026
@@ -213,7 +213,7 @@ Sau khi bản build đầu tiên được upload thành công lên App Store Con
 
 1. Truy cập [appstoreconnect.apple.com](https://appstoreconnect.apple.com/) -> Vào **My Apps** -> Nhấn **`+`** (New App):
    - **Bundle ID:** Chọn `com.xttech.app2`.
-   - **Name:** `XTTech` (hoặc `XTTech - Quản lý công trình & Chấm công`).
+   - **Name:** `XT Tech` (hoặc `XT Tech - Quản lý công trình & Chấm công`).
    - **SKU:** `xttech-ios-01`.
 2. **Chuẩn bị hình ảnh Screenshots & Icon:**
    - **Icon:** `1024 x 1024 px` (PNG không trong suốt).
@@ -244,7 +244,7 @@ Sau khi bản build đầu tiên được upload thành công lên App Store Con
    - **Sign-in required:** Tích chọn Bắt buộc đăng nhập.
    - **User name / Password:** Cung cấp tài khoản test demo có sẵn dữ liệu (Ví dụ: `tester_apple@xttech.vn` / `Demo@123456`).
    - **Notes (Ghi chú duyệt):**
-     > _"Ứng dụng XTTech là ứng dụng nội bộ dành cho nhân sự công trình và kỹ thuật viên. Tính năng Background Location được sử dụng để theo dõi lộ trình và xác định vị trí làm việc trong ca phục vụ chấm công minh bạch. Vui lòng đăng nhập bằng tài khoản demo được cung cấp ở trên và truy cập tab Chấm công để kiểm tra."_
+     > _"Ứng dụng XT Tech là ứng dụng nội bộ dành cho nhân sự công trình và kỹ thuật viên. Tính năng Background Location được sử dụng để theo dõi lộ trình và xác định vị trí làm việc trong ca phục vụ chấm công minh bạch. Vui lòng đăng nhập bằng tài khoản demo được cung cấp ở trên và truy cập tab Chấm công để kiểm tra."_
 4. Nhấn **Submit to App Review**.
 5. Thời gian duyệt thường kéo dài từ **12h - 48h**.
 
@@ -252,7 +252,7 @@ Sau khi bản build đầu tiên được upload thành công lên App Store Con
 
 ## ⚠️ CHECKLIST 3 ĐIỀU KHOẢN DỄ BỊ REJECT ĐỐI VỚI DỰ ÁN XT Tech
 
-| Điều khoản Apple                          | Yêu cầu                                                            | Cách khắc phục trong XTTech                                                                   |
+| Điều khoản Apple                          | Yêu cầu                                                            | Cách khắc phục trong XT Tech                                                                  |
 | :---------------------------------------- | :----------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- |
 | **Guideline 5.1.1(v) (Account Deletion)** | Bắt buộc app có đăng nhập phải có tính năng xóa tài khoản.         | Thêm nút _"Xóa tài khoản / Yêu cầu hủy tài khoản"_ trong trang Cài đặt / Thông tin cá nhân.   |
 | **Guideline 2.5.4 (Background Location)** | Giải trình rõ ràng mục đích sử dụng quyền vị trí chạy ngầm.        | Đảm bảo `Info.plist` và phần App Review Notes mô tả rõ phục vụ chấm công trong ca.            |

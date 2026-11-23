@@ -11,9 +11,7 @@ export function PillarsSection() {
   const [activeIdleIdx, setActiveIdleIdx] = useState(0);
   const [isHoveringGrid, setIsHoveringGrid] = useState(false);
 
-  const filteredPillars = XTTECH_PILLAR_CARDS.filter(
-    (card) => selectedCategory === 'all' || card.category === selectedCategory,
-  );
+  const filteredPillars = XTTECH_PILLAR_CARDS.filter((card) => selectedCategory === 'all' || card.category === selectedCategory);
 
   // Hiệu ứng spotlight tự động chạy tuần tự qua từng khối khi người dùng chưa hover
   useEffect(() => {
@@ -34,9 +32,7 @@ export function PillarsSection() {
             <Layers className="h-3.5 w-3.5" />
             <span>Vì sao chọn chúng tôi</span>
           </div>
-          <h2 className="mt-3 text-2xl font-black tracking-tight text-primary sm:text-3xl lg:text-4xl">
-            Vì sao doanh nghiệp chọn XTTech?
-          </h2>
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-primary sm:text-3xl lg:text-4xl">Vì sao doanh nghiệp chọn XT Tech?</h2>
           <p className="mt-2 text-sm text-gray-600 sm:text-base leading-relaxed">
             Chúng tôi không chỉ cung cấp công cụ, chúng tôi chuyển giao cả phương pháp quản trị hiện đại đã được kiểm chứng cho ngành nhôm kính.
           </p>
@@ -51,9 +47,7 @@ export function PillarsSection() {
                   onClick={() => setSelectedCategory(filter.value)}
                   className={cn(
                     'whitespace-nowrap px-3 sm:px-4.5 py-1.5 rounded-full text-[11px] sm:text-sm font-bold transition-all cursor-pointer',
-                    selectedCategory === filter.value
-                      ? 'bg-primary text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900',
+                    selectedCategory === filter.value ? 'bg-primary text-white shadow-xs' : 'text-slate-600 hover:text-slate-900',
                   )}
                 >
                   {filter.label}
@@ -71,10 +65,7 @@ export function PillarsSection() {
         >
           {filteredPillars.map((pillar, idx) => {
             const Icon = pillar.icon;
-            const isIdleActive =
-              !isHoveringGrid &&
-              filteredPillars.length > 0 &&
-              idx === activeIdleIdx % filteredPillars.length;
+            const isIdleActive = !isHoveringGrid && filteredPillars.length > 0 && idx === activeIdleIdx % filteredPillars.length;
 
             return (
               <div
@@ -82,9 +73,7 @@ export function PillarsSection() {
                 style={{ animationDelay: `${idx * 55}ms` }}
                 className={cn(
                   'animate-pillar-card-in group relative flex w-[82vw] max-w-[330px] shrink-0 snap-center md:w-auto md:max-w-none flex-col justify-between overflow-hidden rounded-2xl border bg-white p-4.5 sm:p-5 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10',
-                  isIdleActive
-                    ? '-translate-y-1 border-primary/45 shadow-lg shadow-primary/10'
-                    : 'border-slate-200/80 shadow-sm',
+                  isIdleActive ? '-translate-y-1 border-primary/45 shadow-lg shadow-primary/10' : 'border-slate-200/80 shadow-sm',
                 )}
               >
                 {/* Thanh primary quét ngang viền trên khi hover hoặc khi đang spotlight */}
@@ -117,9 +106,7 @@ export function PillarsSection() {
                   <div
                     className={cn(
                       'flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-primary group-hover:text-white group-hover:shadow-md',
-                      isIdleActive
-                        ? 'scale-105 bg-primary text-white shadow-sm'
-                        : 'bg-primary/10 text-primary',
+                      isIdleActive ? 'scale-105 bg-primary text-white shadow-sm' : 'bg-primary/10 text-primary',
                     )}
                   >
                     <Icon className="h-5.5 w-5.5 transition-transform duration-300" />
@@ -138,7 +125,10 @@ export function PillarsSection() {
                   {/* Danh sách gạch đầu dòng */}
                   <ul className="space-y-2.5 pt-1 flex-1">
                     {pillar.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-relaxed text-slate-600 transition-colors duration-200 group-hover:text-slate-700">
+                      <li
+                        key={bIdx}
+                        className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-relaxed text-slate-600 transition-colors duration-200 group-hover:text-slate-700"
+                      >
                         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary fill-primary/15 transition-transform duration-200 group-hover:scale-110" />
                         <span>{bullet}</span>
                       </li>
@@ -149,7 +139,6 @@ export function PillarsSection() {
             );
           })}
         </div>
-
       </div>
     </section>
   );

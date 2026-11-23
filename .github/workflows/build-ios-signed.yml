@@ -47,12 +47,12 @@ jobs:
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          if [ -f "./XTTech_AppStore.mobileprovision" ]; then
+          if [ -f "./XT Tech_AppStore.mobileprovision" ]; then
             echo "Using mobileprovision directly from repository..."
-            cp ./XTTech_AppStore.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/XTTech_AppStore.mobileprovision
+            cp ./XT Tech_AppStore.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/XT Tech_AppStore.mobileprovision
           else
             echo "Decoding mobileprovision from secret..."
-            echo "$BUILD_PROVISION_PROFILE_BASE64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/XTTech_AppStore.mobileprovision
+            echo "$BUILD_PROVISION_PROFILE_BASE64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/XT Tech_AppStore.mobileprovision
           fi
 
       - name: 5. Install dependencies, Build Next.js & Sync Capacitor iOS
@@ -80,7 +80,7 @@ jobs:
               <key>provisioningProfiles</key>
               <dict>
                   <key>com.xttech.app2</key>
-                  <string>XTTech_AppStore</string>
+                  <string>XT Tech_AppStore</string>
               </dict>
               <key>compileBitcode</key>
               <false/>
@@ -106,7 +106,7 @@ jobs:
             CURRENT_PROJECT_VERSION="$BUILD_NUM" \
             CODE_SIGN_STYLE="Manual" \
             DEVELOPMENT_TEAM="GPCFYP2K8W" \
-            PROVISIONING_PROFILE_SPECIFIER="XTTech_AppStore" \
+            PROVISIONING_PROFILE_SPECIFIER="XT Tech_AppStore" \
             CODE_SIGN_IDENTITY="Apple Distribution"
 
       - name: 8. Export Signed IPA for App Store
@@ -120,7 +120,7 @@ jobs:
       - name: 9. Upload Signed IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: XTTech-AppStore-Signed-IPA
+          name: XT Tech-AppStore-Signed-IPA
           path: output/*.ipa
           retention-days: 14
 

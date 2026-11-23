@@ -59,7 +59,7 @@ export interface XTTechPillarCard {
   bullets: string[];
 }
 
-// 8 Trụ cột giải pháp chuyên sâu XTTech theo phong cách card số hóa
+// 8 Trụ cột giải pháp chuyên sâu XT Tech theo phong cách card số hóa
 export const XTTECH_PILLAR_CARDS: XTTechPillarCard[] = [
   {
     number: '01',

@@ -33,7 +33,7 @@ export function downloadReceiptTemplateExcel(receiptType: ReceiptType = 'import'
   const blob = new Blob([blobBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
-  const fileName = receiptType === 'export' ? 'Mau_Phieu_Xuat_Kho_XTTech.xlsx' : 'Mau_Phieu_Nhap_Kho_XTTech.xlsx';
+  const fileName = receiptType === 'export' ? 'Mau_Phieu_Xuat_Kho_XT Tech.xlsx' : 'Mau_Phieu_Nhap_Kho_XT Tech.xlsx';
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

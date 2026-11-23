@@ -9,7 +9,7 @@ export interface SectionDotItem {
 }
 
 const SECTION_DOTS: SectionDotItem[] = [
-  { id: 'about', label: 'Tổng quan XTTech' },
+  { id: 'about', label: 'Tổng quan XT Tech' },
   { id: 'advise-cad', label: 'Bản vẽ 2D & 3D' },
   { id: 'brands', label: 'Hãng nhôm & Phụ kiện' },
   { id: 'pain-points', label: 'Vấn đề gặp phải' },
@@ -28,9 +28,7 @@ export const HeroSectionDots = () => {
   const scrollLockUntilRef = useRef<number>(0);
 
   useEffect(() => {
-    const elements = SECTION_DOTS.map((item) => document.getElementById(item.id)).filter(
-      (el): el is HTMLElement => Boolean(el),
-    );
+    const elements = SECTION_DOTS.map((item) => document.getElementById(item.id)).filter((el): el is HTMLElement => Boolean(el));
     if (elements.length === 0) return;
 
     const handleScroll = () => {
@@ -39,9 +37,7 @@ export const HeroSectionDots = () => {
 
       const aboutEl = document.getElementById('about');
       const contactEl = document.getElementById('contact');
-      const overAbout = aboutEl
-        ? navCenterY >= aboutEl.offsetTop && navCenterY <= aboutEl.offsetTop + aboutEl.offsetHeight
-        : false;
+      const overAbout = aboutEl ? navCenterY >= aboutEl.offsetTop && navCenterY <= aboutEl.offsetTop + aboutEl.offsetHeight : false;
       const overContact = contactEl ? navCenterY >= contactEl.offsetTop : false;
       setIsOnDarkSurface(overAbout || overContact);
 
@@ -115,9 +111,7 @@ export const HeroSectionDots = () => {
           }}
           className={cn(
             'pointer-events-none absolute top-0 left-0 w-[3px] rounded-full transition-[transform,height,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-            isOnDarkBanner
-              ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]'
-              : 'bg-primary shadow-[0_0_8px_rgba(4,88,99,0.35)]',
+            isOnDarkBanner ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]' : 'bg-primary shadow-[0_0_8px_rgba(4,88,99,0.35)]',
           )}
         />
 

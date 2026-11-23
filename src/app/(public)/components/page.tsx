@@ -34,7 +34,7 @@ export default function ComponentsPage() {
     <div className="bg-gray-50 min-h-screen p-8">
       <div className="w-full space-y-8 bg-white p-8 rounded-lg shadow-sm">
         <div>
-          <Heading size="h1">XTTech Component Library</Heading>
+          <Heading size="h1">XT Tech Component Library</Heading>
           <p className="text-gray-500 mt-1">Hệ thống UI components dùng chung toàn dự án.</p>
         </div>
 
@@ -47,9 +47,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Color Palette</Heading>
-                <p className="text-sm text-gray-500">
-                  Bảng màu tiêu chuẩn đang được áp dụng trong hệ thống.
-                </p>
+                <p className="text-sm text-gray-500">Bảng màu tiêu chuẩn đang được áp dụng trong hệ thống.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -117,9 +115,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Select Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Dropdown chọn lựa chọn đơn giản, hỗ trợ label, error states và custom arrow icon.
-                </p>
+                <p className="text-sm text-gray-500">Dropdown chọn lựa chọn đơn giản, hỗ trợ label, error states và custom arrow icon.</p>
               </div>
 
               <InteractiveSelects />
@@ -131,10 +127,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Dropdown Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Menu thả xuống đa dạng tùy chọn thao tác nhanh, hỗ trợ icon, disabled, và danger
-                  styles.
-                </p>
+                <p className="text-sm text-gray-500">Menu thả xuống đa dạng tùy chọn thao tác nhanh, hỗ trợ icon, disabled, và danger styles.</p>
               </div>
 
               <InteractiveDropdowns />
@@ -146,23 +139,17 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Breadcrumb Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Thanh điều hướng phân cấp hỗ trợ liên kết và tùy biến ký tự phân tách.
-                </p>
+                <p className="text-sm text-gray-500">Thanh điều hướng phân cấp hỗ trợ liên kết và tùy biến ký tự phân tách.</p>
               </div>
 
               <div className="space-y-4 border border-gray-100 p-4 rounded-lg bg-gray-50/50">
                 <div className="space-y-2">
-                  <h3 className="text-xs font-semibold text-gray-400 uppercase">
-                    Mặc định (Chevron)
-                  </h3>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase">Mặc định (Chevron)</h3>
                   <Breadcrumb items={breadcrumbItems} />
                 </div>
                 <hr className="border-gray-100" />
                 <div className="space-y-2">
-                  <h3 className="text-xs font-semibold text-gray-400 uppercase">
-                    Custom Separator (Slash)
-                  </h3>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase">Custom Separator (Slash)</h3>
                   <Breadcrumb items={breadcrumbItems} separator={<Slash size={10} />} />
                 </div>
               </div>
@@ -174,10 +161,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Modal Component (Shell)</Heading>
-                <p className="text-sm text-gray-500">
-                  Khung bọc Modal dùng chung hỗ trợ các tùy chọn kích thước, overlay mờ và lock
-                  scroll.
-                </p>
+                <p className="text-sm text-gray-500">Khung bọc Modal dùng chung hỗ trợ các tùy chọn kích thước, overlay mờ và lock scroll.</p>
               </div>
 
               <InteractiveModals />
@@ -189,9 +173,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Tabs & Badges</Heading>
-                <p className="text-sm text-gray-500">
-                  Thanh chuyển đổi tab nội dung và nhãn trạng thái trực quan.
-                </p>
+                <p className="text-sm text-gray-500">Thanh chuyển đổi tab nội dung và nhãn trạng thái trực quan.</p>
               </div>
 
               <InteractiveTabsBadges />
@@ -203,9 +185,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Alert Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Dải thông báo ngang hiển thị trạng thái lỗi, thành công hoặc cảnh báo trong trang.
-                </p>
+                <p className="text-sm text-gray-500">Dải thông báo ngang hiển thị trạng thái lỗi, thành công hoặc cảnh báo trong trang.</p>
               </div>
 
               <InteractiveAlerts />
@@ -218,9 +198,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Button Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Hỗ trợ đầy đủ các sizes, variants, loading state và icon.
-                </p>
+                <p className="text-sm text-gray-500">Hỗ trợ đầy đủ các sizes, variants, loading state và icon.</p>
               </div>
 
               <InteractiveButtons />
@@ -232,9 +210,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Heading Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Tiêu đề chuẩn hóa kích thước chữ (typography) từ H1 đến H6.
-                </p>
+                <p className="text-sm text-gray-500">Tiêu đề chuẩn hóa kích thước chữ (typography) từ H1 đến H6.</p>
               </div>
 
               <div className="space-y-4 border border-gray-100 p-6 rounded-lg bg-gray-50/50">
@@ -276,10 +252,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Tooltip Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Hiển thị chú thích nhỏ khi di chuột vào phần tử, hỗ trợ nhiều hướng hiển thị và
-                  delay.
-                </p>
+                <p className="text-sm text-gray-500">Hiển thị chú thích nhỏ khi di chuột vào phần tử, hỗ trợ nhiều hướng hiển thị và delay.</p>
               </div>
 
               <InteractiveTooltips />
@@ -291,9 +264,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Avatar Component</Heading>
-                <p className="text-sm text-gray-500">
-                  Ảnh đại diện hỗ trợ initials dự phòng, các kích thước, hình dạng và trạng thái.
-                </p>
+                <p className="text-sm text-gray-500">Ảnh đại diện hỗ trợ initials dự phòng, các kích thước, hình dạng và trạng thái.</p>
               </div>
 
               <div className="space-y-4 border border-gray-100 p-4 rounded-lg bg-gray-50/50">
@@ -324,9 +295,7 @@ export default function ComponentsPage() {
 
                 {/* Status Indicator */}
                 <div className="space-y-2">
-                  <h3 className="text-xs font-semibold text-gray-400 uppercase">
-                    Trạng thái hoạt động
-                  </h3>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase">Trạng thái hoạt động</h3>
                   <div className="flex gap-3">
                     <Avatar size="md" status="online" name="Online User" />
                     <Avatar size="md" status="busy" name="Busy User" />
@@ -343,10 +312,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Form Controls</Heading>
-                <p className="text-sm text-gray-500">
-                  Các phần tử nhập liệu cơ bản bao gồm Input văn bản, Checkbox chọn nhiều và Radio
-                  chọn một.
-                </p>
+                <p className="text-sm text-gray-500">Các phần tử nhập liệu cơ bản bao gồm Input văn bản, Checkbox chọn nhiều và Radio chọn một.</p>
               </div>
 
               <InteractiveForms />
@@ -358,9 +324,7 @@ export default function ComponentsPage() {
             <section className="space-y-6">
               <div>
                 <Heading size="h2">Loaders & Accordions</Heading>
-                <p className="text-sm text-gray-500">
-                  Khung tải giả lập Skeleton và khối nội dung xếp gọn Accordion.
-                </p>
+                <p className="text-sm text-gray-500">Khung tải giả lập Skeleton và khối nội dung xếp gọn Accordion.</p>
               </div>
 
               <InteractiveLoadersAccs />
@@ -374,9 +338,7 @@ export default function ComponentsPage() {
         <section className="space-y-6">
           <div>
             <Heading size="h2">Sidebar Component</Heading>
-            <p className="text-sm text-gray-500">
-              Thanh điều hướng bên chuyên nghiệp cho Dashboard với cấu hình động, hỗ trợ đóng/mở và menu con.
-            </p>
+            <p className="text-sm text-gray-500">Thanh điều hướng bên chuyên nghiệp cho Dashboard với cấu hình động, hỗ trợ đóng/mở và menu con.</p>
           </div>
 
           <InteractiveSidebars />

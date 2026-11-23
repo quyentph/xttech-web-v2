@@ -150,7 +150,9 @@ export const HeroBrandsSection = () => {
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                Tại <strong className="font-bold text-primary">XTTech</strong>, hệ thống hỗ trợ sẵn danh mục hơn 25 thương hiệu nhôm thông dụng và các hãng phụ kiện phổ biến, đồng thời cho phép xưởng linh hoạt tùy chỉnh thông số tỷ trọng, độ dày kính và cấu hình theo đúng thực tế sản xuất.
+                Tại <strong className="font-bold text-primary">XT Tech</strong>, hệ thống hỗ trợ sẵn danh mục hơn 25 thương hiệu nhôm thông dụng và
+                các hãng phụ kiện phổ biến, đồng thời cho phép xưởng linh hoạt tùy chỉnh thông số tỷ trọng, độ dày kính và cấu hình theo đúng thực tế
+                sản xuất.
               </p>
             </div>
 
@@ -197,7 +199,9 @@ export const HeroBrandsSection = () => {
                   </span>
                   <h3 className="text-base font-bold text-primary sm:text-lg">Hãng nhôm thông dụng</h3>
                 </div>
-                <span className="hidden lg:inline-flex whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">{ALUMINUM_BRANDS.length} thương hiệu</span>
+                <span className="hidden lg:inline-flex whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                  {ALUMINUM_BRANDS.length} thương hiệu
+                </span>
               </div>
 
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
@@ -228,7 +232,9 @@ export const HeroBrandsSection = () => {
                   </span>
                   <h3 className="text-base font-bold text-primary sm:text-lg">Hãng phụ kiện phổ biến</h3>
                 </div>
-                <span className="hidden lg:inline-flex whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">{ACCESSORY_BRANDS.length} thương hiệu</span>
+                <span className="hidden lg:inline-flex whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                  {ACCESSORY_BRANDS.length} thương hiệu
+                </span>
               </div>
 
               <div className="mt-4 flex flex-wrap items-center gap-2.5">

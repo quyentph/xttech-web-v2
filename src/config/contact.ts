@@ -1,4 +1,4 @@
-/** Thông tin liên hệ chính thức của XTTech (nguồn duy nhất cho trang công khai). */
+/** Thông tin liên hệ chính thức của XT Tech (nguồn duy nhất cho trang công khai). */
 export const CONTACT_INFO = {
   companyName: 'XT Group / XT Tech',
   address: '941 Phạm Văn Đồng Dương Kinh Hải Phòng',

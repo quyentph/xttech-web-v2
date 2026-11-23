@@ -69,10 +69,7 @@ export const HeroProjectReportsCarousel = () => {
           {track.map((item, idx) => (
             <div key={`${item.id}-${idx}`} className="w-[300px] shrink-0 px-3 sm:w-[360px] lg:w-[410px]">
               <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 hover:shadow-2xl">
-                <div
-                  className="relative aspect-16/10 w-full overflow-hidden bg-slate-100 cursor-pointer"
-                  onClick={() => handleSelectReport(item)}
-                >
+                <div className="relative aspect-16/10 w-full overflow-hidden bg-slate-100 cursor-pointer" onClick={() => handleSelectReport(item)}>
                   <Image
                     src={item.imageSrc}
                     alt={item.title}
@@ -96,20 +93,16 @@ export const HeroProjectReportsCarousel = () => {
                   <div>
                     <div className="flex items-center gap-3">
                       <div className="h-6 w-1 rounded-full bg-primary transition-all duration-300 group-hover:h-7" />
-                      <span className="text-xl font-black tracking-tight text-primary transition-colors duration-300">
-                        {item.number}
-                      </span>
+                      <span className="text-xl font-black tracking-tight text-primary transition-colors duration-300">{item.number}</span>
                       <h4 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-1 transition-colors duration-300 group-hover:text-primary">
                         {item.title}
                       </h4>
                     </div>
-                    <p className="mt-2.5 text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">
-                      {item.description}
-                    </p>
+                    <p className="mt-2.5 text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">{item.description}</p>
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end text-xs text-slate-400">
-                    <span className="text-[11px]">Giao diện XTTech XMS</span>
+                    <span className="text-[11px]">Giao diện XT Tech XMS</span>
                   </div>
                 </div>
               </div>

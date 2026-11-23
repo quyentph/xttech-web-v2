@@ -15,7 +15,7 @@ const items = [
   },
   {
     id: 'faq2',
-    title: 'XTTech có hỗ trợ API không?',
+    title: 'XT Tech có hỗ trợ API không?',
     content: 'Có, chúng tôi hỗ trợ đầy đủ RESTful API cho lập trình viên tích hợp hệ thống.'
   }
 ];
@@ -29,16 +29,16 @@ const items = [
 
 ## Props API Table
 
-| Prop | Kiểu dữ liệu | Bắt buộc? | Mô tả |
-| :--- | :--- | :--- | :--- |
-| `items` | `AccordionItemProps[]` | Có | Danh sách các câu hỏi/nội dung xếp gọn |
-| `allowMultiple` | `boolean` | Không | Cho phép mở nhiều phần tử đồng thời (Mặc định: `false`) |
-| `defaultExpandedIds` | `string[]` | Không | Danh sách các `id` phần tử được mở sẵn khi tải trang (Mặc định: `[]`) |
+| Prop                 | Kiểu dữ liệu           | Bắt buộc? | Mô tả                                                                 |
+| :------------------- | :--------------------- | :-------- | :-------------------------------------------------------------------- |
+| `items`              | `AccordionItemProps[]` | Có        | Danh sách các câu hỏi/nội dung xếp gọn                                |
+| `allowMultiple`      | `boolean`              | Không     | Cho phép mở nhiều phần tử đồng thời (Mặc định: `false`)               |
+| `defaultExpandedIds` | `string[]`             | Không     | Danh sách các `id` phần tử được mở sẵn khi tải trang (Mặc định: `[]`) |
 
 ## AccordionItemProps API
 
-| Thuộc tính | Kiểu dữ liệu | Bắt buộc? | Mô tả |
-| :--- | :--- | :--- | :--- |
-| `id` | `string` | Có | Định danh duy nhất cho từng phần tử |
-| `title` | `React.ReactNode` | Có | Tiêu đề hiển thị của thanh bấm |
-| `content` | `React.ReactNode` | Có | Nội dung hiển thị khi mở rộng phần tử |
+| Thuộc tính | Kiểu dữ liệu      | Bắt buộc? | Mô tả                                 |
+| :--------- | :---------------- | :-------- | :------------------------------------ |
+| `id`       | `string`          | Có        | Định danh duy nhất cho từng phần tử   |
+| `title`    | `React.ReactNode` | Có        | Tiêu đề hiển thị của thanh bấm        |
+| `content`  | `React.ReactNode` | Có        | Nội dung hiển thị khi mở rộng phần tử |

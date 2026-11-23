@@ -1,15 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  Camera,
-  Check,
-  CheckCircle2,
-  FileCheck2,
-  Mic,
-  Scan,
-  Sparkles,
-} from 'lucide-react';
+import { Camera, Check, CheckCircle2, FileCheck2, Mic, Scan, Sparkles } from 'lucide-react';
 
 export const HeroAiAssistantVisual = () => {
   return (
@@ -176,16 +168,7 @@ export const HeroAiAssistantVisual = () => {
                   <ellipse cx="120" cy="224" rx="28" ry="4" fill="rgba(2, 38, 44, 0.45)" />
 
                   {/* Vành đĩa Hologram ngoài cùng (dạng dashed xoay) */}
-                  <ellipse
-                    cx="120"
-                    cy="216"
-                    rx="68"
-                    ry="14"
-                    stroke="#2dd4bf"
-                    strokeWidth="1.5"
-                    strokeDasharray="6 4"
-                    opacity="0.6"
-                  />
+                  <ellipse cx="120" cy="216" rx="68" ry="14" stroke="#2dd4bf" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
                   {/* Đĩa phát sáng trung tâm */}
                   <ellipse cx="120" cy="216" rx="52" ry="10" fill="url(#holoDiscGrad)" />
                   <ellipse cx="120" cy="216" rx="34" ry="6" stroke="#5eead4" strokeWidth="1.5" opacity="0.85" />
@@ -227,16 +210,7 @@ export const HeroAiAssistantVisual = () => {
                     {/* Vòng bezel ngoài */}
                     <circle cx="120" cy="170" r="15" fill="#032b30" stroke="#0d9488" strokeWidth="2" />
                     {/* Vòng khía kỹ thuật */}
-                    <circle
-                      cx="120"
-                      cy="170"
-                      r="12"
-                      fill="#021c20"
-                      stroke="#2dd4bf"
-                      strokeWidth="1.5"
-                      strokeDasharray="4 2"
-                      opacity="0.8"
-                    />
+                    <circle cx="120" cy="170" r="12" fill="#021c20" stroke="#2dd4bf" strokeWidth="1.5" strokeDasharray="4 2" opacity="0.8" />
                     {/* Tinh thể plasma trung tâm */}
                     <circle cx="120" cy="170" r="8" fill="url(#arcReactorGrad)" filter="url(#neonGlow)" />
                     {/* Điểm sáng phản chiếu Specular */}
@@ -269,35 +243,13 @@ export const HeroAiAssistantVisual = () => {
                   </g>
 
                   {/* ================= ĐẦU ROBOT: VỎ TITAN TRẮNG BO TRÒN TINH TẾ ================= */}
-                  <rect
-                    x="62"
-                    y="54"
-                    width="116"
-                    height="84"
-                    rx="42"
-                    fill="url(#robotHeadGrad)"
-                    stroke="url(#chromeBevel)"
-                    strokeWidth="2.5"
-                  />
+                  <rect x="62" y="54" width="116" height="84" rx="42" fill="url(#robotHeadGrad)" stroke="url(#chromeBevel)" strokeWidth="2.5" />
 
                   {/* ================= KÍNH MẮT VISOR ĐEN BÓNG OBSIDIAN ================= */}
-                  <rect
-                    x="74"
-                    y="72"
-                    width="92"
-                    height="48"
-                    rx="24"
-                    fill="url(#visorObsidian)"
-                    stroke="#1e293b"
-                    strokeWidth="2"
-                  />
+                  <rect x="74" y="72" width="92" height="48" rx="24" fill="url(#visorObsidian)" stroke="#1e293b" strokeWidth="2" />
 
                   {/* Lớp phản chiếu ánh sáng trên mặt kính cong (Glass Specular Reflection) */}
-                  <path
-                    d="M 82 82 C 100 75, 140 75, 158 82 C 142 79, 98 79, 82 82 Z"
-                    fill="#ffffff"
-                    opacity="0.3"
-                  />
+                  <path d="M 82 82 C 100 75, 140 75, 158 82 C 142 79, 98 79, 82 82 Z" fill="#ffffff" opacity="0.3" />
 
                   {/* ================= ĐÔI MẮT LED AI CYBERNETIC BIỂU CẢM THÔNG MINH ================= */}
                   {/* Mắt trái: Viên nang LED rực rỡ với ánh sáng đồng tử */}
@@ -336,20 +288,8 @@ export const HeroAiAssistantVisual = () => {
                   />
 
                   {/* Gờ sống mũ kỹ sư chịu lực ở giữa */}
-                  <path
-                    d="M 120 25 L 120 58"
-                    stroke="#5eead4"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    opacity="0.9"
-                  />
-                  <path
-                    d="M 120 27 L 120 56"
-                    stroke="#ffffff"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    opacity="0.8"
-                  />
+                  <path d="M 120 25 L 120 58" stroke="#5eead4" strokeWidth="4" strokeLinecap="round" opacity="0.9" />
+                  <path d="M 120 27 L 120 56" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
 
                   {/* Dải vành mũ khí động học nhô phía trước */}
                   <path
@@ -360,22 +300,11 @@ export const HeroAiAssistantVisual = () => {
                   />
 
                   {/* Dải LED phát sáng an toàn công trường trên vành mũ */}
-                  <path
-                    d="M 88 61 Q 120 64 152 61"
-                    stroke="#2dd4bf"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    filter="url(#neonGlow)"
-                  />
+                  <path d="M 88 61 Q 120 64 152 61" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" filter="url(#neonGlow)" />
 
                   {/* Huy hiệu công nghệ XT TECH trên trán mũ */}
                   <g>
-                    <polygon
-                      points="120,38 127,42 127,51 120,55 113,51 113,42"
-                      fill="#02262c"
-                      stroke="#2dd4bf"
-                      strokeWidth="1.5"
-                    />
+                    <polygon points="120,38 127,42 127,51 120,55 113,51 113,42" fill="#02262c" stroke="#2dd4bf" strokeWidth="1.5" />
                     <circle cx="120" cy="46.5" r="2.5" fill="#2dd4bf" filter="url(#softGlow)" />
                   </g>
                 </svg>
@@ -391,7 +320,7 @@ export const HeroAiAssistantVisual = () => {
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-300" />
                   </span>
                   <span className="text-xs font-black tracking-wide text-white flex items-center gap-1.5">
-                    <span>Tích hợp công nghệ XTTech AI</span>
+                    <span>Tích hợp công nghệ XT Tech AI</span>
                     <Sparkles className="h-3 w-3 text-emerald-200" />
                   </span>
                 </div>
@@ -481,9 +410,7 @@ export const HeroAiAssistantVisual = () => {
               <Mic className="h-6 w-6 text-white" />
             </div>
 
-            <h4 className="text-sm sm:text-base font-bold text-white">
-              Voice AI, tạo ghi chú hiện trường bằng giọng nói
-            </h4>
+            <h4 className="text-sm sm:text-base font-bold text-white">Voice AI, tạo ghi chú hiện trường bằng giọng nói</h4>
             <p className="mt-2 text-xs leading-relaxed text-teal-100/80">
               Nói kích thước ô chờ, lỗi kính; AI tự nhận diện và lập tức gán vào hồ sơ dự án.
             </p>
@@ -496,9 +423,7 @@ export const HeroAiAssistantVisual = () => {
               <Camera className="h-6 w-6 text-white" />
             </div>
 
-            <h4 className="text-sm sm:text-base font-bold text-white">
-              AI nhận diện dữ liệu ảnh & tem mác
-            </h4>
+            <h4 className="text-sm sm:text-base font-bold text-white">AI nhận diện dữ liệu ảnh & tem mác</h4>
             <p className="mt-2 text-xs leading-relaxed text-teal-100/80">
               Chụp ảnh bản vẽ tay hoặc tem nhôm, phụ kiện; AI tự động trích xuất thông số kỹ thuật.
             </p>
@@ -511,9 +436,7 @@ export const HeroAiAssistantVisual = () => {
               <FileCheck2 className="h-6 w-6 text-white" />
             </div>
 
-            <h4 className="text-sm sm:text-base font-bold text-white">
-              AI tạo phiếu thu/chi, phiếu xuất/nhập vật tư
-            </h4>
+            <h4 className="text-sm sm:text-base font-bold text-white">AI tạo phiếu thu/chi, phiếu xuất/nhập vật tư</h4>
             <p className="mt-2 text-xs leading-relaxed text-teal-100/80">
               Tự động tạo phiếu xuất kho thanh nhôm, kính và phụ kiện theo lệnh sản xuất.
             </p>

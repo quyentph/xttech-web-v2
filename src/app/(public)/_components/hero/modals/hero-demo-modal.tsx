@@ -79,7 +79,7 @@ export function HeroDemoModal({ isOpen, onClose }: HeroDemoModalProps) {
         note: form.note.trim() || undefined,
         pageUrl: typeof window !== 'undefined' ? window.location.href : undefined,
       });
-      toast.success('Đăng ký trải nghiệm Demo thành công! Đội ngũ XTTech sẽ liên hệ tư vấn ngay.');
+      toast.success('Đăng ký trải nghiệm Demo thành công! Đội ngũ XT Tech sẽ liên hệ tư vấn ngay.');
       setForm(INITIAL_FORM);
       setErrors({});
       onClose();
@@ -97,7 +97,7 @@ export function HeroDemoModal({ isOpen, onClose }: HeroDemoModalProps) {
       size="md"
       className="max-w-lg overflow-hidden rounded-lg border border-primary/20 p-0"
       bodyClassName="p-0"
-      title="Đăng ký trải nghiệm Demo XTTech"
+      title="Đăng ký trải nghiệm Demo XT Tech"
     >
       <form onSubmit={handleSubmit} className="space-y-3 bg-white p-5">
         <Input
@@ -168,13 +168,7 @@ export function HeroDemoModal({ isOpen, onClose }: HeroDemoModalProps) {
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
               Đóng
             </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              loading={isSubmitting}
-              leftIcon={<Send className="h-3.5 w-3.5" />}
-            >
+            <Button type="submit" variant="primary" size="sm" loading={isSubmitting} leftIcon={<Send className="h-3.5 w-3.5" />}>
               Đăng ký ngay
             </Button>
           </div>

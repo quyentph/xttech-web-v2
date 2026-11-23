@@ -121,7 +121,7 @@ export function RegisterInlineForm({ onBack, variant = 'inline', onSuccess }: Re
       ) : (
         <form onSubmit={handleSubmit} className={variant === 'inline' ? 'space-y-2.5 pt-2' : 'space-y-2.5'}>
           <div>
-            <h3 className="text-xl sm:text-[22px] font-black text-slate-900 tracking-tight leading-snug">
+            <h3 className="text-[15px] min-[360px]:text-base sm:text-xl font-black text-slate-900 tracking-tight leading-snug whitespace-nowrap">
               Nhận phần mềm <span className="text-primary">XT Tech XMS Fab</span>
             </h3>
             <p className="mt-0.5 text-xs text-slate-500 font-medium">Số hóa quy trình sản xuất, bóc tách nhôm kính & quản trị xưởng may đo riêng.</p>

@@ -21,7 +21,7 @@ private enum AppClosedReminder {
     static func schedule(group: DispatchGroup) {
         let content = UNMutableNotificationContent()
         content.title = "⚠️ Cảnh báo ca làm việc!"
-        content.body = "Đang trong ca làm việc, vui lòng vào lại app XTTech và không đóng app!"
+        content.body = "Đang trong ca làm việc, vui lòng vào lại app XT Tech và không đóng app!"
         content.sound = UNNotificationSound(named: UNNotificationSoundName("nhac_out_app.wav"))
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -549,7 +549,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
                 statusStr: statusStr,
                 isPrecise: isPrecise,
                 title: "Yêu cầu quyền Vị trí \"Luôn luôn\"",
-                message: "Để duy trì chấm công và theo dõi lộ trình làm việc liên tục khi khóa màn hình, vui lòng cấp quyền vị trí \"Luôn luôn\" (Always) và bật \"Vị trí chính xác\" cho XTTech."
+                message: "Để duy trì chấm công và theo dõi lộ trình làm việc liên tục khi khóa màn hình, vui lòng cấp quyền vị trí \"Luôn luôn\" (Always) và bật \"Vị trí chính xác\" cho XT Tech."
             )
             return
         }
@@ -560,7 +560,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
             statusStr: statusStr,
             isPrecise: isPrecise,
             title: "Quyền Vị trí đã bị từ chối",
-            message: "Ứng dụng XTTech cần quyền vị trí để hỗ trợ chấm công và định vị làm việc. Vui lòng mở Cài đặt để cấp lại quyền Vị trí."
+            message: "Ứng dụng XT Tech cần quyền vị trí để hỗ trợ chấm công và định vị làm việc. Vui lòng mở Cài đặt để cấp lại quyền Vị trí."
         )
     }
 
@@ -774,7 +774,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
 
         if isWhenInUse {
             // Người dùng vừa chọn "Khi dùng ứng dụng" từ hộp thoại cấp quyền của Apple.
-            // Lúc này XTTech đã chính thức được iOS ghi nhận vào Cài đặt -> Vị trí.
+            // Lúc này XT Tech đã chính thức được iOS ghi nhận vào Cài đặt -> Vị trí.
             // Hiển thị popup hướng dẫn mở Cài đặt để nâng cấp lên "Luôn luôn".
             DispatchQueue.main.async { [weak self] in
                 self?.showOpenSettingsAlert(
@@ -782,7 +782,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
                     statusStr: statusStr,
                     isPrecise: isPrecise,
                     title: "Yêu cầu quyền Vị trí \"Luôn luôn\"",
-                    message: "Để duy trì chấm công và theo dõi lộ trình làm việc liên tục khi khóa màn hình, vui lòng cấp quyền vị trí \"Luôn luôn\" (Always) và bật \"Vị trí chính xác\" cho XTTech."
+                    message: "Để duy trì chấm công và theo dõi lộ trình làm việc liên tục khi khóa màn hình, vui lòng cấp quyền vị trí \"Luôn luôn\" (Always) và bật \"Vị trí chính xác\" cho XT Tech."
                 )
             }
             return
@@ -1505,7 +1505,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
 
         // Yêu cầu iOS cấp quyền CPU chạy nền an toàn
         var bgTaskId: UIBackgroundTaskIdentifier = .invalid
-        bgTaskId = UIApplication.shared.beginBackgroundTask(withName: "XTTechLocationPing") {
+        bgTaskId = UIApplication.shared.beginBackgroundTask(withName: "XT TechLocationPing") {
             if bgTaskId != .invalid {
                 UIApplication.shared.endBackgroundTask(bgTaskId)
                 bgTaskId = .invalid
@@ -1600,7 +1600,7 @@ public class NativeTrackingPlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManage
         request.httpBody = httpBody
 
         var bgTaskId: UIBackgroundTaskIdentifier = .invalid
-        bgTaskId = UIApplication.shared.beginBackgroundTask(withName: "XTTechRefreshToken") {
+        bgTaskId = UIApplication.shared.beginBackgroundTask(withName: "XT TechRefreshToken") {
             if bgTaskId != .invalid {
                 UIApplication.shared.endBackgroundTask(bgTaskId)
                 bgTaskId = .invalid

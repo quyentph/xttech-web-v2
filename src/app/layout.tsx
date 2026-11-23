@@ -3,14 +3,7 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
 import { AppUpdateModal } from '@/components';
-import {
-  BASE_SITE_URL,
-  FB_PIXEL_ID,
-  PAGE_SEO_META,
-  SEO_CONFIG,
-  SEO_KEYWORDS,
-  isProductionIndexingAllowed,
-} from '@/config';
+import { BASE_SITE_URL, FB_PIXEL_ID, PAGE_SEO_META, SEO_CONFIG, SEO_KEYWORDS, isProductionIndexingAllowed } from '@/config';
 import { QueryProvider } from '@/contexts';
 
 import './globals.css';
@@ -109,7 +102,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'XTTech ERP',
+    title: 'XT Tech ERP',
   },
   icons: {
     icon: [

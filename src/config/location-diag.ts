@@ -1,9 +1,4 @@
-import type {
-  DiagAuthStatus,
-  DiagGpsErrorCode,
-  DiagGpsSource,
-  HybridLocationFailure,
-} from '@/types';
+import type { DiagAuthStatus, DiagGpsErrorCode, DiagGpsSource, HybridLocationFailure } from '@/types';
 
 export const ATTENDANCE_GPS_ACCEPTABLE_ACCURACY_METERS = 35;
 export const ATTENDANCE_GPS_COARSE_WARNING_METERS = 150;
@@ -73,11 +68,7 @@ export const COARSE_ACCURACY_BANNER =
 
 export type DiagGuidePlatform = 'android' | 'ios' | 'desktop';
 
-export type LocationPrimaryAction =
-  | 'open_settings'
-  | 'open_location_settings'
-  | 'request_permission'
-  | 'retry';
+export type LocationPrimaryAction = 'open_settings' | 'open_location_settings' | 'request_permission' | 'retry';
 
 export interface LocationDiagGuidance {
   title: string;
@@ -90,31 +81,31 @@ export interface LocationDiagGuidance {
 const MANUFACTURER_BATTERY_HINTS: Array<{ match: string; hint: string }> = [
   {
     match: 'xiaomi',
-    hint: 'Trên Xiaomi/Redmi: vào Bảo mật → Pin → Tắt Tiết kiệm pin và bật Tự khởi chạy cho XTTech.',
+    hint: 'Trên Xiaomi/Redmi: vào Bảo mật → Pin → Tắt Tiết kiệm pin và bật Tự khởi chạy cho XT Tech.',
   },
   {
     match: 'redmi',
-    hint: 'Trên Xiaomi/Redmi: vào Bảo mật → Pin → Tắt Tiết kiệm pin và bật Tự khởi chạy cho XTTech.',
+    hint: 'Trên Xiaomi/Redmi: vào Bảo mật → Pin → Tắt Tiết kiệm pin và bật Tự khởi chạy cho XT Tech.',
   },
   {
     match: 'oppo',
-    hint: 'Trên OPPO/Realme: vào Cài đặt → Pin → Tắt Tiết kiệm pin và cho phép XTTech chạy nền.',
+    hint: 'Trên OPPO/Realme: vào Cài đặt → Pin → Tắt Tiết kiệm pin và cho phép XT Tech chạy nền.',
   },
   {
     match: 'realme',
-    hint: 'Trên OPPO/Realme: vào Cài đặt → Pin → Tắt Tiết kiệm pin và cho phép XTTech chạy nền.',
+    hint: 'Trên OPPO/Realme: vào Cài đặt → Pin → Tắt Tiết kiệm pin và cho phép XT Tech chạy nền.',
   },
   {
     match: 'vivo',
-    hint: 'Trên Vivo: vào Cài đặt → Pin → Chế độ bình thường & cho phép XTTech tiêu thụ pin nền cao.',
+    hint: 'Trên Vivo: vào Cài đặt → Pin → Chế độ bình thường & cho phép XT Tech tiêu thụ pin nền cao.',
   },
   {
     match: 'samsung',
-    hint: 'Trên Samsung: vào Cài đặt → Pin → Tắt Tiết kiệm pin và đưa XTTech khỏi danh sách ứng dụng ngủ.',
+    hint: 'Trên Samsung: vào Cài đặt → Pin → Tắt Tiết kiệm pin và đưa XT Tech khỏi danh sách ứng dụng ngủ.',
   },
   {
     match: 'huawei',
-    hint: 'Trên Huawei/Honor: vào Cài đặt → Pin → Khởi chạy ứng dụng → Quản lý thủ công cho XTTech.',
+    hint: 'Trên Huawei/Honor: vào Cài đặt → Pin → Khởi chạy ứng dụng → Quản lý thủ công cho XT Tech.',
   },
 ];
 
@@ -133,23 +124,12 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
         title: 'Quyền vị trí đang bị tắt',
         description: 'Ứng dụng chưa được cấp quyền truy cập vị trí để xác nhận điểm danh.',
         steps: {
-          android:
-            'Cài đặt → Ứng dụng → XTTech → Quyền → Vị trí → Chọn "Cho phép khi dùng ứng dụng" và bật "Vị trí chính xác".',
-          ios:
-            'Cài đặt iPhone → Quyền riêng tư & Bảo mật → Dịch vụ định vị → XTTech → Chọn "Khi dùng ứng dụng" và bật "Vị trí chính xác".',
-          desktop:
-            'Bấm biểu tượng Ổ khóa bên trái thanh địa chỉ trình duyệt → Bật Cho phép Vị trí (Location).',
+          android: 'Cài đặt → Ứng dụng → XT Tech → Quyền → Vị trí → Chọn "Cho phép khi dùng ứng dụng" và bật "Vị trí chính xác".',
+          ios: 'Cài đặt iPhone → Quyền riêng tư & Bảo mật → Dịch vụ định vị → XT Tech → Chọn "Khi dùng ứng dụng" và bật "Vị trí chính xác".',
+          desktop: 'Bấm biểu tượng Ổ khóa bên trái thanh địa chỉ trình duyệt → Bật Cho phép Vị trí (Location).',
         },
-        primaryAction: canRequest
-          ? 'request_permission'
-          : failure.canOpenSettings
-            ? 'open_settings'
-            : 'retry',
-        primaryActionLabel: canRequest
-          ? 'Cấp quyền vị trí'
-          : failure.canOpenSettings
-            ? 'Mở Cài đặt'
-            : 'Thử lại',
+        primaryAction: canRequest ? 'request_permission' : failure.canOpenSettings ? 'open_settings' : 'retry',
+        primaryActionLabel: canRequest ? 'Cấp quyền vị trí' : failure.canOpenSettings ? 'Mở Cài đặt' : 'Thử lại',
       };
     }
 
@@ -170,13 +150,9 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
       const oemHint = getManufacturerBatteryHint(failure.manufacturer);
       return {
         title: 'Chế độ Tiết kiệm pin đang hạn chế GPS',
-        description:
-          oemHint ||
-          'Thiết bị đang bật Tiết kiệm pin hoặc hạn chế định vị nền khiến GPS không phản hồi kịp.',
+        description: oemHint || 'Thiết bị đang bật Tiết kiệm pin hoặc hạn chế định vị nền khiến GPS không phản hồi kịp.',
         steps: {
-          android:
-            oemHint ||
-            'Tắt chế độ Tiết kiệm pin trên thanh trạng thái, bật Wi-Fi và bấm "Thử lại".',
+          android: oemHint || 'Tắt chế độ Tiết kiệm pin trên thanh trạng thái, bật Wi-Fi và bấm "Thử lại".',
           ios: 'Vào Cài đặt → Pin → Tắt "Chế độ nguồn điện thấp" (Low Power Mode) rồi bấm "Thử lại".',
           desktop: 'Tắt chế độ tiết kiệm pin trên laptop và bật Wi-Fi để cải thiện định vị.',
         },
@@ -190,8 +166,8 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
         title: 'Chỉ lấy được vị trí gần đúng',
         description: 'Vị trí chính xác (Precise Location) đang tắt hoặc tín hiệu vệ tinh quá yếu.',
         steps: {
-          android: 'Cài đặt → Ứng dụng → XTTech → Quyền → Vị trí → Bật "Sử dụng vị trí chính xác".',
-          ios: 'Cài đặt iPhone → XTTech → Vị trí → Bật "Vị trí chính xác" (Precise Location).',
+          android: 'Cài đặt → Ứng dụng → XT Tech → Quyền → Vị trí → Bật "Sử dụng vị trí chính xác".',
+          ios: 'Cài đặt iPhone → XT Tech → Vị trí → Bật "Vị trí chính xác" (Precise Location).',
           desktop: 'Kết nối Wi-Fi ổn định để trình duyệt cải thiện độ chính xác.',
         },
         primaryAction: failure.canOpenSettings ? 'open_settings' : 'retry',
@@ -201,12 +177,8 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
     case 'timeout':
     case 'position_unavailable':
       return {
-        title:
-          failure.errorCode === 'timeout'
-            ? 'Quá thời gian kết nối GPS'
-            : 'Chưa xác định được vị trí hiện tại',
-        description:
-          'Tín hiệu GPS trong nhà kín hoặc tầng hầm yếu. Hãy bật Wi-Fi để hỗ trợ định vị hoặc bước ra gần cửa sổ/nơi thoáng.',
+        title: failure.errorCode === 'timeout' ? 'Quá thời gian kết nối GPS' : 'Chưa xác định được vị trí hiện tại',
+        description: 'Tín hiệu GPS trong nhà kín hoặc tầng hầm yếu. Hãy bật Wi-Fi để hỗ trợ định vị hoặc bước ra gần cửa sổ/nơi thoáng.',
         steps: {
           android: 'Bật Wi-Fi (không cần kết nối mạng) và đặt chế độ định vị Độ chính xác cao, sau đó bấm "Thử lại".',
           ios: 'Bật Wi-Fi để hỗ trợ định vị trong nhà, kiểm tra Dịch vụ định vị đang bật và bấm "Thử lại".',
@@ -221,8 +193,8 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
         title: 'Thiết bị không hỗ trợ định vị',
         description: 'Trình duyệt hoặc thiết bị hiện tại không cung cấp dịch vụ Geolocation.',
         steps: {
-          android: 'Vui lòng mở bằng ứng dụng XTTech hoặc trình duyệt Chrome mới nhất.',
-          ios: 'Vui lòng mở bằng ứng dụng XTTech hoặc Safari phiên bản mới nhất.',
+          android: 'Vui lòng mở bằng ứng dụng XT Tech hoặc trình duyệt Chrome mới nhất.',
+          ios: 'Vui lòng mở bằng ứng dụng XT Tech hoặc Safari phiên bản mới nhất.',
           desktop: 'Sử dụng Chrome, Edge hoặc Safari qua kết nối HTTPS bảo mật.',
         },
         primaryAction: 'retry',
@@ -234,8 +206,8 @@ export function getLocationErrorGuidance(failure: HybridLocationFailure): Locati
         title: 'Không thể lấy tọa độ GPS',
         description: failure.errorMessage || 'Đã xảy ra lỗi khi lấy vị trí hiện tại. Vui lòng thử lại.',
         steps: {
-          android: 'Kiểm tra bật Vị trí, bật Wi-Fi và quyền Vị trí cho XTTech, sau đó bấm "Thử lại".',
-          ios: 'Kiểm tra Dịch vụ định vị và quyền Vị trí cho XTTech, sau đó bấm "Thử lại".',
+          android: 'Kiểm tra bật Vị trí, bật Wi-Fi và quyền Vị trí cho XT Tech, sau đó bấm "Thử lại".',
+          ios: 'Kiểm tra Dịch vụ định vị và quyền Vị trí cho XT Tech, sau đó bấm "Thử lại".',
           desktop: 'Kiểm tra quyền Vị trí của trình duyệt và bấm "Thử lại".',
         },
         primaryAction: failure.canOpenSettings ? 'open_settings' : 'retry',

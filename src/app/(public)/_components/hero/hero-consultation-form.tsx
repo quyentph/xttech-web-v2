@@ -81,7 +81,7 @@ export function HeroConsultationForm() {
         pageUrl: typeof window !== 'undefined' ? window.location.href : undefined,
       });
       setIsSubmitted(true);
-      toast.success('Đăng ký nhận tư vấn thành công! XTTech sẽ liên hệ bạn ngay.');
+      toast.success('Đăng ký nhận tư vấn thành công! XT Tech sẽ liên hệ bạn ngay.');
     } catch (err) {
       showErrorToast(err);
     } finally {

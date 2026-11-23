@@ -49,7 +49,7 @@ export function NewsLeadSection({
           </div>
           <h3 className="text-base font-bold text-slate-900">Hiện tại chưa có bài viết tin tức nào được xuất bản</h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-md mx-auto">
-            Các bản tin công nghệ, công trình nhôm kính và hoạt động mới nhất của XTTech sẽ được cập nhật tại đây.
+            Các bản tin công nghệ, công trình nhôm kính và hoạt động mới nhất của XT Tech sẽ được cập nhật tại đây.
           </p>
         </div>
       ) : (
