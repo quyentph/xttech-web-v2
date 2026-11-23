@@ -87,17 +87,11 @@ export function IntroduceVideoSection() {
       className="border-t border-slate-200/80 overflow-hidden bg-white pt-6 pb-12 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-20"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.5, ease: INTRODUCE_EASE_OUT }}
-          className="mx-auto mb-6 max-w-3xl text-center sm:mb-8"
-        >
+        <div className="mx-auto mb-6 max-w-3xl text-center sm:mb-8">
           <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
             Giới thiệu <span className="text-primary">công ty XT Tech</span>
           </h2>
-        </motion.div>
+        </div>
       </div>
 
       <div className="mx-auto w-full max-w-[97vw] 2xl:max-w-[1720px] px-3 sm:px-4 lg:px-4">

@@ -17,13 +17,7 @@ export function IntroduceBenefitsSection() {
     <section className="border-b border-t border-slate-100 bg-white py-16 sm:py-24 overflow-hidden">
       <div className="mx-auto w-full max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1500px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Tiêu đề căn giữa thoáng đãng, lược bỏ cột dài bên trái */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.5, ease: INTRODUCE_EASE_OUT }}
-          className="mx-auto mb-14 max-w-3xl text-center sm:mb-18 lg:mb-22"
-        >
+        <div className="mx-auto mb-14 max-w-3xl text-center sm:mb-18 lg:mb-22">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
             <Sparkles className="h-3.5 w-3.5" />
             <span>Lợi ích vận hành thực tế</span>
@@ -34,7 +28,7 @@ export function IntroduceBenefitsSection() {
           <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
             Chuẩn hóa quy trình sản xuất, bóc tách và giám sát công trình giúp loại bỏ hao hụt và tối ưu hóa lợi nhuận.
           </p>
-        </motion.div>
+        </div>
 
         {/* Sơ đồ dạng xen kẽ: bên này (trái) -> xong bên kia (phải) */}
         <div className="relative mx-auto w-full max-w-6xl xl:max-w-[1320px] 2xl:max-w-[1400px]">
