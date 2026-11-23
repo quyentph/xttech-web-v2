@@ -198,7 +198,6 @@ export const HeroAiAssistantVisual = () => {
                 <div className="h-6 w-44 sm:w-56 rounded-full bg-linear-to-r from-teal-500/20 via-teal-400/40 to-teal-500/20 blur-xs" />
                 <div className="relative -mt-4.5 rounded-full border border-teal-300/80 bg-linear-to-r from-primary via-[#0d9488] to-primary px-5 py-1.5 shadow-lg shadow-teal-500/25">
                   <span className="flex items-center gap-1.5 text-xs font-black tracking-wide text-white">
-                    <Sparkles className="h-3.5 w-3.5 text-hero-accent" />
                     <span>Tích hợp công nghệ XTTech AI</span>
                   </span>
                 </div>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Briefcase, CheckCircle2, HardHat, RefreshCw, ClipboardCheck, Zap } from 'lucide-react';
+import { Briefcase, CheckCircle2, Users, RefreshCw, ClipboardCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
 
@@ -122,7 +122,7 @@ export function BenefitsSection() {
                 />
                 <div className="flex items-center gap-3 pb-3 border-b border-teal-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm shadow-primary/30 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
-                    <HardHat className="h-5 w-5" />
+                    <Users className="h-5 w-5" />
                   </div>
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-primary">Lợi ích cho</span>
