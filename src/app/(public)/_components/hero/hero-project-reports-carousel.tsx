@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Maximize2, ZoomIn } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { PROJECT_REPORTS, type ProjectReportItem } from './hero.constants';
 import { ProjectReportPreviewModal } from './modals';
 import { useHeroMarquee } from './use-hero-marquee';
@@ -108,16 +108,8 @@ export const HeroProjectReportsCarousel = () => {
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <button
-                      type="button"
-                      onClick={() => handleSelectReport(item)}
-                      className="cursor-pointer text-primary font-bold hover:underline inline-flex items-center gap-1"
-                    >
-                      <ZoomIn className="h-3.5 w-3.5" />
-                      <span>Xem số liệu thực tế</span>
-                    </button>
-                    <span className="text-slate-400 text-[11px]">Giao diện XTTech XMS</span>
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end text-xs text-slate-400">
+                    <span className="text-[11px]">Giao diện XTTech XMS</span>
                   </div>
                 </div>
               </div>

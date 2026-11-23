@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Briefcase, CheckCircle2, HardHat, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Briefcase, CheckCircle2, HardHat, RefreshCw, ClipboardCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
 
@@ -207,7 +207,7 @@ export function BenefitsSection() {
               {/* Floating Badge 1: Tiến độ trực quan */}
               <div className="hidden sm:flex absolute -top-4 right-4 z-20 items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white/95 px-4 py-2.5 shadow-xl backdrop-blur-md animate-float-slow">
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-white">
-                  <TrendingUp className="h-4 w-4" />
+                  <ClipboardCheck className="h-4 w-4" />
                 </div>
                 <div>
                   <div className="text-[11px] font-medium text-slate-500">Hỗ trợ cắt nhôm</div>
@@ -218,7 +218,7 @@ export function BenefitsSection() {
               {/* Floating Badge 2: Mobile App đồng bộ */}
               <div className="hidden sm:flex absolute -bottom-4 left-4 z-20 items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white/95 px-4 py-2.5 shadow-xl backdrop-blur-md animate-float-delayed">
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-white">
-                  <Sparkles className="h-4 w-4" />
+                  <RefreshCw className="h-4 w-4" />
                 </div>
                 <div>
                   <div className="text-[11px] font-medium text-slate-500">Đồng bộ tức thời</div>

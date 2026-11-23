@@ -57,7 +57,7 @@ const NormalCard = ({ plan }: { plan: Plan }) => {
       <div className="mt-auto pt-6">
         <button
           type="button"
-          className="flex min-h-[48px] w-full items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-6 py-3 text-sm font-bold text-primary shadow-sm transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white group-hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+          className="flex h-[44px] min-h-[44px] w-full items-center justify-center rounded-full border-2 border-primary bg-white px-6 py-2.5 text-sm font-bold text-primary shadow-xs transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white group-hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         >
           {plan.cta}
         </button>
@@ -133,7 +133,7 @@ const HighlightCard = ({ plan }: { plan: Plan }) => {
       <div className="mt-auto pt-6">
         <button
           type="button"
-          className="group/btn flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-6 py-3 text-sm font-bold text-primary shadow-sm transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white group-hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+          className="group/btn flex h-[44px] min-h-[44px] w-full items-center justify-center gap-2 rounded-full border-2 border-primary bg-white px-6 py-2.5 text-sm font-bold text-primary shadow-xs transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-[var(--hero-accent-from)] group-hover:to-[var(--hero-accent-to)] group-hover:text-white group-hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         >
           {plan.cta}
           <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" strokeWidth={2.5} />
