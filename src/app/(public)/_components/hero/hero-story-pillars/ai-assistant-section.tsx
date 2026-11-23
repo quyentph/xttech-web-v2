@@ -18,7 +18,7 @@ export function AiAssistantSection({ onOpenDemo }: HeroSectionDemoProps) {
           <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
             <span className="text-primary">Công nghệ AI</span> giảm gánh nặng nhập liệu, tự động hóa mọi tác vụ tại công trường & xưởng
           </h2>
-          <div className="mx-auto mt-3 h-1 w-20 rounded-full bg-slate-900" />
+          <div className="mx-auto mt-3 h-1 w-20 rounded-full bg-gradient-to-r from-[#0097b2] to-[#4eb622]" />
         </div>
 
         {/* Toàn bộ hình ảnh Robot 3D, sóng âm Voice Note, Viewfinder AI Vision và 3 Card đều được CODE 100% */}

@@ -326,19 +326,19 @@ export const HeroAiAssistantVisual = () => {
                   <circle cx="157" cy="96" r="1.2" fill="#2dd4bf" opacity="0.75" />
                   <circle cx="157" cy="100" r="1.2" fill="#2dd4bf" opacity="0.45" />
 
-                  {/* ================= MŨ BẢO HỘ KỸ SƯ CÔNG TRÌNH VÀNG CAO CẤP ================= */}
+                  {/* ================= MŨ BẢO HỘ KỸ SƯ CÔNG TRÌNH XANH PETROL TEAL & CYAN SANG TRỌNG ================= */}
                   {/* Vỏ chóp mũ bo mượt theo cấu trúc đầu */}
                   <path
                     d="M 68 58 C 68 25, 172 25, 172 58 C 172 61, 155 64, 120 64 C 85 64, 68 61, 68 58 Z"
                     fill="url(#helmShellGrad)"
-                    stroke="#b45309"
+                    stroke="#0d9488"
                     strokeWidth="2"
                   />
 
                   {/* Gờ sống mũ kỹ sư chịu lực ở giữa */}
                   <path
                     d="M 120 25 L 120 58"
-                    stroke="#fef08a"
+                    stroke="#5eead4"
                     strokeWidth="4"
                     strokeLinecap="round"
                     opacity="0.9"
@@ -355,7 +355,7 @@ export const HeroAiAssistantVisual = () => {
                   <path
                     d="M 60 58 C 60 53, 180 53, 180 58 C 180 65, 155 69, 120 69 C 85 69, 60 65, 60 58 Z"
                     fill="url(#helmBrimGrad)"
-                    stroke="#92400e"
+                    stroke="#045863"
                     strokeWidth="1.8"
                   />
 
@@ -372,8 +372,8 @@ export const HeroAiAssistantVisual = () => {
                   <g>
                     <polygon
                       points="120,38 127,42 127,51 120,55 113,51 113,42"
-                      fill="#045863"
-                      stroke="#fef08a"
+                      fill="#02262c"
+                      stroke="#2dd4bf"
                       strokeWidth="1.5"
                     />
                     <circle cx="120" cy="46.5" r="2.5" fill="#2dd4bf" filter="url(#softGlow)" />
@@ -385,14 +385,14 @@ export const HeroAiAssistantVisual = () => {
               <div className="relative -mt-4 z-20 flex flex-col items-center">
                 {/* Đĩa đệm phát quang */}
                 <div className="h-5 w-48 sm:w-60 rounded-full bg-linear-to-r from-teal-500/10 via-teal-400/40 to-teal-500/10 blur-xs" />
-                <div className="relative -mt-3.5 flex items-center gap-2 rounded-full border border-teal-300/80 bg-gradient-to-r from-primary via-[#0d9488] to-primary px-4 sm:px-5 py-1.5 shadow-xl shadow-teal-950/20 backdrop-blur-md transition-transform duration-300 hover:scale-105">
+                <div className="relative -mt-3.5 flex items-center gap-2 rounded-full border border-teal-300/80 bg-gradient-to-r from-[#0097b2] via-[#0d9488] to-[#4eb622] px-4 sm:px-5 py-1.5 shadow-xl shadow-teal-950/20 backdrop-blur-md transition-transform duration-300 hover:scale-105">
                   <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-300" />
                   </span>
                   <span className="text-xs font-black tracking-wide text-white flex items-center gap-1.5">
                     <span>Tích hợp công nghệ XTTech AI</span>
-                    <Sparkles className="h-3 w-3 text-emerald-300" />
+                    <Sparkles className="h-3 w-3 text-emerald-200" />
                   </span>
                 </div>
               </div>
