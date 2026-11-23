@@ -7,7 +7,7 @@ import { INTRODUCE_EASE_OUT, SOFTWARE_BENEFITS } from '../_constants/introduce.c
 
 const UNIFIED_STEP_STYLE = {
   card: 'bg-white text-slate-900 shadow-md shadow-slate-200/40 hover:shadow-xl hover:shadow-primary/10',
-  title: 'text-slate-900 group-hover:text-primary',
+  title: 'text-hero-accent group-hover:brightness-110',
   desc: 'text-slate-600',
   node: 'border-2 border-primary bg-white text-primary shadow-md shadow-primary/15',
 };
@@ -98,7 +98,7 @@ export function IntroduceBenefitsSection() {
 
                       <div>
                         <h3
-                          className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tight leading-snug transition-colors duration-200 ${style.title}`}
+                          className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tight leading-snug transition-all duration-200 ${style.title}`}
                         >
                           {benefit.title}
                         </h3>
