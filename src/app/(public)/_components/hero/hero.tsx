@@ -27,11 +27,7 @@ const getDesktopSnapshot = (): boolean => window.matchMedia(DESKTOP_MEDIA_QUERY)
 const getServerDesktopSnapshot = (): boolean => false;
 
 export const Hero = () => {
-  const isDesktop = useSyncExternalStore(
-    subscribeDesktopMedia,
-    getDesktopSnapshot,
-    getServerDesktopSnapshot,
-  );
+  const isDesktop = useSyncExternalStore(subscribeDesktopMedia, getDesktopSnapshot, getServerDesktopSnapshot);
   const [manualRegisterMode, setManualRegisterMode] = useState<boolean | null>(null);
   const [inlineResetKey, setInlineResetKey] = useState(0);
   const [isAutoModalOpen, setIsAutoModalOpen] = useState(false);
@@ -104,11 +100,7 @@ export const Hero = () => {
                     : 'opacity-0 translate-x-12 lg:-translate-x-12 pointer-events-none absolute top-0 left-0 w-full z-0'
                 }`}
               >
-                <RegisterInlineForm
-                  key={`hero-inline-${inlineResetKey}`}
-                  isOpen={isRegisterMode}
-                  onBack={handleCloseInline}
-                />
+                <RegisterInlineForm key={`hero-inline-${inlineResetKey}`} isOpen={isRegisterMode} onBack={handleCloseInline} />
               </div>
 
               <div
@@ -204,15 +196,11 @@ export const Hero = () => {
         isOpen={isAutoModalOpen}
         onClose={() => setIsAutoModalOpen(false)}
         size="md"
-        title="Đăng ký sử dụng XTTECH XMS Fab"
+        title="Đăng ký sử dụng XT Tech XMS Fab"
         className="max-w-lg border border-primary/20"
         bodyClassName="p-5 sm:p-6"
       >
-        <RegisterInlineForm
-          key={`hero-auto-${isAutoModalOpen}`}
-          variant="modal"
-          onBack={() => setIsAutoModalOpen(false)}
-        />
+        <RegisterInlineForm key={`hero-auto-${isAutoModalOpen}`} variant="modal" onBack={() => setIsAutoModalOpen(false)} />
       </Modal>
     </div>
   );

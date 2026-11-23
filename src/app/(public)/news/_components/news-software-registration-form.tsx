@@ -1,4 +1,4 @@
- 'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { CheckCircle2, RotateCcw, Send, ShieldCheck } from 'lucide-react';
@@ -112,14 +112,11 @@ export function NewsSoftwareRegistrationForm() {
         <div className="pointer-events-none absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-amber-300/15 blur-2xl" />
 
         <div className="relative space-y-2">
-        
-          <h3 className="text-xl sm:text-[22px] font-black text-white tracking-tight leading-snug">
-            Nhận phần mềm ngay
-          </h3>
+          <h3 className="text-xl sm:text-[22px] font-black text-white tracking-tight leading-snug">Nhận phần mềm ngay</h3>
 
           <p className="text-xs text-teal-50/90 leading-relaxed font-medium">
             Đăng ký trải nghiệm hệ thống quản trị sản xuất & vận hành xưởng nhôm kính nội thất may đo riêng từ{' '}
-            <span className="font-bold text-white">XTTECH</span>.
+            <span className="font-bold text-white">XT Tech</span>.
           </p>
 
           {/* 2 Lợi ích nhanh khẳng định giá trị */}
@@ -147,7 +144,7 @@ export function NewsSoftwareRegistrationForm() {
               <h4 className="text-base font-bold text-slate-900">Gửi yêu cầu thành công!</h4>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Cảm ơn <span className="font-semibold text-slate-900">{formData.fullName}</span> (
-                <span className="font-medium text-slate-700">{formData.companyName}</span>). Đội ngũ chuyên gia XTTECH sẽ liên hệ qua SĐT{' '}
+                <span className="font-medium text-slate-700">{formData.companyName}</span>). Đội ngũ chuyên gia XT Tech sẽ liên hệ qua SĐT{' '}
                 <span className="font-semibold text-primary">{formData.phone}</span> để tư vấn demo trực tiếp.
               </p>
             </div>

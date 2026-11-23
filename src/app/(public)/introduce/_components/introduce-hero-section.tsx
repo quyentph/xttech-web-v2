@@ -46,9 +46,7 @@ export function IntroduceHeroSection() {
         <div className="relative">
           <div
             className={`grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              isRegisterMode
-                ? 'opacity-100 pointer-events-auto relative z-20'
-                : 'opacity-0 pointer-events-none absolute inset-0 z-0'
+              isRegisterMode ? 'opacity-100 pointer-events-auto relative z-20' : 'opacity-0 pointer-events-none absolute inset-0 z-0'
             }`}
           >
             <div
@@ -58,11 +56,7 @@ export function IntroduceHeroSection() {
                   : 'opacity-0 translate-x-12 lg:-translate-x-12 pointer-events-none absolute top-0 left-0 w-full z-0'
               }`}
             >
-              <RegisterInlineForm
-                key={`intro-inline-${formResetKey}`}
-                isOpen={isRegisterMode}
-                onBack={handleCloseRegister}
-              />
+              <RegisterInlineForm key={`intro-inline-${formResetKey}`} isOpen={isRegisterMode} onBack={handleCloseRegister} />
             </div>
 
             <div
@@ -75,16 +69,14 @@ export function IntroduceHeroSection() {
               <div className="space-y-3">
                 <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1 text-xs font-bold text-emerald-300 backdrop-blur-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  HỆ SINH THÁI GIẢI PHÁP XTTECH
+                  HỆ SINH THÁI GIẢI PHÁP XT Tech
                 </span>
                 <h2 className="text-3xl font-black tracking-tight text-white uppercase xl:text-4xl xl:leading-[1.18]">
-                  Phần mềm quản trị sản xuất cho{' '}
-                  <span className="text-emerald-400">Xưởng Nhôm Kính &amp; Nhà Thầu</span>
+                  Phần mềm quản trị sản xuất cho <span className="text-emerald-400">Xưởng Nhôm Kính &amp; Nhà Thầu</span>
                 </h2>
                 <p className="text-sm leading-relaxed text-slate-200 sm:text-base">
-                  <strong className="text-white">XTTECH</strong> đồng bộ toàn bộ quy trình từ khảo sát ô chờ, thiết kế
-                  cửa CAD 2D/3D, bóc tách vật tư và xuất thẻ cắt A4 đến quản lý kho, chấm công tại công trình và báo
-                  cáo lãi/lỗ trên một hệ thống duy nhất.
+                  <strong className="text-white">XT Tech</strong> đồng bộ toàn bộ quy trình từ khảo sát ô chờ, thiết kế cửa CAD 2D/3D, bóc tách vật tư
+                  và xuất thẻ cắt A4 đến quản lý kho, chấm công tại công trình và báo cáo lãi/lỗ trên một hệ thống duy nhất.
                 </p>
               </div>
 
@@ -133,7 +125,7 @@ export function IntroduceHeroSection() {
             <div className="xttech-logo-enter inline-flex items-center justify-center gap-3 sm:gap-5 lg:gap-6">
               <img
                 src="/image-xttech/logo-xttech.svg"
-                alt="XTTECH Logo"
+                alt="XT Tech Logo"
                 className="object-contain"
                 style={{
                   width: 'clamp(24px, 3.4vw, 44px)',
@@ -147,7 +139,7 @@ export function IntroduceHeroSection() {
                   lineHeight: 1.1,
                 }}
               >
-                XTTECH
+                XT Tech
               </span>
             </div>
 

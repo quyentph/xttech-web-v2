@@ -19,7 +19,7 @@ export const HeroStoryPillarsSection = () => {
       {/* KHỐI 1: THỰC TRẠNG DOANH NGHIỆP */}
       <PainPointsSection />
 
-      {/* KHỐI 2: CẢI TIẾN QUẢN LÝ VỚI XTTECH */}
+      {/* KHỐI 2: CẢI TIẾN QUẢN LÝ VỚI XT Tech */}
       <BenefitsSection />
 
       {/* KHỐI 3: HÀNG LOẠT BÁO CÁO THI CÔNG & DỰ ÁN (CIRCULAR CAROUSEL) */}
@@ -28,7 +28,7 @@ export const HeroStoryPillarsSection = () => {
       {/* KHỐI 4: CÔNG NGHỆ AI TRỢ LÝ THÔNG MINH */}
       <AiAssistantSection onOpenDemo={openDemo} />
 
-      {/* KHỐI 5: 8 TRỤ CỘT GIẢI PHÁP CỐT LÕI XTTECH */}
+      {/* KHỐI 5: 8 TRỤ CỘT GIẢI PHÁP CỐT LÕI XT Tech */}
       <PillarsSection />
 
       {/* Modal đăng ký trải nghiệm khi bấm nút */}
@@ -36,15 +36,11 @@ export const HeroStoryPillarsSection = () => {
         isOpen={isDemoModalOpen}
         onClose={() => setIsDemoModalOpen(false)}
         size="md"
-        title="Đăng ký sử dụng XTTECH XMS Fab"
+        title="Đăng ký sử dụng XT Tech XMS Fab"
         className="max-w-lg border border-primary/20"
         bodyClassName="p-5 sm:p-6"
       >
-        <RegisterInlineForm
-          key={`pillars-reg-${isDemoModalOpen}`}
-          variant="modal"
-          onBack={() => setIsDemoModalOpen(false)}
-        />
+        <RegisterInlineForm key={`pillars-reg-${isDemoModalOpen}`} variant="modal" onBack={() => setIsDemoModalOpen(false)} />
       </Modal>
     </>
   );

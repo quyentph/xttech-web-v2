@@ -1,20 +1,12 @@
 import { CONTACT_INFO } from '@/config/contact';
 import { NextResponse } from 'next/server';
-import {
-  BASE_SITE_URL,
-  HOME_AI_FAQ_ITEMS,
-  NEWS_CATEGORY_MAP,
-  SEO_CONFIG,
-  fetchAllPublicArticlesForSitemap,
-} from '@/config';
+import { BASE_SITE_URL, HOME_AI_FAQ_ITEMS, NEWS_CATEGORY_MAP, SEO_CONFIG, fetchAllPublicArticlesForSitemap } from '@/config';
 
 export const revalidate = 3600;
 
 export async function GET() {
   const articles = await fetchAllPublicArticlesForSitemap();
-  const publishedArticles = articles
-    .filter((item) => Boolean(item.slug) && item.status === 'published')
-    .slice(0, 30);
+  const publishedArticles = articles.filter((item) => Boolean(item.slug) && item.status === 'published').slice(0, 30);
 
   const lines: string[] = [
     `# ${SEO_CONFIG.siteName} — ${SEO_CONFIG.legalName}`,
@@ -22,7 +14,7 @@ export async function GET() {
     `> ${SEO_CONFIG.defaultDescription}`,
     '',
     '## Tổng quan về Doanh nghiệp & Sản phẩm (Company & Platform Overview)',
-    `- **Tên thương hiệu:** ${SEO_CONFIG.siteName} (XTTECH ERP)`,
+    `- **Tên thương hiệu:** ${SEO_CONFIG.siteName} (XT Tech ERP)`,
     `- **Pháp nhân:** ${SEO_CONFIG.legalName}`,
     `- **Website chính thức:** ${BASE_SITE_URL}`,
     `- **Hotline tư vấn:** ${SEO_CONFIG.contactPhone} (Zalo: ${CONTACT_INFO.zaloUrl})`,
@@ -55,8 +47,8 @@ export async function GET() {
     '## Câu hỏi Thường gặp Dành cho Trợ lý AI (FAQ for AI Assistants)',
     ...HOME_AI_FAQ_ITEMS.flatMap((faq) => [`### ${faq.question}`, faq.answer, '']),
     '## Đường dẫn Trang Chính (Primary URLs)',
-    `- [Trang chủ XTTECH ERP](${BASE_SITE_URL}): Giới thiệu tổng quan hệ sinh thái ERP nhôm kính, xây dựng & quản trị doanh nghiệp.`,
-    `- [Giới thiệu nền tảng XTTECH](${BASE_SITE_URL}/introduce): Tầm nhìn, sứ mệnh, video giới thiệu hệ sinh thái XMS Fab, XMS Build & XMS Biz.`,
+    `- [Trang chủ XT Tech ERP](${BASE_SITE_URL}): Giới thiệu tổng quan hệ sinh thái ERP nhôm kính, xây dựng & quản trị doanh nghiệp.`,
+    `- [Giới thiệu nền tảng XT Tech](${BASE_SITE_URL}/introduce): Tầm nhìn, sứ mệnh, video giới thiệu hệ sinh thái XMS Fab, XMS Build & XMS Biz.`,
     `- [Bảng giá dịch vụ](${BASE_SITE_URL}/pricing): So sánh tính năng và chi phí các gói Miễn phí, Bạc, Vàng, Kim cương của XMS Fab, XMS Build, XMS Biz.`,
     `- [Tin tức & Kiến thức chuyên ngành](${BASE_SITE_URL}/news): Bài viết kỹ thuật nhôm kính, giải pháp quản trị xưởng và công trình thực tế.`,
     `- [Chính sách bảo mật](${BASE_SITE_URL}/privacy-policy): Cam kết bảo mật bản vẽ CAD, định mức BOM và dữ liệu doanh nghiệp.`,
@@ -82,4 +74,3 @@ export async function GET() {
     },
   });
 }
-

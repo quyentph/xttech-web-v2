@@ -2,10 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'XTTECH — Hệ thống ERP Quản trị Sản xuất Nhôm Kính & Xây dựng',
-    short_name: 'XTTECH ERP',
-    description:
-      'Hệ sinh thái ERP quản lý thiết kế cửa CAD 2D/3D, bóc tách vật tư BOM, báo giá, kho xưởng và chấm công GPS công trình XTTECH.',
+    name: 'XT TECH — Hệ thống ERP Quản trị Sản xuất Nhôm Kính & Xây dựng',
+    short_name: 'XT TECH ERP',
+    description: 'Hệ sinh thái ERP quản lý thiết kế cửa CAD 2D/3D, bóc tách vật tư BOM, báo giá, kho xưởng và chấm công GPS công trình XT Tech.',
     start_url: '/',
     scope: '/',
     lang: 'vi',

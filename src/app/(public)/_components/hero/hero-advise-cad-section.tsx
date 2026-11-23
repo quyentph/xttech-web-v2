@@ -19,13 +19,10 @@ export const HeroAdviseCadSection = () => {
     <section className="overflow-x-clip border-t border-gray-100 bg-white pt-16 pb-8 lg:pt-24 lg:pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-2xl font-black tracking-tight text-[#16384C] uppercase sm:text-3xl lg:text-4xl">
-            TƯ VẤN CỤ THỂ — BÁO GIÁ NHANH CHÓNG
-          </h2>
+          <h2 className="text-2xl font-black tracking-tight text-[#16384C] uppercase sm:text-3xl lg:text-4xl">TƯ VẤN CỤ THỂ — BÁO GIÁ NHANH CHÓNG</h2>
           <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-primary" />
           <p className="mt-4 text-sm text-primary sm:text-base">
-            Từ bản vẽ kỹ thuật sắc nét đến mô hình 3D sống động, mọi thứ đều có thể chia sẻ cho khách hàng chỉ với một
-            liên kết.
+            Từ bản vẽ kỹ thuật sắc nét đến mô hình 3D sống động, mọi thứ đều có thể chia sẻ cho khách hàng chỉ với một liên kết.
           </p>
         </div>
 
@@ -38,8 +35,7 @@ export const HeroAdviseCadSection = () => {
             className="space-y-6 lg:col-span-6"
           >
             <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
-              Thiết kế &amp; chốt phương án <span className="font-black text-primary">ngay tại công trình</span> bằng
-              các lợi thế:
+              Thiết kế &amp; chốt phương án <span className="font-black text-primary">ngay tại công trình</span> bằng các lợi thế:
             </h3>
 
             <div className="space-y-4 pt-1">
@@ -116,9 +112,7 @@ export const HeroAdviseCadSection = () => {
                         title={colorOption.label}
                         style={{ backgroundColor: colorOption.swatch }}
                         className={`h-5 w-5 rounded-full border-2 transition-all cursor-pointer ${
-                          activeTab === colorOption.key
-                            ? 'scale-110 border-primary ring-2 ring-primary/30'
-                            : 'border-gray-300'
+                          activeTab === colorOption.key ? 'scale-110 border-primary ring-2 ring-primary/30' : 'border-gray-300'
                         }`}
                       />
                     ))}
@@ -168,15 +162,11 @@ export const HeroAdviseCadSection = () => {
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         size="md"
-        title="Đăng ký sử dụng XTTECH XMS Fab"
+        title="Đăng ký sử dụng XT Tech XMS Fab"
         className="max-w-lg border border-primary/20"
         bodyClassName="p-5 sm:p-6"
       >
-        <RegisterInlineForm
-          key={`cad-reg-${isRegisterModalOpen}`}
-          variant="modal"
-          onBack={() => setIsRegisterModalOpen(false)}
-        />
+        <RegisterInlineForm key={`cad-reg-${isRegisterModalOpen}`} variant="modal" onBack={() => setIsRegisterModalOpen(false)} />
       </Modal>
     </section>
   );

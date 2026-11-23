@@ -36,9 +36,7 @@ export const OnlineA4Composer: React.FC<OnlineA4ComposerProps> = ({
   onChangeBody,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'edit' | 'preview'>('edit');
-  const [selectedTplId, setSelectedTplId] = useState<string>(
-    () => getTemplateByDocType(documentType).id,
-  );
+  const [selectedTplId, setSelectedTplId] = useState<string>(() => getTemplateByDocType(documentType).id);
   const [prevDocType, setPrevDocType] = useState<string>(documentType);
 
   if (prevDocType !== documentType) {
@@ -48,7 +46,7 @@ export const OnlineA4Composer: React.FC<OnlineA4ComposerProps> = ({
 
   const now = dayjs();
   const typeHeading = DOC_TYPE_HEADING_MAP[documentType] || 'VĂN BẢN ĐỊNH CHẾ';
-  const docCode = code?.trim() || '....../2026/VB-XTTECH';
+  const docCode = code?.trim() || '....../2026/VB-XT Tech';
 
   const previewHtml = useMemo(
     () =>
@@ -74,7 +72,7 @@ export const OnlineA4Composer: React.FC<OnlineA4ComposerProps> = ({
     <div className="font-sans text-slate-900 select-none pb-4 mb-4 border-b border-dashed border-slate-200">
       <div className="grid grid-cols-12 gap-2 text-center items-start">
         <div className="col-span-5">
-          <p className="font-bold text-[12px] uppercase tracking-tight">CÔNG TY CỔ PHẦN XTTECH</p>
+          <p className="font-bold text-[12px] uppercase tracking-tight">CÔNG TY CỔ PHẦN XT Tech</p>
           <div className="w-20 border-b border-slate-800 mx-auto my-1" />
           <p className="text-[11.5px] text-slate-700">Số: {docCode}</p>
         </div>
@@ -90,9 +88,7 @@ export const OnlineA4Composer: React.FC<OnlineA4ComposerProps> = ({
 
       <div className="text-center mt-5">
         <h3 className="font-bold text-[16px] uppercase tracking-wide text-slate-900">{typeHeading}</h3>
-        <p className="font-bold text-[14px] text-slate-900 mt-0.5">
-          {title?.trim() || '(Nhập tiêu đề văn bản ở ô phía trên)'}
-        </p>
+        <p className="font-bold text-[14px] text-slate-900 mt-0.5">{title?.trim() || '(Nhập tiêu đề văn bản ở ô phía trên)'}</p>
         {summary?.trim() && <p className="italic text-[12px] text-slate-600 mt-0.5">({summary.trim()})</p>}
       </div>
     </div>

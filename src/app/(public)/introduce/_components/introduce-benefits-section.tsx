@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 import { INTRODUCE_EASE_OUT, SOFTWARE_BENEFITS } from '../_constants/introduce.constants';
 
 const UNIFIED_STEP_STYLE = {
-  card: 'bg-white text-slate-900 border border-slate-200/90 shadow-sm shadow-slate-200/30 hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10',
+  card: 'bg-white text-slate-900 shadow-md shadow-slate-200/40 hover:shadow-xl hover:shadow-primary/10',
   title: 'text-slate-900 group-hover:text-primary',
   desc: 'text-slate-600',
   node: 'border-2 border-primary bg-white text-primary shadow-md shadow-primary/15',
@@ -29,7 +29,7 @@ export function IntroduceBenefitsSection() {
             <span>Lợi ích vận hành thực tế</span>
           </span>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
-            Giá trị cốt lõi khi <span className="text-primary">vận hành trên XTTECH</span>
+            Giá trị cốt lõi khi <span className="text-primary">vận hành trên XT Tech</span>
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
             Chuẩn hóa quy trình sản xuất, bóc tách và giám sát công trình giúp loại bỏ hao hụt và tối ưu hóa lợi nhuận.
@@ -52,7 +52,7 @@ export function IntroduceBenefitsSection() {
 
           <div className="space-y-8 sm:space-y-10 lg:space-y-12">
             {SOFTWARE_BENEFITS.map((benefit, idx) => {
-              const stepNumber = String(idx + 1).padStart(2, '0');
+              const stepNumber = benefit.letter || String(idx + 1).padStart(2, '0');
               const style = UNIFIED_STEP_STYLE;
               const isEven = idx % 2 === 0; // chẵn: bên trái (bên này), lẻ: bên phải (bên kia)
 
@@ -61,7 +61,7 @@ export function IntroduceBenefitsSection() {
                   {/* Node tròn trung tâm (Desktop) */}
                   <div
                     aria-hidden="true"
-                    className={`hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full font-mono text-xs font-black transition-transform duration-300 hover:scale-110 ${style.node}`}
+                    className={`hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-black transition-transform duration-300 hover:scale-110 ${style.node}`}
                   >
                     {stepNumber}
                   </div>
@@ -69,7 +69,7 @@ export function IntroduceBenefitsSection() {
                   {/* Node tròn bên trái (Mobile & Tablet) */}
                   <div
                     aria-hidden="true"
-                    className={`flex lg:hidden absolute left-4 top-6 -translate-x-1/2 z-20 h-7 w-7 items-center justify-center rounded-full font-mono text-[11px] font-black shadow-xs ${style.node}`}
+                    className={`flex lg:hidden absolute left-4 top-6 -translate-x-1/2 z-20 h-7 w-7 items-center justify-center rounded-full font-mono text-xs font-black shadow-xs ${style.node}`}
                   >
                     {stepNumber}
                   </div>
@@ -87,7 +87,7 @@ export function IntroduceBenefitsSection() {
                       whileInView={{ opacity: 1, x: 0, y: 0 }}
                       viewport={{ once: true, amount: 0.25, margin: '0px 0px -40px 0px' }}
                       transition={{ duration: 0.52, delay: idx * 0.1, ease: INTRODUCE_EASE_OUT }}
-                      className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl border p-5 sm:p-6 lg:p-7 xl:p-8 transition-all duration-300 ease-out hover:-translate-y-1 ${style.card}`}
+                      className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 xl:p-8 transition-all duration-300 ease-out hover:-translate-y-1 ${style.card}`}
                     >
                       {/* Đường connector nhánh ngang nối vào trục giữa (Desktop) */}
                       {isEven ? (
@@ -108,9 +108,7 @@ export function IntroduceBenefitsSection() {
                         >
                           {benefit.title}
                         </h3>
-                        <p className={`mt-2.5 text-xs sm:text-sm lg:text-base leading-relaxed ${style.desc}`}>
-                          {benefit.desc}
-                        </p>
+                        <p className={`mt-2.5 text-xs sm:text-sm lg:text-base leading-relaxed ${style.desc}`}>{benefit.desc}</p>
                       </div>
                     </motion.div>
                   </div>

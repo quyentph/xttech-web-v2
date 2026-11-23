@@ -6,25 +6,13 @@ import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import { Eye, Heart, MessageSquare, Newspaper, Sparkles } from 'lucide-react';
 import { Badge } from '@/components';
-import {
-  isNewsArticleLiked,
-  NEWS_CATEGORY_BADGE_MAP,
-  NEWS_CATEGORY_MAP,
-  PUBLIC_NEWS_QUERY_KEYS,
-  setNewsArticleLiked,
-} from '@/config';
+import { isNewsArticleLiked, NEWS_CATEGORY_BADGE_MAP, NEWS_CATEGORY_MAP, PUBLIC_NEWS_QUERY_KEYS, setNewsArticleLiked } from '@/config';
 import { togglePublicNewsLike } from '@/actions';
 import { getFileUrl, showErrorToast } from '@/utils';
 import queryClient from '@/utils/query';
 import type { NewsArticle } from '@/types';
 
-export type NewsCardVariant =
-  | 'lead-hero'
-  | 'sub-lead'
-  | 'horizontal-sm'
-  | 'horizontal-md'
-  | 'bullet'
-  | 'numbered';
+export type NewsCardVariant = 'lead-hero' | 'sub-lead' | 'horizontal-sm' | 'horizontal-md' | 'bullet' | 'numbered';
 
 export interface NewsArticleCardProps {
   article: NewsArticle;
@@ -70,13 +58,9 @@ export function NewsArticleCard({
     lastClickTimeRef.current = now;
   };
 
-  const isLiked =
-    optimisticLike?.articleId === article.id
-      ? optimisticLike.liked
-      : clientLiked;
+  const isLiked = optimisticLike?.articleId === article.id ? optimisticLike.liked : clientLiked;
 
-  const currentLikeCount =
-    optimisticLike?.articleId === article.id ? optimisticLike.likeCount : article.likeCount;
+  const currentLikeCount = optimisticLike?.articleId === article.id ? optimisticLike.likeCount : article.likeCount;
 
   const likeMutation = useMutation({
     mutationFn: (nextLiked: boolean) =>
@@ -94,21 +78,14 @@ export function NewsArticleCard({
     onSuccess: (res, nextLiked) => {
       setOptimisticLike({ articleId: article.id, liked: nextLiked, likeCount: res.likeCount });
       setClientLiked(nextLiked);
-      queryClient.setQueryData<NewsArticle>(PUBLIC_NEWS_QUERY_KEYS.detail(article.slug), (old) =>
-        old ? { ...old, likeCount: res.likeCount } : old,
-      );
-      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>(
-        { queryKey: PUBLIC_NEWS_QUERY_KEYS.list },
-        (old) => {
-          if (!old?.items) return old;
-          return {
-            ...old,
-            items: old.items.map((item) =>
-              item.id === article.id ? { ...item, likeCount: res.likeCount } : item,
-            ),
-          };
-        },
-      );
+      queryClient.setQueryData<NewsArticle>(PUBLIC_NEWS_QUERY_KEYS.detail(article.slug), (old) => (old ? { ...old, likeCount: res.likeCount } : old));
+      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list }, (old) => {
+        if (!old?.items) return old;
+        return {
+          ...old,
+          items: old.items.map((item) => (item.id === article.id ? { ...item, likeCount: res.likeCount } : item)),
+        };
+      });
       queryClient.invalidateQueries({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list });
       queryClient.invalidateQueries({ queryKey: ['admin-news'] });
       queryClient.invalidateQueries({ queryKey: ['admin-news-detail', article.id] });
@@ -157,9 +134,7 @@ export function NewsArticleCard({
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center bg-linear-to-br from-primary/15 via-primary/5 to-teal-50 text-primary/40 p-8">
               <Newspaper className="w-16 h-16 stroke-[1.5]" />
-              <span className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary/60">
-                XTTECH News & Insights
-              </span>
+              <span className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary/60">XT Tech News & Insights</span>
             </div>
           )}
           <div className="absolute top-3.5 left-3.5 flex flex-wrap items-center gap-2">
@@ -169,12 +144,7 @@ export function NewsArticleCard({
                 Tiêu điểm
               </span>
             )}
-            <Badge
-              variant={categoryBadge.variant}
-              size="sm"
-              pill
-              className="bg-white/95 backdrop-blur-xs shadow-xs"
-            >
+            <Badge variant={categoryBadge.variant} size="sm" pill className="bg-white/95 backdrop-blur-xs shadow-xs">
               {categoryBadge.label}
             </Badge>
           </div>
@@ -185,11 +155,7 @@ export function NewsArticleCard({
             {article.title}
           </h2>
 
-          {article.summary && (
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed line-clamp-2">
-              {article.summary}
-            </p>
-          )}
+          {article.summary && <p className="text-sm sm:text-base text-slate-600 leading-relaxed line-clamp-2">{article.summary}</p>}
 
           <div className="flex items-center justify-between gap-4 pt-1 text-xs text-slate-500">
             <span className="font-mono tabular-nums">{formattedDate}</span>
@@ -203,15 +169,9 @@ export function NewsArticleCard({
                 onClick={handleQuickLike}
                 disabled={likeMutation.isPending}
                 suppressHydrationWarning
-                className={`inline-flex items-center gap-1 cursor-pointer ${
-                  isLiked ? 'text-rose-600 font-bold' : 'hover:text-rose-600'
-                }`}
+                className={`inline-flex items-center gap-1 cursor-pointer ${isLiked ? 'text-rose-600 font-bold' : 'hover:text-rose-600'}`}
               >
-                <Heart
-                  className={`w-3.5 h-3.5 ${
-                    isLiked ? 'text-rose-500 fill-rose-500' : 'text-rose-500'
-                  }`}
-                />
+                <Heart className={`w-3.5 h-3.5 ${isLiked ? 'text-rose-500 fill-rose-500' : 'text-rose-500'}`} />
                 <span suppressHydrationWarning>{currentLikeCount}</span>
               </button>
               <span className="inline-flex items-center gap-1" title="Bình luận">
@@ -242,9 +202,7 @@ export function NewsArticleCard({
             </div>
           )}
         </div>
-        <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">
-          {article.title}
-        </h3>
+        <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">{article.title}</h3>
         <div className="flex items-center gap-3 text-xs text-slate-400 font-mono tabular-nums">
           <span>{formattedDate}</span>
           <span className="inline-flex items-center gap-1" suppressHydrationWarning>
@@ -252,11 +210,7 @@ export function NewsArticleCard({
             {article.viewCount}
           </span>
         </div>
-        {!hideDescription && article.summary && (
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">
-            {article.summary}
-          </p>
-        )}
+        {!hideDescription && article.summary && <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">{article.summary}</p>}
       </Link>
     );
   }
@@ -279,9 +233,7 @@ export function NewsArticleCard({
           )}
         </div>
         <div className="col-span-7 min-w-0 space-y-1.5">
-          <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">
-            {article.title}
-          </h4>
+          <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">{article.title}</h4>
           <div className="flex items-center gap-2.5 text-xs text-slate-400 font-mono tabular-nums">
             <span>{formattedDate}</span>
             <span className="inline-flex items-center gap-1" suppressHydrationWarning>
@@ -304,9 +256,7 @@ export function NewsArticleCard({
             <h4 className="text-xs sm:text-sm font-medium text-slate-800 group-hover:text-primary transition-colors leading-snug line-clamp-2">
               {article.title}
             </h4>
-            {showDateOnBullet && (
-              <p className="text-[11px] text-slate-400 font-mono tabular-nums">{formattedDate}</p>
-            )}
+            {showDateOnBullet && <p className="text-[11px] text-slate-400 font-mono tabular-nums">{formattedDate}</p>}
           </div>
         </div>
       </Link>
@@ -316,11 +266,7 @@ export function NewsArticleCard({
   // 5. Kiểu Đánh số thứ tự lớn 1..5 (Cột "Đọc nhiều nhất")
   if (variant === 'numbered') {
     return (
-      <Link
-        href={href}
-        onClick={handleCardClick}
-        className="group flex items-center gap-4 py-3 first:pt-0 last:pb-0"
-      >
+      <Link href={href} onClick={handleCardClick} className="group flex items-center gap-4 py-3 first:pt-0 last:pb-0">
         <span className="text-2xl sm:text-3xl font-black font-mono tabular-nums text-slate-400/80 group-hover:text-primary transition-colors w-6 text-center shrink-0 select-none">
           {rank ?? 1}
         </span>
@@ -344,9 +290,7 @@ export function NewsArticleCard({
                 isLiked ? 'text-rose-600 font-bold' : 'hover:text-rose-600'
               }`}
             >
-              <Heart
-                className={`w-3 h-3 ${isLiked ? 'text-rose-500 fill-rose-500' : 'text-rose-500'}`}
-              />
+              <Heart className={`w-3 h-3 ${isLiked ? 'text-rose-500 fill-rose-500' : 'text-rose-500'}`} />
               <span suppressHydrationWarning>{currentLikeCount}</span>
             </button>
           </div>
@@ -357,11 +301,7 @@ export function NewsArticleCard({
 
   // 6. Kiểu Ngang vừa có Tóm tắt (horizontal-md - mặc định cho danh sách bài viết & khối 2 cột chuyên mục)
   return (
-    <Link
-      href={href}
-      onClick={handleCardClick}
-      className="group grid grid-cols-1 sm:grid-cols-12 gap-4 items-start"
-    >
+    <Link href={href} onClick={handleCardClick} className="group grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
       <div className="sm:col-span-5 min-w-0 relative w-full aspect-16/10 rounded-lg overflow-hidden bg-slate-100">
         {thumbnailSrc ? (
           <img
@@ -376,15 +316,9 @@ export function NewsArticleCard({
         )}
       </div>
       <div className="sm:col-span-7 min-w-0 space-y-1.5">
-        <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">
-          {article.title}
-        </h3>
+        <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors leading-snug line-clamp-2">{article.title}</h3>
         <div className="text-xs text-slate-400 font-mono tabular-nums">{formattedDate}</div>
-        {article.summary && (
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
-            {article.summary}
-          </p>
-        )}
+        {article.summary && <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">{article.summary}</p>}
       </div>
     </Link>
   );

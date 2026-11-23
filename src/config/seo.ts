@@ -5,11 +5,11 @@ import { BASE_API_URL, BASE_MINIO_URL, BASE_SITE_URL } from './app';
 import { NEWS_CATEGORY_MAP } from './news';
 
 export const SEO_CONFIG = {
-  siteName: 'XTTECH',
-  legalName: 'Công ty Cổ phần Công nghệ XTTECH',
-  brandTitle: 'XTTECH — Phần mềm ERP Quản trị Sản xuất Nhôm Kính & Xây dựng',
-  defaultTitle: 'XTTECH — Phần mềm ERP Sản xuất Nhôm Kính & Xây dựng',
-  titleTemplate: '%s | XTTECH',
+  siteName: 'XT Tech',
+  legalName: 'Công ty Cổ phần Công nghệ XT Tech',
+  brandTitle: 'XT Tech — Phần mềm ERP Quản trị Sản xuất Nhôm Kính & Xây dựng',
+  defaultTitle: 'XT Tech — Phần mềm ERP Sản xuất Nhôm Kính & Xây dựng',
+  titleTemplate: '%s | XT Tech',
   defaultDescription:
     'Hệ sinh thái ERP đám mây chuyên sâu cho doanh nghiệp sản xuất nhôm kính, cơ khí và thi công công trình: Thiết kế cửa CAD 2D/3D, bóc tách tự động theo công thức, báo giá & chấm công tại công trình.',
   locale: 'vi_VN',
@@ -25,8 +25,8 @@ export const SEO_CONFIG = {
 } as const;
 
 export const SEO_KEYWORDS: string[] = [
-  'XTTECH',
-  'XTTECH ERP',
+  'XT Tech',
+  'XT Tech ERP',
   'phần mềm quản lý doanh nghiệp',
   'phần mềm quản trị doanh nghiệp',
   'phần mềm ERP nhôm kính',
@@ -44,16 +44,16 @@ export const SEO_KEYWORDS: string[] = [
 
 export const PAGE_SEO_META = {
   home: {
-    title: 'XTTECH — Giải pháp cho xưởng nhôm kính & nhà thầu xây dựng',
+    title: 'XT Tech — Giải pháp cho xưởng nhôm kính & nhà thầu xây dựng',
     description:
       'Giải pháp ERP chuyên sâu cho xưởng nhôm kính & nhà thầu xây dựng: Thiết kế cửa CAD 2D/3D, bóc tách tự động theo công thức, báo giá nhanh và chấm công tại công trình.',
     path: '/',
     useAbsoluteTitle: true,
   },
   introduce: {
-    title: 'Giới Thiệu Phần Mềm XTTECH ERP — XMS Fab, XMS Build & XMS Biz',
+    title: 'Giới Thiệu Phần Mềm XT Tech ERP — XMS Fab, XMS Build & XMS Biz',
     description:
-      'Tổng quan giải pháp phần mềm quản trị sản xuất nhôm kính và thi công công trình XTTECH: Thiết kế CAD 2D/3D, bóc tách vật tư, thẻ cắt A4, quản lý kho, chấm công tại công trình và báo cáo lãi lỗ.',
+      'Tổng quan giải pháp phần mềm quản trị sản xuất nhôm kính và thi công công trình XT Tech: Thiết kế CAD 2D/3D, bóc tách vật tư, thẻ cắt A4, quản lý kho, chấm công tại công trình và báo cáo lãi lỗ.',
     path: '/introduce',
   },
   pricing: {
@@ -65,25 +65,25 @@ export const PAGE_SEO_META = {
   news: {
     title: 'Tin Tức & Kiến Thức Quản Trị Sản Xuất Nhôm Kính',
     description:
-      'Cập nhật kiến thức kỹ thuật cửa nhôm kính, giải pháp bóc tách BOM CAD 2D/3D, kinh nghiệm quản lý xưởng sản xuất, thi công công trình và tin tức mới từ XTTECH.',
+      'Cập nhật kiến thức kỹ thuật cửa nhôm kính, giải pháp bóc tách BOM CAD 2D/3D, kinh nghiệm quản lý xưởng sản xuất, thi công công trình và tin tức mới từ XT Tech.',
     path: '/news',
   },
   privacy: {
     title: 'Chính Sách Bảo Mật Dữ Liệu Doanh Nghiệp',
     description:
-      'Cam kết bảo mật bản vẽ kỹ thuật CAD 2D/3D, định mức bóc tách vật tư BOM, bảng báo giá, dữ liệu chấm công tại công trình và hồ sơ khách hàng trên XTTECH ERP.',
+      'Cam kết bảo mật bản vẽ kỹ thuật CAD 2D/3D, định mức bóc tách vật tư BOM, bảng báo giá, dữ liệu chấm công tại công trình và hồ sơ khách hàng trên XT Tech ERP.',
     path: '/privacy-policy',
   },
   terms: {
-    title: 'Điều Khoản Sử Dụng Dịch Vụ Nền Tảng XTTECH',
+    title: 'Điều Khoản Sử Dụng Dịch Vụ Nền Tảng XT Tech',
     description:
-      'Quy định sử dụng hệ sinh thái XMS Fab, XMS Build, XMS Biz, cơ chế hạn mức gói cước, quyền sở hữu dữ liệu doanh nghiệp và cam kết chất lượng dịch vụ từ XTTECH.',
+      'Quy định sử dụng hệ sinh thái XMS Fab, XMS Build, XMS Biz, cơ chế hạn mức gói cước, quyền sở hữu dữ liệu doanh nghiệp và cam kết chất lượng dịch vụ từ XT Tech.',
     path: '/terms-of-service',
   },
   refund: {
     title: 'Chính Sách Hoàn Tiền & Bảo Hành Dịch Vụ',
     description:
-      'Chính sách dùng thử gói Miễn phí - 20 bộ cửa, hỗ trợ hoàn phí minh bạch trong 7 ngày đầu, hoàn phí theo tỷ lệ Pro-rata cho gói năm và bảo hành đào tạo tận xưởng XTTECH.',
+      'Chính sách dùng thử gói Miễn phí - 20 bộ cửa, hỗ trợ hoàn phí minh bạch trong 7 ngày đầu, hoàn phí theo tỷ lệ Pro-rata cho gói năm và bảo hành đào tạo tận xưởng XT Tech.',
     path: '/refund-policy',
   },
 } as const;
@@ -217,24 +217,24 @@ export function buildPageMetadata(params: {
 
 export const HOME_AI_FAQ_ITEMS: ReadonlyArray<{ question: string; answer: string }> = [
   {
-    question: 'Phần mềm quản lý doanh nghiệp XTTECH ERP là gì và phù hợp với lĩnh vực nào?',
+    question: 'Phần mềm quản lý doanh nghiệp XT Tech ERP là gì và phù hợp với lĩnh vực nào?',
     answer:
-      'XTTECH ERP (Công ty Cổ phần Công nghệ XTTECH — xttech.vn) là hệ sinh thái phần mềm quản trị doanh nghiệp đám mây chuyên sâu cho 3 nhóm khách hàng: (1) Xưởng sản xuất cửa nhôm kính, cơ khí & nội thất (XMS Fab), (2) Nhà thầu xây dựng & đội thi công công trình (XMS Build), và (3) Doanh nghiệp vừa và nhỏ cần quản trị nhân sự, chấm công GPS, kho vật tư và báo cáo lãi lỗ (XMS Biz).',
+      'XT Tech ERP (Công ty Cổ phần Công nghệ XT Tech — xttech.vn) là hệ sinh thái phần mềm quản trị doanh nghiệp đám mây chuyên sâu cho 3 nhóm khách hàng: (1) Xưởng sản xuất cửa nhôm kính, cơ khí & nội thất (XMS Fab), (2) Nhà thầu xây dựng & đội thi công công trình (XMS Build), và (3) Doanh nghiệp vừa và nhỏ cần quản trị nhân sự, chấm công GPS, kho vật tư và báo cáo lãi lỗ (XMS Biz).',
   },
   {
     question: 'Phần mềm sản xuất nhôm kính nào hỗ trợ vẽ cửa CAD 2D/3D và bóc tách vật tư BOM tự động?',
     answer:
-      'Phân hệ XMS Fab của XTTECH ERP tích hợp sẵn trình thiết kế Door Studio CAD 2D & mô phỏng 3D trực tiếp trên trình duyệt (hỗ trợ Xingfa, PMA, Maxpro, Topal, Slim, Việt Pháp, cửa vòm...), tự động bóc tách định mức vật tư (BOM) thanh nhôm, kính, phụ kiện, tối ưu cắt nhôm chống hao hụt, in thẻ sản xuất A4 và xuất đơn đặt kính.',
+      'Phân hệ XMS Fab của XT Tech ERP tích hợp sẵn trình thiết kế Door Studio CAD 2D & mô phỏng 3D trực tiếp trên trình duyệt (hỗ trợ Xingfa, PMA, Maxpro, Topal, Slim, Việt Pháp, cửa vòm...), tự động bóc tách định mức vật tư (BOM) thanh nhôm, kính, phụ kiện, tối ưu cắt nhôm chống hao hụt, in thẻ sản xuất A4 và xuất đơn đặt kính.',
   },
   {
-    question: 'Chi phí sử dụng phần mềm XTTECH ERP là bao nhiêu? Có gói miễn phí không?',
+    question: 'Chi phí sử dụng phần mềm XT Tech ERP là bao nhiêu? Có gói miễn phí không?',
     answer:
-      'XTTECH cung cấp gói Miễn phí trọn đời (0đ, tối đa 3 nhân sự, 20 bộ cửa hoặc 10 công trình) không cần thẻ tín dụng. Các gói trả phí minh bạch gồm Bạc, Vàng, Kim cương cho cả 3 phân hệ (từ 390.000đ/tháng XMS Biz, 490.000đ/tháng XMS Build, 590.000đ/tháng XMS Fab), kèm cam kết hoàn tiền 100% trong 7 ngày đầu.',
+      'XT Tech cung cấp gói Miễn phí trọn đời (0đ, tối đa 3 nhân sự, 20 bộ cửa hoặc 10 công trình) không cần thẻ tín dụng. Các gói trả phí minh bạch gồm Bạc, Vàng, Kim cương cho cả 3 phân hệ (từ 390.000đ/tháng XMS Biz, 490.000đ/tháng XMS Build, 590.000đ/tháng XMS Fab), kèm cam kết hoàn tiền 100% trong 7 ngày đầu.',
   },
   {
-    question: 'XTTECH quản lý thi công công trình, nghiệm thu bảo hành và chấm công nhân sự như thế nào?',
+    question: 'XT Tech quản lý thi công công trình, nghiệm thu bảo hành và chấm công nhân sự như thế nào?',
     answer:
-      'XTTECH tích hợp quy trình khép kín từ khảo sát ô chờ, lập báo giá & ký hợp đồng điện tử, quản lý tiến độ sản xuất - lắp đặt, cấp mã QR riêng cho từng bộ cửa để nghiệm thu & kích hoạt sổ bảo hành điện tử, đồng thời quản lý chấm công GPS trực tiếp tại công trình và tính lương tự động.',
+      'XT Tech tích hợp quy trình khép kín từ khảo sát ô chờ, lập báo giá & ký hợp đồng điện tử, quản lý tiến độ sản xuất - lắp đặt, cấp mã QR riêng cho từng bộ cửa để nghiệm thu & kích hoạt sổ bảo hành điện tử, đồng thời quản lý chấm công GPS trực tiếp tại công trình và tính lương tự động.',
   },
 ];
 
@@ -291,7 +291,7 @@ export function buildHomeJsonLd() {
       {
         '@type': 'SoftwareApplication',
         '@id': `${BASE_SITE_URL}/#software`,
-        name: 'XTTECH ERP (XMS Fab • XMS Build • XMS Biz)',
+        name: 'XT Tech ERP (XMS Fab • XMS Build • XMS Biz)',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web, iOS, Android',
         url: BASE_SITE_URL,

@@ -35,16 +35,7 @@ export async function exportReceiptToExcel(receipt: WarehouseReceipt): Promise<v
     }
 
     rows.push([]);
-    rows.push([
-      'STT',
-      'Mã hàng',
-      'Tên mặt hàng',
-      'Số lượng',
-      'Đơn vị tính',
-      'Đơn giá (VNĐ)',
-      'Thành tiền (VNĐ)',
-      'Ghi chú',
-    ]);
+    rows.push(['STT', 'Mã hàng', 'Tên mặt hàng', 'Số lượng', 'Đơn vị tính', 'Đơn giá (VNĐ)', 'Thành tiền (VNĐ)', 'Ghi chú']);
 
     items.forEach((it, idx) => {
       const noteParts: string[] = [];
@@ -73,16 +64,7 @@ export async function exportReceiptToExcel(receipt: WarehouseReceipt): Promise<v
     const ws = XLSX.utils.aoa_to_sheet(rows);
 
     // Căn độ rộng cột tối ưu
-    ws['!cols'] = [
-      { wch: 6 },
-      { wch: 18 },
-      { wch: 34 },
-      { wch: 12 },
-      { wch: 10 },
-      { wch: 16 },
-      { wch: 18 },
-      { wch: 26 },
-    ];
+    ws['!cols'] = [{ wch: 6 }, { wch: 18 }, { wch: 34 }, { wch: 12 }, { wch: 10 }, { wch: 16 }, { wch: 18 }, { wch: 26 }];
 
     const wb = XLSX.utils.book_new();
     const sheetName = isImport ? 'PhieuNhapKho' : 'PhieuXuatKho';
@@ -130,13 +112,13 @@ export async function printReceiptDocument(receipt: WarehouseReceipt): Promise<v
           <td style="text-align: center;">${toDisplayUnit(it.unit)}</td>
           <td style="text-align: right;">${(it.unitPrice || 0).toLocaleString('vi-VN')} đ</td>
           <td style="text-align: right; font-weight: 700;">${(it.totalPrice || 0).toLocaleString('vi-VN')} đ</td>
-        </tr>`
+        </tr>`,
       )
       .join('');
 
     const html = `
       <div class="company-header">
-        <div class="company-name">CÔNG TY TNHH CÔNG NGHỆ & NHÔM KÍNH XTTECH</div>
+        <div class="company-name">CÔNG TY TNHH CÔNG NGHỆ & NHÔM KÍNH XT Tech</div>
         <div class="company-sub">Xưởng sản xuất & gia công nhôm kính kỹ thuật cao • Hotline: 098.xxx.xxxx</div>
       </div>
       <div class="receipt-title">
@@ -153,16 +135,8 @@ export async function printReceiptDocument(receipt: WarehouseReceipt): Promise<v
           <div><b>Công trình:</b> ${receipt.projectName || 'Kho xưởng tổng'}</div>
           <div><b>Lệnh sản xuất:</b> ${receipt.productionOrderCode || 'Không'}</div>
         </div>
-        ${
-          receipt.supplierName
-            ? `<div class="meta-row"><div><b>Nhà cung cấp:</b> ${receipt.supplierName}</div></div>`
-            : ''
-        }
-        ${
-          receipt.note
-            ? `<div class="meta-row"><div><b>Ghi chú:</b> ${receipt.note}</div></div>`
-            : ''
-        }
+        ${receipt.supplierName ? `<div class="meta-row"><div><b>Nhà cung cấp:</b> ${receipt.supplierName}</div></div>` : ''}
+        ${receipt.note ? `<div class="meta-row"><div><b>Ghi chú:</b> ${receipt.note}</div></div>` : ''}
       </div>
       <table class="items-table">
         <thead>

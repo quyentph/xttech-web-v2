@@ -1,27 +1,15 @@
 'use client';
 
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useSyncExternalStore,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useSyncExternalStore } from 'react';
 import { Camera, CheckCircle2, Navigation, RefreshCw } from 'lucide-react';
 import { Button } from '@/components';
 import type { HybridLocationFix } from '@/types';
 
 export type TimekeepingStep = 'camera' | 'preview';
 
-export const UNSUPPORTED_CAMERA_MESSAGE =
-  'Thiết bị đang tắt luồng video trực tiếp. Hãy bấm nút "Mở Camera máy" bên dưới để chụp ảnh chấm công.';
+export const UNSUPPORTED_CAMERA_MESSAGE = 'Thiết bị đang tắt luồng video trực tiếp. Hãy bấm nút "Mở Camera máy" bên dưới để chụp ảnh chấm công.';
 
-type LegacyGetUserMediaFn = (
-  constraints: MediaStreamConstraints,
-  success: (stream: MediaStream) => void,
-  error: (err: unknown) => void,
-) => void;
+type LegacyGetUserMediaFn = (constraints: MediaStreamConstraints, success: (stream: MediaStream) => void, error: (err: unknown) => void) => void;
 
 interface NavigatorWithLegacyMedia extends Navigator {
   webkitGetUserMedia?: LegacyGetUserMediaFn;
@@ -34,12 +22,7 @@ const emptySubscribe = () => () => {};
 function getWebRtcSupportSnapshot(): boolean {
   if (typeof navigator === 'undefined') return false;
   const nav = navigator as NavigatorWithLegacyMedia;
-  return Boolean(
-    navigator.mediaDevices?.getUserMedia ||
-      nav.webkitGetUserMedia ||
-      nav.mozGetUserMedia ||
-      nav.getUserMedia,
-  );
+  return Boolean(navigator.mediaDevices?.getUserMedia || nav.webkitGetUserMedia || nav.mozGetUserMedia || nav.getUserMedia);
 }
 
 function getWebRtcSupportServerSnapshot(): boolean {
@@ -47,11 +30,7 @@ function getWebRtcSupportServerSnapshot(): boolean {
 }
 
 export function useIsWebRtcSupported(): boolean {
-  return useSyncExternalStore(
-    emptySubscribe,
-    getWebRtcSupportSnapshot,
-    getWebRtcSupportServerSnapshot,
-  );
+  return useSyncExternalStore(emptySubscribe, getWebRtcSupportSnapshot, getWebRtcSupportServerSnapshot);
 }
 
 async function requestMediaStream(constraints: MediaStreamConstraints): Promise<MediaStream> {
@@ -76,7 +55,7 @@ function mapCameraErrorMessage(err: unknown): string {
   const errName = error?.name || '';
 
   if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
-    return 'Quyền truy cập Camera bị từ chối (NotAllowedError). Nếu bạn đang mở bằng App XTTECH, vui lòng vào "Cài đặt iPhone > XTTECH > Bật Camera". Nếu mở bằng Web, vui lòng cấp quyền cho trang web trong Safari/Chrome.';
+    return 'Quyền truy cập Camera bị từ chối (NotAllowedError). Nếu bạn đang mở bằng App XT Tech, vui lòng vào "Cài đặt iPhone > XT Tech > Bật Camera". Nếu mở bằng Web, vui lòng cấp quyền cho trang web trong Safari/Chrome.';
   }
   if (errName === 'NotReadableError' || errName === 'TrackStartError') {
     return 'Camera đang bị ứng dụng khác chiếm dụng hoặc bị kẹt luồng (NotReadableError). Vui lòng đóng các ứng dụng chạy ngầm hoặc khởi động lại iPhone.';
@@ -90,9 +69,7 @@ function mapCameraErrorMessage(err: unknown): string {
   if (errName === 'SecurityError') {
     return 'Hệ điều hành iOS chặn quyền truy cập Camera do chính sách bảo mật (SecurityError).';
   }
-  return `Không thể mở camera [${errName || 'Lỗi'}]: ${
-    error?.message || 'Vui lòng kiểm tra quyền camera và thử lại.'
-  }`;
+  return `Không thể mở camera [${errName || 'Lỗi'}]: ${error?.message || 'Vui lòng kiểm tra quyền camera và thử lại.'}`;
 }
 
 export interface TimekeepingCameraBoxHandle {
@@ -115,10 +92,7 @@ export interface TimekeepingCameraBoxProps {
   onAfterExternalCapture: () => void;
 }
 
-export const TimekeepingCameraBox = forwardRef<
-  TimekeepingCameraBoxHandle,
-  TimekeepingCameraBoxProps
->(function TimekeepingCameraBox(
+export const TimekeepingCameraBox = forwardRef<TimekeepingCameraBoxHandle, TimekeepingCameraBoxProps>(function TimekeepingCameraBox(
   {
     isOpen,
     step,
@@ -287,18 +261,9 @@ export const TimekeepingCameraBox = forwardRef<
     <>
       <div className="relative overflow-hidden rounded-2xl bg-slate-950 shadow-sm aspect-[4/3] w-full shrink-0 border border-slate-800">
         {step === 'camera' && !cameraError && (
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="h-full w-full object-cover"
-            style={{ transform: 'scaleX(-1)' }}
-          />
+          <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover" style={{ transform: 'scaleX(-1)' }} />
         )}
-        {step === 'preview' && previewUrl && (
-          <img src={previewUrl} alt="Ảnh chụp chấm công" className="h-full w-full object-cover" />
-        )}
+        {step === 'preview' && previewUrl && <img src={previewUrl} alt="Ảnh chụp chấm công" className="h-full w-full object-cover" />}
 
         {step === 'camera' && cameraError && (
           <div className="flex h-full flex-col items-center justify-center gap-2.5 p-4 text-center">
@@ -345,19 +310,8 @@ export const TimekeepingCameraBox = forwardRef<
             </div>
 
             <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white/90 border border-white/10 shadow-xs text-[11px] font-mono">
-              <Navigation
-                size={11}
-                className={
-                  location
-                    ? location.isCoarseWarning
-                      ? 'text-amber-300'
-                      : 'text-teal-300'
-                    : 'text-amber-400'
-                }
-              />
-              <span>
-                {location ? `±${location.accuracy}m` : isLocating ? 'GPS...' : 'Mất GPS'}
-              </span>
+              <Navigation size={11} className={location ? (location.isCoarseWarning ? 'text-amber-300' : 'text-teal-300') : 'text-amber-400'} />
+              <span>{location ? `±${location.accuracy}m` : isLocating ? 'GPS...' : 'Mất GPS'}</span>
             </div>
 
             <div className="absolute inset-7 pointer-events-none border border-white/15 rounded-2xl flex flex-col justify-between p-2">
@@ -382,14 +336,7 @@ export const TimekeepingCameraBox = forwardRef<
       </div>
 
       <canvas ref={canvasRef} className="hidden" />
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture="user"
-        className="hidden"
-        onChange={handleNativeFileCapture}
-      />
+      <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={handleNativeFileCapture} />
     </>
   );
 });

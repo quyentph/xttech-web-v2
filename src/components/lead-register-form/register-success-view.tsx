@@ -26,8 +26,7 @@ export function RegisterSuccessView({ formData, onReset, onBack }: RegisterSucce
         </span>
         <h4 className="text-xl font-black text-slate-900 tracking-tight">Đăng ký thành công!</h4>
         <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-          Chuyên viên kỹ thuật <strong className="text-primary">XTTECH</strong> sẽ liên hệ sớm để cấp tài khoản và
-          hướng dẫn sử dụng.
+          Chuyên viên kỹ thuật <strong className="text-primary">XT Tech</strong> sẽ liên hệ sớm để cấp tài khoản và hướng dẫn sử dụng.
         </p>
       </div>
 
@@ -50,10 +49,7 @@ export function RegisterSuccessView({ formData, onReset, onBack }: RegisterSucce
 
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-red-500">
         <span>Cần hỗ trợ gấp?</span>
-        <a
-          href={`tel:${CONTACT_INFO.phone}`}
-          className="inline-flex items-center gap-1 font-bold text-primary hover:underline"
-        >
+        <a href={`tel:${CONTACT_INFO.phone}`} className="inline-flex items-center gap-1 font-bold text-primary hover:underline">
           <Phone className="h-3 w-3" />
           <span>{CONTACT_INFO.phoneDisplay}</span>
         </a>

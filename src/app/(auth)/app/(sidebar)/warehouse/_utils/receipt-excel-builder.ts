@@ -5,8 +5,20 @@ import { toDisplayUnit } from './unit-mapping';
 
 const STANDARD_UNITS = ['Cây', 'Cái', 'Bộ', 'Mét', 'Chiếc', 'Đôi', 'Cuộn', 'Hộp', 'Túi', 'Chai', 'Tấm', 'Kg'];
 const SUGGESTED_COLORS = [
-  'Trắng sữa', 'Trắng sứ', 'Xám', 'Xám ghi', 'Xám đá ánh kim', 'Nâu',
-  'Nâu cafe', 'Nâu mocha', 'Đen', 'Champagne', 'Vân gỗ', 'Anodized Vàng', 'Bạc / Inox', 'Vàng',
+  'Trắng sữa',
+  'Trắng sứ',
+  'Xám',
+  'Xám ghi',
+  'Xám đá ánh kim',
+  'Nâu',
+  'Nâu cafe',
+  'Nâu mocha',
+  'Đen',
+  'Champagne',
+  'Vân gỗ',
+  'Anodized Vàng',
+  'Bạc / Inox',
+  'Vàng',
 ];
 
 interface SampleRowData {
@@ -28,10 +40,8 @@ const esc = (v: string | number | null | undefined): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
-const strCell = (ref: string, text: string, s: number): string =>
-  `<c r="${ref}" s="${s}" t="inlineStr"><is><t>${esc(text)}</t></is></c>`;
-const numCell = (ref: string, val: number, s: number): string =>
-  `<c r="${ref}" s="${s}"><v>${Number.isFinite(val) ? val : 0}</v></c>`;
+const strCell = (ref: string, text: string, s: number): string => `<c r="${ref}" s="${s}" t="inlineStr"><is><t>${esc(text)}</t></is></c>`;
+const numCell = (ref: string, val: number, s: number): string => `<c r="${ref}" s="${s}"><v>${Number.isFinite(val) ? val : 0}</v></c>`;
 const fNumCell = (ref: string, f: string, val: number, s: number): string =>
   `<c r="${ref}" s="${s}"><f>${esc(f)}</f><v>${Number.isFinite(val) ? val : 0}</v></c>`;
 const fStrCell = (ref: string, f: string, text: string, s: number): string =>
@@ -64,9 +74,33 @@ function buildSampleRows(receiptType: ReceiptType, existingItems: WarehouseItem[
     }));
   }
   return [
-    { code: 'XF55-01', name: 'Khung bao cửa đi mở quay hệ 55 Xingfa', color: 'Xám ghi', unit: 'Cây', qty: 20, price: 380000, note: 'Nhôm dày 2.0mm (Dòng mẫu)' },
-    { code: 'BL-3D-KL', name: 'Bản lề 3D cửa đi Kinlong chính hãng', color: 'Đen', unit: 'Bộ', qty: 60, price: 85000, note: 'Phụ kiện đồng bộ (Dòng mẫu)' },
-    { code: 'KEO-APOLLO-A500', name: 'Keo Silicone trung tính Apollo A500', color: 'Trắng sữa', unit: 'Chai', qty: 100, price: 52000, note: 'Thùng 25 chai (Dòng mẫu)' },
+    {
+      code: 'XF55-01',
+      name: 'Khung bao cửa đi mở quay hệ 55 Xingfa',
+      color: 'Xám ghi',
+      unit: 'Cây',
+      qty: 20,
+      price: 380000,
+      note: 'Nhôm dày 2.0mm (Dòng mẫu)',
+    },
+    {
+      code: 'BL-3D-KL',
+      name: 'Bản lề 3D cửa đi Kinlong chính hãng',
+      color: 'Đen',
+      unit: 'Bộ',
+      qty: 60,
+      price: 85000,
+      note: 'Phụ kiện đồng bộ (Dòng mẫu)',
+    },
+    {
+      code: 'KEO-APOLLO-A500',
+      name: 'Keo Silicone trung tính Apollo A500',
+      color: 'Trắng sữa',
+      unit: 'Chai',
+      qty: 100,
+      price: 52000,
+      note: 'Thùng 25 chai (Dòng mẫu)',
+    },
   ];
 }
 
@@ -125,7 +159,7 @@ function buildSheet1DataRowsXml(receiptType: ReceiptType, existingItems: Warehou
       const amount = sample.qty * sample.price;
       totalSampleAmount += amount;
       rows.push(
-        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, sample.code, 5)}${strCell(`C${r}`, sample.name, 6)}${strCell(`D${r}`, sample.color, 6)}${strCell(`E${r}`, sample.unit, 4)}${numCell(`F${r}`, sample.qty, 7)}${numCell(`G${r}`, sample.price, 7)}${fNumCell(`H${r}`, totalF, amount, 8)}${strCell(`I${r}`, sample.note, 6)}</row>`
+        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, sample.code, 5)}${strCell(`C${r}`, sample.name, 6)}${strCell(`D${r}`, sample.color, 6)}${strCell(`E${r}`, sample.unit, 4)}${numCell(`F${r}`, sample.qty, 7)}${numCell(`G${r}`, sample.price, 7)}${fNumCell(`H${r}`, totalF, amount, 8)}${strCell(`I${r}`, sample.note, 6)}</row>`,
       );
     } else if (existingItems.length > 0) {
       const nameF = `IF(B${r}="","",IFERROR(VLOOKUP(B${r},${lookupRange},2,FALSE),""))`;
@@ -133,27 +167,25 @@ function buildSheet1DataRowsXml(receiptType: ReceiptType, existingItems: Warehou
       const unitF = `IF(B${r}="","",IFERROR(VLOOKUP(B${r},${lookupRange},5,FALSE),"Cây"))`;
       const priceF = `IF(B${r}="",0,IFERROR(VLOOKUP(B${r},${lookupRange},7,FALSE),0))`;
       rows.push(
-        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, '', 5)}${fStrCell(`C${r}`, nameF, '', 6)}${fStrCell(`D${r}`, colorF, '', 6)}${fStrCell(`E${r}`, unitF, '', 4)}<c r="F${r}" s="7"/>${fNumCell(`G${r}`, priceF, 0, 7)}${fNumCell(`H${r}`, totalF, 0, 8)}${strCell(`I${r}`, '', 6)}</row>`
+        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, '', 5)}${fStrCell(`C${r}`, nameF, '', 6)}${fStrCell(`D${r}`, colorF, '', 6)}${fStrCell(`E${r}`, unitF, '', 4)}<c r="F${r}" s="7"/>${fNumCell(`G${r}`, priceF, 0, 7)}${fNumCell(`H${r}`, totalF, 0, 8)}${strCell(`I${r}`, '', 6)}</row>`,
       );
     } else {
       rows.push(
-        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, '', 5)}${strCell(`C${r}`, '', 6)}${strCell(`D${r}`, '', 6)}${strCell(`E${r}`, '', 4)}<c r="F${r}" s="7"/><c r="G${r}" s="7"/>${fNumCell(`H${r}`, totalF, 0, 8)}${strCell(`I${r}`, '', 6)}</row>`
+        `<row r="${r}" ht="22" customHeight="1">${numCell(`A${r}`, idx + 1, 4)}${strCell(`B${r}`, '', 5)}${strCell(`C${r}`, '', 6)}${strCell(`D${r}`, '', 6)}${strCell(`E${r}`, '', 4)}<c r="F${r}" s="7"/><c r="G${r}" s="7"/>${fNumCell(`H${r}`, totalF, 0, 8)}${strCell(`I${r}`, '', 6)}</row>`,
       );
     }
   }
 
   const mergeTail = ['B', 'C', 'D', 'E', 'F', 'G'].map((c) => `<c r="${c}20" s="9"/>`).join('');
   rows.push(
-    `<row r="20" ht="26" customHeight="1">${strCell('A20', 'TỔNG CỘNG TIỀN HÀNG (VNĐ):', 9)}${mergeTail}${fNumCell('H20', 'SUM(H5:H19)', totalSampleAmount, 10)}<c r="I20" s="9"/></row>`
+    `<row r="20" ht="26" customHeight="1">${strCell('A20', 'TỔNG CỘNG TIỀN HÀNG (VNĐ):', 9)}${mergeTail}${fNumCell('H20', 'SUM(H5:H19)', totalSampleAmount, 10)}<c r="I20" s="9"/></row>`,
   );
   return rows.join('');
 }
 
 function buildSheet1Xml(receiptType: ReceiptType, existingItems: WarehouseItem[]): string {
   const isImport = receiptType === 'import';
-  const title = isImport
-    ? 'BIỂU MẪU NHẬP LIỆU PHIẾU NHẬP KHO VẬT TƯ - XTTECH ERP'
-    : 'BIỂU MẪU NHẬP LIỆU PHIẾU XUẤT KHO VẬT TƯ - XTTECH ERP';
+  const title = isImport ? 'BIỂU MẪU NHẬP LIỆU PHIẾU NHẬP KHO VẬT TƯ - XT Tech ERP' : 'BIỂU MẪU NHẬP LIỆU PHIẾU XUẤT KHO VẬT TƯ - XT Tech ERP';
   const guide = isImport
     ? 'Hướng dẫn: Chọn Mã vật tư từ danh sách gợi ý (tự động điền Tên, Màu, ĐVT, Đơn giá từ kho) hoặc gõ mã vật tư mới. Các cột (*) là bắt buộc. Cột Thành tiền tự động tính.'
     : 'Hướng dẫn: Chọn Mã vật tư có sẵn trong kho (tự động điền Tên, Màu, ĐVT, Giá vốn; xem tồn kho ở sheet Danh_Muc_Kho). Số lượng xuất không vượt quá Tồn khả dụng.';
@@ -162,8 +194,15 @@ function buildSheet1Xml(receiptType: ReceiptType, existingItems: WarehouseItem[]
   const row1 = `<row r="1" ht="32" customHeight="1">${strCell('A1', title, 1)}${cols.map((c) => `<c r="${c}1" s="1"/>`).join('')}</row>`;
   const row2 = `<row r="2" ht="26" customHeight="1">${strCell('A2', guide, 2)}${cols.map((c) => `<c r="${c}2" s="2"/>`).join('')}</row>`;
   const headers = [
-    ['A4', 'STT'], ['B4', 'Mã vật tư (*)'], ['C4', 'Tên vật tư & Quy cách (*)'], ['D4', 'Màu sắc'],
-    ['E4', 'Đơn vị tính (*)'], ['F4', 'Số lượng (*)'], ['G4', 'Đơn giá (VNĐ)'], ['H4', 'Thành tiền (VNĐ)'], ['I4', 'Ghi chú'],
+    ['A4', 'STT'],
+    ['B4', 'Mã vật tư (*)'],
+    ['C4', 'Tên vật tư & Quy cách (*)'],
+    ['D4', 'Màu sắc'],
+    ['E4', 'Đơn vị tính (*)'],
+    ['F4', 'Số lượng (*)'],
+    ['G4', 'Đơn giá (VNĐ)'],
+    ['H4', 'Thành tiền (VNĐ)'],
+    ['I4', 'Ghi chú'],
   ];
   const row4 = `<row r="4" ht="28" customHeight="1">${headers.map(([ref, lbl]) => strCell(ref, lbl, 3)).join('')}</row>`;
 
@@ -173,13 +212,11 @@ function buildSheet1Xml(receiptType: ReceiptType, existingItems: WarehouseItem[]
   ];
   if (existingItems.length > 0) {
     validations.push(
-      `<dataValidation type="list" allowBlank="1" showInputMessage="1" showErrorMessage="0" sqref="B5:B200"><formula1>Danh_Muc_Kho!$A$2:$A$${existingItems.length + 1}</formula1></dataValidation>`
+      `<dataValidation type="list" allowBlank="1" showInputMessage="1" showErrorMessage="0" sqref="B5:B200"><formula1>Danh_Muc_Kho!$A$2:$A$${existingItems.length + 1}</formula1></dataValidation>`,
     );
   }
 
-  const colWidths = [6, 22, 36, 18, 15, 14, 18, 20, 28]
-    .map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`)
-    .join('');
+  const colWidths = [6, 22, 36, 18, 15, 14, 18, 20, 28].map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('');
 
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
@@ -194,8 +231,15 @@ function buildSheet1Xml(receiptType: ReceiptType, existingItems: WarehouseItem[]
 
 function buildSheet2Xml(existingItems: WarehouseItem[]): string {
   const headers = [
-    ['A1', 'Mã vật tư'], ['B1', 'Tên vật tư & Quy cách'], ['C1', 'Phân loại'], ['D1', 'Màu sắc'],
-    ['E1', 'Đơn vị tính'], ['F1', 'Tồn khả dụng'], ['G1', 'Đơn giá vốn (VNĐ)'], ['I1', 'ĐVT Chuẩn'], ['J1', 'Màu Sắc Gợi Ý'],
+    ['A1', 'Mã vật tư'],
+    ['B1', 'Tên vật tư & Quy cách'],
+    ['C1', 'Phân loại'],
+    ['D1', 'Màu sắc'],
+    ['E1', 'Đơn vị tính'],
+    ['F1', 'Tồn khả dụng'],
+    ['G1', 'Đơn giá vốn (VNĐ)'],
+    ['I1', 'ĐVT Chuẩn'],
+    ['J1', 'Màu Sắc Gợi Ý'],
   ];
   const rows: string[] = [`<row r="1" ht="26" customHeight="1">${headers.map(([ref, lbl]) => strCell(ref, lbl, 3)).join('')}</row>`];
   const maxRows = Math.max(existingItems.length, STANDARD_UNITS.length, SUGGESTED_COLORS.length);
@@ -232,10 +276,7 @@ function buildSheet2Xml(existingItems: WarehouseItem[]): string {
 </worksheet>`;
 }
 
-export function buildReceiptTemplateXlsxBuffer(
-  receiptType: ReceiptType = 'import',
-  existingItems: WarehouseItem[] = []
-): Uint8Array {
+export function buildReceiptTemplateXlsxBuffer(receiptType: ReceiptType = 'import', existingItems: WarehouseItem[] = []): Uint8Array {
   const sheet1Name = receiptType === 'import' ? 'Phieu_Nhap_Kho' : 'Phieu_Xuat_Kho';
   const enc = new TextEncoder();
   const cfb = XLSX.CFB.utils.cfb_new();

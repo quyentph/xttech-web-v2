@@ -1,15 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'motion/react';
+import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { Play } from 'lucide-react';
 import { INTRO_VIDEO_URL } from '@/config';
 import { INTRODUCE_EASE_OUT } from '../_constants/introduce.constants';
@@ -32,11 +24,7 @@ export function IntroduceVideoSection() {
   const previewVideoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  const isMobile = useSyncExternalStore(
-    subscribeMobileMedia,
-    getMobileSnapshot,
-    getServerMobileSnapshot,
-  );
+  const isMobile = useSyncExternalStore(subscribeMobileMedia, getMobileSnapshot, getServerMobileSnapshot);
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalSessionKey, setModalSessionKey] = useState(0);
@@ -95,7 +83,7 @@ export function IntroduceVideoSection() {
   return (
     <section
       ref={sectionRef}
-      aria-label="Video giới thiệu phần mềm XTTECH XMS"
+      aria-label="Video giới thiệu phần mềm XT Tech XMS"
       className="border-t border-slate-200/80 overflow-hidden bg-white pt-6 pb-12 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-20"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -107,7 +95,7 @@ export function IntroduceVideoSection() {
           className="mx-auto mb-6 max-w-3xl text-center sm:mb-8"
         >
           <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
-            Giới thiệu <span className="text-primary">công ty XTTECH</span>
+            Giới thiệu <span className="text-primary">công ty XT Tech</span>
           </h2>
         </motion.div>
       </div>
@@ -139,10 +127,8 @@ export function IntroduceVideoSection() {
           {videoFailed ? (
             <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-linear-to-br from-[#072b28] via-primary to-[#0d1e2e] px-6 text-center text-white">
               <Play className="h-12 w-12 text-hero-accent opacity-80" />
-              <p className="text-base font-bold sm:text-lg">Video giới thiệu hệ sinh thái XTTECH ERP</p>
-              <p className="max-w-md text-xs text-teal-100/80">
-                Video giới thiệu đang được đồng bộ từ máy chủ media MinIO.
-              </p>
+              <p className="text-base font-bold sm:text-lg">Video giới thiệu hệ sinh thái XT Tech ERP</p>
+              <p className="max-w-md text-xs text-teal-100/80">Video giới thiệu đang được đồng bộ từ máy chủ media MinIO.</p>
             </div>
           ) : (
             <video
@@ -186,12 +172,7 @@ export function IntroduceVideoSection() {
         </motion.div>
       </div>
 
-      <IntroduceVideoModal
-        key={modalSessionKey}
-        isOpen={isModalOpen}
-        videoUrl={INTRO_VIDEO_URL}
-        onClose={handleCloseModal}
-      />
+      <IntroduceVideoModal key={modalSessionKey} isOpen={isModalOpen} videoUrl={INTRO_VIDEO_URL} onClose={handleCloseModal} />
     </section>
   );
 }

@@ -46,7 +46,7 @@ export const TEXT_COLOR_PALETTE: EditorColorOption[] = [
   { label: 'Đen đá phiến (Mặc định)', value: '#0F172A' },
   { label: 'Xám đậm', value: '#475569' },
   { label: 'Xám trung tính', value: '#64748B' },
-  { label: 'Xanh cổ vịt XTTECH', value: '#045863' },
+  { label: 'Xanh cổ vịt XT Tech', value: '#045863' },
   { label: 'Xanh dương đậm', value: '#2563EB' },
   { label: 'Xanh lá cây', value: '#16A34A' },
   { label: 'Cam hổ phách', value: '#D97706' },
@@ -58,7 +58,7 @@ export const TEXT_COLOR_PALETTE: EditorColorOption[] = [
 export const HIGHLIGHT_COLOR_PALETTE: EditorColorOption[] = [
   { label: 'Vàng tô sáng', value: '#FEF08A' },
   { label: 'Cam nhạt', value: '#FED7AA' },
-  { label: 'Xanh ngọc XTTECH', value: '#E6F2F3' },
+  { label: 'Xanh ngọc XT Tech', value: '#E6F2F3' },
   { label: 'Xanh lá nhạt', value: '#DCFCE7' },
   { label: 'Xanh dương nhạt', value: '#DBEAFE' },
   { label: 'Tím nhạt', value: '#EDE9FE' },

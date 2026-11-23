@@ -26,10 +26,12 @@ flowchart TD
 ## 🏢 GIAI ĐOẠN 1: TÀI KHOẢN APPLE DEVELOPER & CHỨNG CHỈ KÝ SỐ
 
 ### 1.1. Tài khoản Apple Developer Program
+
 - Đăng ký tại [developer.apple.com](https://developer.apple.com/programs/) ($99 USD / năm).
 - Có thể dùng tài khoản **Cá nhân** hoặc **Doanh nghiệp (Organization - khuyên dùng)**.
 
 ### 1.2. Môi trường Build: Bạn build qua Git (GitHub Actions)
+
 - Bạn **KHÔNG BẮT BUỘC** phải có máy Mac vật lý nếu sử dụng **GitHub Actions** với runner `macos-14` (như trong workflow `.github/workflows/build-ios-unsigned.yml` hiện tại của bạn).
 - ⚠️ **LƯU Ý CỐT LÕI VỀ FILE IPA:**
   - File IPA hiện tại bạn build trên Git là **Unsigned IPA** (`CODE_SIGNING_ALLOWED=NO`). Bản này chỉ dùng để test nội bộ qua các công cụ jailbreak/sideloading (TrollStore, AltStore).
@@ -48,7 +50,7 @@ flowchart TD
    - Xuất file chứng chỉ kèm Private Key dưới dạng file `.p12` và đặt mật khẩu bảo vệ (ví dụ: `CertPassword123`).
 2. **App Identifier & Capabilities:**
    - Vào mục **Identifiers** -> Chọn/Tạo App ID `com.xttech.app2`.
-   - Bật các Capabilities cần thiết (ví dụ: *Access WiFi Information*, *Push Notifications* nếu có).
+   - Bật các Capabilities cần thiết (ví dụ: _Access WiFi Information_, _Push Notifications_ nếu có).
 3. **Provisioning Profile (`.mobileprovision`):**
    - Vào mục **Profiles** -> Nhấn **`+`** -> Chọn **App Store** (trong mục Distribution) -> Chọn App ID `com.xttech.app2` và Certificate vừa tạo -> Tải file `.mobileprovision` về máy.
 4. **App Store Connect API Key (`.p8` - Dùng để Git tự động upload):**
@@ -62,7 +64,9 @@ flowchart TD
 ### 2.2. Mã hóa Base64 và Lưu vào GitHub Secrets
 
 Chuyển đổi các file trên thành chuỗi Base64:
+
 - **Trên Windows PowerShell:**
+
   ```powershell
   # Chuyển đổi Certificate .p12 sang base64
   [Convert]::ToBase64String([IO.File]::ReadAllBytes("path\to\distribution.p12")) | Set-Clipboard
@@ -95,7 +99,7 @@ name: Build & Upload to App Store / TestFlight
 on:
   workflow_dispatch:
   push:
-    branches: [ main, release ]
+    branches: [main, release]
 
 jobs:
   build-and-deploy:
@@ -123,7 +127,7 @@ jobs:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
-          KEYCHAIN_PASSWORD: "temp_keychain_password_123"
+          KEYCHAIN_PASSWORD: 'temp_keychain_password_123'
         run: |
           # Tạo biến đường dẫn
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -150,7 +154,7 @@ jobs:
       - name: 5. Build Archive & Export Signed IPA
         run: |
           cd ios/App
-          
+
           # Build Archive với Code Signing
           xcodebuild clean archive \
             -project App.xcodeproj \
@@ -216,7 +220,7 @@ Sau khi bản build đầu tiên được upload thành công lên App Store Con
    - **Screenshots:** Tối thiểu 3 ảnh kích thước `1290 x 2796 px` (Màn hình 6.7" / 6.9" iPhone 15/16 Pro Max).
 3. **Chính sách & Bản quyền:**
    - **Privacy Policy URL (Bắt buộc):** `https://xttech.vn/privacy-policy` (Trang chính sách bảo mật).
-   - **App Privacy:** Khai báo thu thập *Location* (vị trí chấm công) và *Photos/Camera* (ảnh công trình, selfie).
+   - **App Privacy:** Khai báo thu thập _Location_ (vị trí chấm công) và _Photos/Camera_ (ảnh công trình, selfie).
 
 ---
 
@@ -240,16 +244,16 @@ Sau khi bản build đầu tiên được upload thành công lên App Store Con
    - **Sign-in required:** Tích chọn Bắt buộc đăng nhập.
    - **User name / Password:** Cung cấp tài khoản test demo có sẵn dữ liệu (Ví dụ: `tester_apple@xttech.vn` / `Demo@123456`).
    - **Notes (Ghi chú duyệt):**
-     > *"Ứng dụng XTTech là ứng dụng nội bộ dành cho nhân sự công trình và kỹ thuật viên. Tính năng Background Location được sử dụng để theo dõi lộ trình và xác định vị trí làm việc trong ca phục vụ chấm công minh bạch. Vui lòng đăng nhập bằng tài khoản demo được cung cấp ở trên và truy cập tab Chấm công để kiểm tra."*
+     > _"Ứng dụng XTTech là ứng dụng nội bộ dành cho nhân sự công trình và kỹ thuật viên. Tính năng Background Location được sử dụng để theo dõi lộ trình và xác định vị trí làm việc trong ca phục vụ chấm công minh bạch. Vui lòng đăng nhập bằng tài khoản demo được cung cấp ở trên và truy cập tab Chấm công để kiểm tra."_
 4. Nhấn **Submit to App Review**.
 5. Thời gian duyệt thường kéo dài từ **12h - 48h**.
 
 ---
 
-## ⚠️ CHECKLIST 3 ĐIỀU KHOẢN DỄ BỊ REJECT ĐỐI VỚI DỰ ÁN XTTECH
+## ⚠️ CHECKLIST 3 ĐIỀU KHOẢN DỄ BỊ REJECT ĐỐI VỚI DỰ ÁN XT Tech
 
-| Điều khoản Apple | Yêu cầu | Cách khắc phục trong XTTech |
-| :--- | :--- | :--- |
-| **Guideline 5.1.1(v) (Account Deletion)** | Bắt buộc app có đăng nhập phải có tính năng xóa tài khoản. | Thêm nút *"Xóa tài khoản / Yêu cầu hủy tài khoản"* trong trang Cài đặt / Thông tin cá nhân. |
-| **Guideline 2.5.4 (Background Location)** | Giải trình rõ ràng mục đích sử dụng quyền vị trí chạy ngầm. | Đảm bảo `Info.plist` và phần App Review Notes mô tả rõ phục vụ chấm công trong ca. |
-| **Guideline 2.1 (App Completeness)** | Backend phải luôn hoạt động 24/7 và tài khoản demo không được lỗi. | Đảm bảo server backend (`railway` / VPS) hoạt động ổn định trong suốt thời gian Apple review. |
+| Điều khoản Apple                          | Yêu cầu                                                            | Cách khắc phục trong XTTech                                                                   |
+| :---------------------------------------- | :----------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- |
+| **Guideline 5.1.1(v) (Account Deletion)** | Bắt buộc app có đăng nhập phải có tính năng xóa tài khoản.         | Thêm nút _"Xóa tài khoản / Yêu cầu hủy tài khoản"_ trong trang Cài đặt / Thông tin cá nhân.   |
+| **Guideline 2.5.4 (Background Location)** | Giải trình rõ ràng mục đích sử dụng quyền vị trí chạy ngầm.        | Đảm bảo `Info.plist` và phần App Review Notes mô tả rõ phục vụ chấm công trong ca.            |
+| **Guideline 2.1 (App Completeness)**      | Backend phải luôn hoạt động 24/7 và tài khoản demo không được lỗi. | Đảm bảo server backend (`railway` / VPS) hoạt động ổn định trong suốt thời gian Apple review. |

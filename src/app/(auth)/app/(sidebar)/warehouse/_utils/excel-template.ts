@@ -25,21 +25,15 @@ interface ColumnMap {
 }
 
 /**
- * Tải xuống biểu mẫu Excel (.xlsx) 2 Sheet chuẩn XTTECH ERP cho Phiếu Nhập / Xuất Kho
+ * Tải xuống biểu mẫu Excel (.xlsx) 2 Sheet chuẩn XT Tech ERP cho Phiếu Nhập / Xuất Kho
  */
-export function downloadReceiptTemplateExcel(
-  receiptType: ReceiptType = 'import',
-  existingItems: WarehouseItem[] = []
-): void {
+export function downloadReceiptTemplateExcel(receiptType: ReceiptType = 'import', existingItems: WarehouseItem[] = []): void {
   const bytes = buildReceiptTemplateXlsxBuffer(receiptType, existingItems);
   const blobBuffer = new Uint8Array(bytes).buffer;
   const blob = new Blob([blobBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
-  const fileName =
-    receiptType === 'export'
-      ? 'Mau_Phieu_Xuat_Kho_XTTech.xlsx'
-      : 'Mau_Phieu_Nhap_Kho_XTTech.xlsx';
+  const fileName = receiptType === 'export' ? 'Mau_Phieu_Xuat_Kho_XTTech.xlsx' : 'Mau_Phieu_Nhap_Kho_XTTech.xlsx';
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -54,10 +48,7 @@ export function downloadReceiptTemplateExcel(
 /**
  * Xuất biểu mẫu Excel (.xlsx) 2 Sheet (giữ tên export để tương thích import hiện có)
  */
-export function downloadReceiptTemplateCsv(
-  receiptType: ReceiptType = 'import',
-  existingItems: WarehouseItem[] = []
-): void {
+export function downloadReceiptTemplateCsv(receiptType: ReceiptType = 'import', existingItems: WarehouseItem[] = []): void {
   downloadReceiptTemplateExcel(receiptType, existingItems);
 }
 
@@ -80,13 +71,13 @@ function detectHeaderAndColumnMap(rows: Array<Array<string | number>>): {
 } {
   const maxScan = Math.min(rows.length, 15);
   for (let r = 0; r < maxScan; r++) {
-    const row = rows[r].map((c) => String(c ?? '').trim().toLowerCase());
-    const codeIdx = row.findIndex(
-      (c) => c.includes('mã vật tư') || c.includes('mã vt') || c.includes('mã hàng')
+    const row = rows[r].map((c) =>
+      String(c ?? '')
+        .trim()
+        .toLowerCase(),
     );
-    const nameIdx = row.findIndex(
-      (c) => c.includes('tên vật tư') || c.includes('tên mặt hàng')
-    );
+    const codeIdx = row.findIndex((c) => c.includes('mã vật tư') || c.includes('mã vt') || c.includes('mã hàng'));
+    const nameIdx = row.findIndex((c) => c.includes('tên vật tư') || c.includes('tên mặt hàng'));
     if (codeIdx !== -1 && nameIdx !== -1 && codeIdx !== nameIdx) {
       const colorIdx = row.findIndex((c) => c.includes('màu sắc') || c.includes('màu'));
       const unitIdx = row.findIndex((c) => c.includes('đơn vị') || c.includes('đvt'));
@@ -136,10 +127,7 @@ function isIgnoredTemplateRow(rawCode: string, rawName: string, rowTextJoined: s
   return !rawCode && !rawName;
 }
 
-function parseRowsMatrix(
-  rows: Array<Array<string | number>>,
-  existingItems: WarehouseItem[]
-): ParsedReceiptImportResult {
+function parseRowsMatrix(rows: Array<Array<string | number>>, existingItems: WarehouseItem[]): ParsedReceiptImportResult {
   const items: WarehouseReceiptItemCreatePayload[] = [];
   const unmatchedSet = new Set<string>();
   const overStockItems: ParsedReceiptImportResult['overStockItems'] = [];
@@ -198,10 +186,7 @@ function parseRowsMatrix(
 /**
  * Đọc file Excel (.xlsx, .xls) hoặc CSV (.csv, .txt) hoặc chuỗi CSV thành danh sách vật tư phiếu kho
  */
-export async function parseReceiptExcelFile(
-  fileOrText: File | string,
-  existingItems: WarehouseItem[] = []
-): Promise<ParsedReceiptImportResult> {
+export async function parseReceiptExcelFile(fileOrText: File | string, existingItems: WarehouseItem[] = []): Promise<ParsedReceiptImportResult> {
   if (typeof fileOrText === 'string') {
     const matrix = fileOrText
       .split(/\r?\n/)
@@ -227,10 +212,7 @@ export async function parseReceiptExcelFile(
   return parseRowsMatrix(matrix, existingItems);
 }
 
-export async function parseReceiptCsv(
-  fileOrText: File | string,
-  existingItems: WarehouseItem[] = []
-): Promise<ParsedReceiptImportResult> {
+export async function parseReceiptCsv(fileOrText: File | string, existingItems: WarehouseItem[] = []): Promise<ParsedReceiptImportResult> {
   return parseReceiptExcelFile(fileOrText, existingItems);
 }
 

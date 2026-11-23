@@ -167,11 +167,18 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                         )
                       )}
                       <div className="flex flex-col min-w-0 overflow-hidden">
-                        <span className={cn('text-base font-bold tracking-tight truncate whitespace-nowrap block', isLight ? 'text-primary' : 'text-white')}>
-                          {brand.name || 'XTTECH'}
+                        <span
+                          className={cn(
+                            'text-base font-bold tracking-tight truncate whitespace-nowrap block',
+                            isLight ? 'text-primary' : 'text-white',
+                          )}
+                        >
+                          {brand.name || 'XT Tech'}
                         </span>
                         {brand.subtitle && (
-                          <span className="text-[10px] font-semibold tracking-wider text-slate-400 truncate whitespace-nowrap block">{brand.subtitle}</span>
+                          <span className="text-[10px] font-semibold tracking-wider text-slate-400 truncate whitespace-nowrap block">
+                            {brand.subtitle}
+                          </span>
                         )}
                       </div>
                     </>
@@ -180,10 +187,14 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                       <>
                         <Avatar src={user.avatar} name={user.name} size="md" />
                         <div className="flex flex-col min-w-0 overflow-hidden">
-                          <span className={cn('text-sm font-semibold truncate whitespace-nowrap block', isLight ? 'text-slate-900' : 'text-slate-100')}>
+                          <span
+                            className={cn('text-sm font-semibold truncate whitespace-nowrap block', isLight ? 'text-slate-900' : 'text-slate-100')}
+                          >
                             {user.name}
                           </span>
-                          <span className="text-[9px] font-bold tracking-wider text-slate-500 uppercase truncate whitespace-nowrap block">{user.role}</span>
+                          <span className="text-[9px] font-bold tracking-wider text-slate-500 uppercase truncate whitespace-nowrap block">
+                            {user.role}
+                          </span>
                         </div>
                       </>
                     )
@@ -321,7 +332,9 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                           <>
                             <span className="flex-1 truncate whitespace-nowrap">{item.label}</span>
                             {hasSubItems && (
-                              <span className="text-slate-500 shrink-0">{isSubMenuOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}</span>
+                              <span className="text-slate-500 shrink-0">
+                                {isSubMenuOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                              </span>
                             )}
                           </>
                         )}
@@ -329,7 +342,9 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 
                       {/* Danh sách menu con */}
                       {!effectivelyCollapsed && hasSubItems && isSubMenuOpen && (
-                        <div className={cn('relative pl-6 space-y-1 ml-4 border-l overflow-hidden', isLight ? 'border-slate-200' : 'border-slate-800')}>
+                        <div
+                          className={cn('relative pl-6 space-y-1 ml-4 border-l overflow-hidden', isLight ? 'border-slate-200' : 'border-slate-800')}
+                        >
                           {item.subItems?.map((sub) => {
                             const isSubActive = activeId === sub.id;
 
@@ -373,7 +388,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 
         {/* Khung quảng bá hành động ở chân trang */}
         {cta && !effectivelyCollapsed && (
-          <div className={cn('p-2.5 sm:p-3 shrink-0 border-t overflow-hidden', isLight ? 'border-slate-100 bg-slate-50/40' : 'border-slate-800/50 bg-slate-950/20')}>
+          <div
+            className={cn(
+              'p-2.5 sm:p-3 shrink-0 border-t overflow-hidden',
+              isLight ? 'border-slate-100 bg-slate-50/40' : 'border-slate-800/50 bg-slate-950/20',
+            )}
+          >
             <div
               className={cn(
                 'p-2.5 sm:p-3 rounded-xl border flex flex-col gap-2 sm:gap-2.5 transition-all relative overflow-hidden',
@@ -393,7 +413,9 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 </div>
                 <div className="space-y-0.5 min-w-0 flex-1 overflow-hidden">
                   <div className="flex items-center justify-between gap-1">
-                    <h5 className={cn('text-xs font-semibold truncate whitespace-nowrap', isLight ? 'text-slate-800' : 'text-slate-100')}>{cta.title}</h5>
+                    <h5 className={cn('text-xs font-semibold truncate whitespace-nowrap', isLight ? 'text-slate-800' : 'text-slate-100')}>
+                      {cta.title}
+                    </h5>
                     {cta.badge && (
                       <span className="text-[9px] font-medium px-1.5 py-0.2 rounded-full bg-primary/10 text-primary shrink-0">{cta.badge}</span>
                     )}

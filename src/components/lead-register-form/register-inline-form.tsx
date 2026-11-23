@@ -8,19 +8,10 @@ import { Input } from '@/components/input';
 import { showErrorToast } from '@/utils/error';
 import { isValidEmail, isValidVnPhone } from '@/utils/validators';
 import { RegisterCountdownBanner } from './register-countdown-banner';
-import {
-  INITIAL_REGISTER_FORM,
-  type RegisterFormErrors,
-  type RegisterFormState,
-  type RegisterInlineFormProps,
-} from './register-form.types';
+import { INITIAL_REGISTER_FORM, type RegisterFormErrors, type RegisterFormState, type RegisterInlineFormProps } from './register-form.types';
 import { RegisterSuccessView } from './register-success-view';
 
-export function RegisterInlineForm({
-  onBack,
-  variant = 'inline',
-  onSuccess,
-}: RegisterInlineFormProps) {
+export function RegisterInlineForm({ onBack, variant = 'inline', onSuccess }: RegisterInlineFormProps) {
   const [formData, setFormData] = useState<RegisterFormState>(INITIAL_REGISTER_FORM);
   const [errors, setErrors] = useState<RegisterFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,7 +67,7 @@ export function RegisterInlineForm({
       });
       setIsSubmitted(true);
       onSuccess?.();
-      toast.success('Đăng ký nhận phần mềm thành công! Đội ngũ XTTECH sẽ liên hệ hỗ trợ bạn ngay.');
+      toast.success('Đăng ký nhận phần mềm thành công! Đội ngũ XT Tech sẽ liên hệ hỗ trợ bạn ngay.');
     } catch (err) {
       showErrorToast(err);
     } finally {
@@ -133,11 +124,9 @@ export function RegisterInlineForm({
 
           <div>
             <h3 className="text-xl sm:text-[22px] font-black text-slate-900 tracking-tight leading-snug">
-              Nhận phần mềm <span className="text-primary">XTTECH XMS Fab</span>
+              Nhận phần mềm <span className="text-primary">XT Tech XMS Fab</span>
             </h3>
-            <p className="mt-0.5 text-xs text-slate-500 font-medium">
-              Số hóa quy trình sản xuất, bóc tách nhôm kính & quản trị xưởng may đo riêng.
-            </p>
+            <p className="mt-0.5 text-xs text-slate-500 font-medium">Số hóa quy trình sản xuất, bóc tách nhôm kính & quản trị xưởng may đo riêng.</p>
           </div>
 
           <div className="space-y-2.5 pt-1">

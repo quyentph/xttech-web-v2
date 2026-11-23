@@ -99,12 +99,9 @@ export function HeroConsultationForm() {
     <div className="lg:col-span-7 space-y-4">
       <div>
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Đăng ký nhận thông tin{' '}
-          <span className="text-primary  font-black">tư vấn</span>
+          Đăng ký nhận thông tin <span className="text-primary  font-black">tư vấn</span>
         </h2>
-        <p className="mt-1.5 text-sm sm:text-base text-slate-600 font-medium">
-          Chúng tôi sẽ liên hệ với bạn sớm nhất, cảm ơn bạn vì đã đăng ký.
-        </p>
+        <p className="mt-1.5 text-sm sm:text-base text-slate-600 font-medium">Chúng tôi sẽ liên hệ với bạn sớm nhất, cảm ơn bạn vì đã đăng ký.</p>
       </div>
 
       {isSubmitted ? (
@@ -116,8 +113,7 @@ export function HeroConsultationForm() {
           <div className="space-y-1.5">
             <h3 className="text-lg font-bold text-slate-900">Gửi yêu cầu tư vấn thành công!</h3>
             <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
-              Cảm ơn <span className="font-bold text-slate-900">{formData.fullName}</span>.
-              Chuyên viên giải pháp XTTECH sẽ liên hệ qua số điện thoại{' '}
+              Cảm ơn <span className="font-bold text-slate-900">{formData.fullName}</span>. Chuyên viên giải pháp XT Tech sẽ liên hệ qua số điện thoại{' '}
               <span className="font-bold text-primary">{formData.phone}</span> trong vòng 2h làm việc để tư vấn chi tiết.
             </p>
           </div>
@@ -141,11 +137,7 @@ export function HeroConsultationForm() {
               onChange={(v) => handleChange('fullName', v)}
               error={errors.fullName}
             />
-            <ConsultationTextField
-              placeholder="Tên công ty / Xưởng"
-              value={formData.companyName}
-              onChange={(v) => handleChange('companyName', v)}
-            />
+            <ConsultationTextField placeholder="Tên công ty / Xưởng" value={formData.companyName} onChange={(v) => handleChange('companyName', v)} />
           </div>
 
           {/* Hàng 2: Email | Địa chỉ công ty */}

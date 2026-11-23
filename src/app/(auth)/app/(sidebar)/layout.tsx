@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const sidebarConfig = {
     brand: {
-      name: 'XTTECH',
+      name: 'XT Tech',
       subtitle: 'v' + process.env.NEXT_PUBLIC_APP_VERSION,
       logo: <XTLogo className="w-8 h-8 drop-shadow-[0_2px_5px_rgba(4,88,99,0.35)]" />,
       onClick: () => navigateTo('/app/dashboard'),

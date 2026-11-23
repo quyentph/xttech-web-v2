@@ -26,7 +26,7 @@ export function DashboardSidebar() {
           <div className="flex items-center gap-1">
             <div className="flex h-3.5 w-3.5 items-center justify-center rounded bg-primary text-[6px] font-black text-white">XT</div>
             <div className="leading-none">
-              <div className="text-[7px] font-black tracking-tight text-primary">XTTECH</div>
+              <div className="text-[7px] font-black tracking-tight text-primary">XT Tech</div>
               <div className="text-[5px] text-slate-400">v2.1.2</div>
             </div>
           </div>

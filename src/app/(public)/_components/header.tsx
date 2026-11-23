@@ -63,7 +63,9 @@ export const Header = () => {
         : isLegalRoute
           ? 'legal'
           : pathname === '/'
-            ? currentHash === '#contact' ? 'contact' : 'about'
+            ? currentHash === '#contact'
+              ? 'contact'
+              : 'about'
             : '';
 
   const updateActivePillPosition = useCallback(() => {
@@ -136,7 +138,7 @@ export const Header = () => {
         >
           <XTLogo className="h-8 w-8 drop-shadow-[0_2px_5px_rgba(4,88,99,0.35)]" />
           <Heading as="span" size="h1" className="tracking-tight text-primary">
-            XTTECH
+            XT Tech
           </Heading>
         </Link>
 

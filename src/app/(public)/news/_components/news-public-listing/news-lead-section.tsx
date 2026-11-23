@@ -18,7 +18,17 @@ interface NewsLeadSectionProps {
   setIsHoveringSlide: (isHovering: boolean) => void;
 }
 
-export function NewsLeadSection({ isLoading, hasArticles, leadHeroArticle, latestLeadArticle, latestSideArticles, featuredSlideArticles, safeFeaturedSlideIdx, setFeaturedSlideIdx, setIsHoveringSlide }: NewsLeadSectionProps) {
+export function NewsLeadSection({
+  isLoading,
+  hasArticles,
+  leadHeroArticle,
+  latestLeadArticle,
+  latestSideArticles,
+  featuredSlideArticles,
+  safeFeaturedSlideIdx,
+  setFeaturedSlideIdx,
+  setIsHoveringSlide,
+}: NewsLeadSectionProps) {
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-8 lg:px-12 xl:px-16">
       {isLoading ? (
@@ -37,29 +47,22 @@ export function NewsLeadSection({ isLoading, hasArticles, leadHeroArticle, lates
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
             <Newspaper className="w-7 h-7" />
           </div>
-          <h3 className="text-base font-bold text-slate-900">
-            Hiện tại chưa có bài viết tin tức nào được xuất bản
-          </h3>
+          <h3 className="text-base font-bold text-slate-900">Hiện tại chưa có bài viết tin tức nào được xuất bản</h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-md mx-auto">
-            Các bản tin công nghệ, công trình nhôm kính và hoạt động mới nhất của XTTech sẽ
-            được cập nhật tại đây.
+            Các bản tin công nghệ, công trình nhôm kính và hoạt động mới nhất của XTTech sẽ được cập nhật tại đây.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-start">
           {/* CỘT TRÁI (8 cols): BÀI Đinh (Lead Hero) + Khối "Tin mới" */}
           <div className="lg:col-span-8 min-w-0 space-y-10">
-            {leadHeroArticle && (
-              <NewsArticleCard article={leadHeroArticle} variant="lead-hero" />
-            )}
+            {leadHeroArticle && <NewsArticleCard article={leadHeroArticle} variant="lead-hero" />}
 
             {/* Khối "Tin mới" */}
             {latestLeadArticle && (
               <div className="pt-2 space-y-5 border-t border-slate-200/80">
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-primary tracking-tight">
-                    Tin mới
-                  </h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-primary tracking-tight">Tin mới</h2>
                   <button
                     type="button"
                     onClick={() => {
@@ -83,11 +86,7 @@ export function NewsLeadSection({ isLoading, hasArticles, leadHeroArticle, lates
                   {latestSideArticles.length > 0 && (
                     <div className="md:col-span-6 min-w-0 space-y-4">
                       {latestSideArticles.map((item) => (
-                        <NewsArticleCard
-                          key={item.id}
-                          article={item}
-                          variant="horizontal-sm"
-                        />
+                        <NewsArticleCard key={item.id} article={item} variant="horizontal-sm" />
                       ))}
                     </div>
                   )}
@@ -107,7 +106,7 @@ export function NewsLeadSection({ isLoading, hasArticles, leadHeroArticle, lates
               />
             )}
 
-            {/* Form yêu cầu sử dụng phần mềm XTTECH */}
+            {/* Form yêu cầu sử dụng phần mềm XT Tech */}
             <NewsSoftwareRegistrationForm />
           </aside>
         </div>

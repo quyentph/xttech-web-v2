@@ -14,7 +14,7 @@ export const ADMINISTRATIVE_TEMPLATES: AdministrativeDocumentTemplate[] = [
     label: 'Mẫu Quyết định (Điều 1, 2, 3)',
     docTypes: ['decision'],
     description: 'Bố cục chuẩn Quyết định của Ban Giám đốc: Căn cứ pháp lý, Xét đề nghị và các Điều khoản thi hành.',
-    defaultBodyHtml: `<p style="text-align: justify;"><em>- Căn cứ Điều lệ tổ chức và hoạt động của Công ty Cổ phần XTTECH;</em></p>
+    defaultBodyHtml: `<p style="text-align: justify;"><em>- Căn cứ Điều lệ tổ chức và hoạt động của Công ty Cổ phần XT Tech;</em></p>
 <p style="text-align: justify;"><em>- Căn cứ chức năng, nhiệm vụ và quyền hạn của Ban Giám đốc;</em></p>
 <p style="text-align: justify;"><em>- Xét đề nghị của Trưởng bộ phận chuyên môn,</em></p>
 <h3 style="text-align: center;"><strong>QUYẾT ĐỊNH:</strong></h3>
@@ -30,7 +30,7 @@ export const ADMINISTRATIVE_TEMPLATES: AdministrativeDocumentTemplate[] = [
     label: 'Mẫu Thông báo nội bộ',
     docTypes: ['announcement', 'notice'],
     description: 'Bố cục chuẩn Thông báo gửi toàn công ty hoặc phòng ban về lịch làm việc, chủ trương, sự kiện.',
-    defaultBodyHtml: `<p style="text-align: center;"><strong>Kính gửi: Toàn thể Cán bộ Nhân viên Công ty Cổ phần XTTECH</strong></p>
+    defaultBodyHtml: `<p style="text-align: center;"><strong>Kính gửi: Toàn thể Cán bộ Nhân viên Công ty Cổ phần XT Tech</strong></p>
 <p style="text-align: justify;">Nhằm đảm bảo sự thống nhất trong công tác vận hành và phối hợp giữa các phòng ban, Ban Giám đốc thông báo đến toàn thể Cán bộ Nhân viên nội dung như sau:</p>
 <p style="text-align: justify;"><strong>1. Nội dung thông báo:</strong></p>
 <ul>
@@ -48,7 +48,7 @@ export const ADMINISTRATIVE_TEMPLATES: AdministrativeDocumentTemplate[] = [
     docTypes: ['procedure', 'guideline', 'standard', 'norm'],
     description: 'Bố cục chuẩn Quy trình thao tác chuẩn (SOP): Mục đích, Phạm vi, Định nghĩa, Các bước thực hiện.',
     defaultBodyHtml: `<p style="text-align: center;"><strong>PHẦN I: MỤC ĐÍCH &amp; PHẠM VI ÁP DỤNG</strong></p>
-<p style="text-align: justify;"><strong>1. Mục đích:</strong> Quy trình này quy định trình tự, trách nhiệm và biểu mẫu áp dụng nhằm chuẩn hóa hoạt động nghiệp vụ tại Công ty Cổ phần XTTECH.</p>
+<p style="text-align: justify;"><strong>1. Mục đích:</strong> Quy trình này quy định trình tự, trách nhiệm và biểu mẫu áp dụng nhằm chuẩn hóa hoạt động nghiệp vụ tại Công ty Cổ phần XT Tech.</p>
 <p style="text-align: justify;"><strong>2. Phạm vi áp dụng:</strong> Áp dụng đối với các phòng ban, bộ phận trực tiếp tham gia vào luồng công việc liên quan.</p>
 <p style="text-align: center;"><strong>PHẦN II: NỘI DUNG QUY TRÌNH THỰC HIỆN</strong></p>
 <p style="text-align: justify;"><strong>Bước 1: Tiếp nhận và kiểm tra yêu cầu</strong></p>
@@ -67,7 +67,7 @@ export const ADMINISTRATIVE_TEMPLATES: AdministrativeDocumentTemplate[] = [
 <p style="text-align: justify;"><strong>Điều 1. Mục đích ban hành</strong></p>
 <p style="text-align: justify;">Xây dựng khuôn khổ quản trị minh bạch, thống nhất tiêu chuẩn làm việc và nâng cao hiệu suất vận hành tại doanh nghiệp.</p>
 <p style="text-align: justify;"><strong>Điều 2. Đối tượng và phạm vi áp dụng</strong></p>
-<p style="text-align: justify;">Áp dụng đối với toàn thể Cán bộ Nhân viên đang làm việc tại các phòng ban, đơn vị trực thuộc Công ty Cổ phần XTTECH.</p>
+<p style="text-align: justify;">Áp dụng đối với toàn thể Cán bộ Nhân viên đang làm việc tại các phòng ban, đơn vị trực thuộc Công ty Cổ phần XT Tech.</p>
 <p style="text-align: center;"><strong>CHƯƠNG II: NỘI DUNG QUY ĐỊNH CHI TIẾT</strong></p>
 <p style="text-align: justify;"><strong>Điều 3. Nguyên tắc thực hiện</strong></p>
 <p style="text-align: justify;">1. Tuân thủ đúng quy trình, thẩm quyền và thời hạn xử lý công việc.</p>
@@ -79,14 +79,11 @@ export const ADMINISTRATIVE_TEMPLATES: AdministrativeDocumentTemplate[] = [
 ];
 
 export function getTemplateByDocType(documentType?: string): AdministrativeDocumentTemplate {
-  return (
-    ADMINISTRATIVE_TEMPLATES.find((tpl) => tpl.docTypes.includes(documentType || '')) ||
-    ADMINISTRATIVE_TEMPLATES[3]
-  );
+  return ADMINISTRATIVE_TEMPLATES.find((tpl) => tpl.docTypes.includes(documentType || '')) || ADMINISTRATIVE_TEMPLATES[3];
 }
 
-const BODY_START_MARKER = '<!-- XTTECH_BODY_START -->';
-const BODY_END_MARKER = '<!-- XTTECH_BODY_END -->';
+const BODY_START_MARKER = '<!-- XT Tech_BODY_START -->';
+const BODY_END_MARKER = '<!-- XT Tech_BODY_END -->';
 
 export interface BuildAdministrativeA4Params {
   title: string;
@@ -115,7 +112,7 @@ export const DOC_TYPE_HEADING_MAP: Record<string, string> = {
 export function buildAdministrativeA4Html(params: BuildAdministrativeA4Params): string {
   const dateObj = params.effectiveDate ? dayjs(params.effectiveDate) : dayjs();
   const dateStr = `Ngày ${dateObj.format('DD')} tháng ${dateObj.format('MM')} năm ${dateObj.format('YYYY')}`;
-  const docCode = params.code?.trim() || '....../2026/VB-XTTECH';
+  const docCode = params.code?.trim() || '....../2026/VB-XT Tech';
   const typeHeading = DOC_TYPE_HEADING_MAP[params.documentType] || 'VĂN BẢN ĐỊNH CHẾ';
   const cleanTitle = (params.title || 'Tiêu đề văn bản').trim();
 
@@ -258,7 +255,7 @@ export function buildAdministrativeA4Html(params: BuildAdministrativeA4Params): 
   <div class="a4-sheet">
     <div class="admin-header">
       <div class="header-left">
-        <p class="company-name">CÔNG TY CỔ PHẦN XTTECH</p>
+        <p class="company-name">CÔNG TY CỔ PHẦN XT Tech</p>
         <div class="divider-line"></div>
         <div class="doc-code">Số: ${docCode}</div>
       </div>
@@ -322,4 +319,3 @@ export function createHtmlDocumentFile(htmlContent: string, codeOrTitle: string)
       .slice(0, 60) || 'van-ban-xttech';
   return new File([htmlContent], `${safeBase}.html`, { type: 'text/html;charset=utf-8' });
 }
-

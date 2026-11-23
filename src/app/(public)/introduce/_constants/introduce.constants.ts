@@ -1,14 +1,4 @@
-import {
-  Briefcase,
-  Building2,
-  Compass,
-  HardHat,
-  Layers,
-  Target,
-  Users,
-  Wrench,
-  type LucideIcon,
-} from 'lucide-react';
+import { Briefcase, Building2, Compass, HardHat, Layers, Target, Users, Wrench, type LucideIcon } from 'lucide-react';
 
 export const INTRODUCE_EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -51,26 +41,41 @@ export const ECOSYSTEM_MODULES: EcosystemModule[] = [
 ];
 
 export interface BenefitItem {
+  letter?: string;
   title: string;
   desc: string;
 }
 
 export const SOFTWARE_BENEFITS: BenefitItem[] = [
   {
-    title: 'Báo giá nhanh tại công trình',
-    desc: 'Lên phương án thiết kế và dự toán vật tư tức thì ngay trên điện thoại hoặc máy tính bảng, loại bỏ hoàn toàn việc tính tay Excel và rút ngắn thời gian chốt hợp đồng.',
+    letter: 'X',
+    title: 'X – Xuyên suốt & Thực chiến (Execution)',
+    desc: 'Biến mọi quy trình phức tạp từ bản vẽ đến công trường thành thao tác đơn giản, hiệu quả thực tế.',
   },
   {
-    title: 'Giảm hao hụt phôi & kho',
-    desc: 'Chuẩn hóa quy trình bóc tách BOM và xuất thẻ cắt A4 tối ưu thanh nhôm, giúp kiểm soát chặt chẽ định mức vật tư và tiết kiệm phôi tồn kho đáng kể.',
+    letter: 'T',
+    title: 'T – Tận gốc (Transparency & Root-cause)',
+    desc: 'Giải quyết triệt để nỗi đau của xưởng và công trình bằng dữ liệu minh bạch, không làm ăn "áng chừng".',
   },
   {
-    title: 'Đồng bộ xưởng & đội thợ',
-    desc: 'Giao việc trực quan theo bản vẽ kỹ thuật chi tiết, kiểm tra phụ kiện cần mang và theo dõi tiến độ thi công xuyên suốt từ gia công tại xưởng đến hiện trường lắp dựng.',
+    letter: 'T',
+    title: 'T – Tin cậy & Bảo mật (Trust)',
+    desc: 'Coi dữ liệu và biên lợi nhuận của khách hàng là danh dự bất khả xâm phạm (kiến trúc Zero-Trust).',
   },
   {
-    title: 'Minh bạch dữ liệu & dòng tiền',
-    desc: 'Nắm bắt tức thời chi phí vật tư, công thợ và biên lợi nhuận lãi/lỗ của từng dự án trên một màn hình tập trung, giúp chủ doanh nghiệp dễ dàng kiểm soát dòng tiền.',
+    letter: 'E',
+    title: 'E – Hiệu quả tinh gọn (Efficiency)',
+    desc: 'Tối ưu từng đồng vốn, từng milimet vật tư và từng giờ công thợ.',
+  },
+  {
+    letter: 'C',
+    title: 'C – Chung thuyền (Co-ownership)',
+    desc: 'Đội ngũ đồng lòng làm chủ, cùng kiến tạo, cùng hưởng thành quả và chịu trách nhiệm đến cùng.',
+  },
+  {
+    letter: 'H',
+    title: 'H – Hệ thống hóa (Habit & System)',
+    desc: 'Mọi hoạt động đều vận hành bằng quy trình chuẩn (SOP) và số liệu đo lường rõ ràng.',
   },
 ];
 
@@ -153,10 +158,10 @@ export interface MissionVisionBlock {
 export const MISSION_VISION_BLOCKS: MissionVisionBlock[] = [
   {
     id: 'mission',
-    badge: 'Sứ mệnh XTTECH',
+    badge: 'Sứ mệnh XT Tech',
     title: 'Sứ mệnh',
     icon: Compass,
-    summaryLead: 'XTTECH đưa công nghệ trở thành công cụ vận hành',
+    summaryLead: 'XT Tech đưa công nghệ trở thành công cụ vận hành',
     summaryHighlight: 'dễ tiếp cận, hiệu quả và bền vững',
     summaryTail: 'cho mọi doanh nghiệp vừa và nhỏ tại Việt Nam.',
     listTitle: 'Chúng tôi giúp doanh nghiệp:',
@@ -175,14 +180,14 @@ export const MISSION_VISION_BLOCKS: MissionVisionBlock[] = [
       },
     ],
     imageSrc: '/assets/introduce/our-mission.png',
-    imageAlt: 'Sứ mệnh XTTECH',
+    imageAlt: 'Sứ mệnh XT Tech',
     imageAnimationClass: 'animate-compass-mission',
     glowClass: 'bg-linear-to-tr from-primary/20 via-emerald-400/15 to-transparent',
     imageFirst: false,
   },
   {
     id: 'vision',
-    badge: 'Tầm nhìn XTTECH',
+    badge: 'Tầm nhìn XT Tech',
     title: 'Tầm nhìn',
     icon: Target,
     summaryLead: 'Trở thành',
@@ -204,7 +209,7 @@ export const MISSION_VISION_BLOCKS: MissionVisionBlock[] = [
       },
     ],
     imageSrc: '/assets/introduce/vision.jpg',
-    imageAlt: 'Tầm nhìn XTTECH',
+    imageAlt: 'Tầm nhìn XT Tech',
     imageAnimationClass: 'animate-compass-vision',
     glowClass: 'bg-linear-to-bl from-teal-400/20 via-primary/15 to-transparent',
     imageFirst: true,

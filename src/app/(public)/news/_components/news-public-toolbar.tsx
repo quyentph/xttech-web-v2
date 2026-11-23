@@ -24,14 +24,14 @@ export function NewsPublicToolbar({ searchInput, onSearchChange, selectedCategor
         <div className="max-w-3xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <span>Chuyên trang Tin tức & Kiến thức Nhôm Kính XTTECH</span>
+            <span>Chuyên trang Tin tức & Kiến thức Nhôm Kính XT Tech</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
             Cập nhật công nghệ, công trình tiêu biểu & <span className="text-primary">giải pháp nhôm kính hiện đại</span>
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
             Khám phá các bài viết chuyên sâu về kỹ thuật gia công cửa nhôm, xu hướng kiến trúc mặt dựng, hoạt động doanh nghiệp và các dự án thực tế
-            từ đội ngũ kỹ sư XTTECH.
+            từ đội ngũ kỹ sư XT Tech.
           </p>
         </div>
 

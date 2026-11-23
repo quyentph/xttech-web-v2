@@ -6,12 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ArrowUpRight, Phone } from 'lucide-react';
 import { Modal, RegisterInlineForm, XTLogo } from '@/components';
 import { CONTACT_INFO } from '@/config/contact';
-import {
-  FOOTER_BOTTOM_LINKS,
-  FOOTER_CONTACT_ITEMS,
-  FOOTER_LEGAL_LINKS,
-  FOOTER_SOLUTION_LINKS,
-} from '../_constants/public-layout.constants';
+import { FOOTER_BOTTOM_LINKS, FOOTER_CONTACT_ITEMS, FOOTER_LEGAL_LINKS, FOOTER_SOLUTION_LINKS } from '../_constants/public-layout.constants';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -30,10 +25,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer
-      id="contact"
-      className="relative scroll-mt-20 overflow-hidden bg-linear-to-b from-[#062e39] via-[#04242d] to-[#031920] text-slate-300"
-    >
+    <footer id="contact" className="relative scroll-mt-20 overflow-hidden bg-linear-to-b from-[#062e39] via-[#04242d] to-[#031920] text-slate-300">
       {/* Dải nhấn thương hiệu phía trên */}
       <div className="h-1 w-full bg-linear-to-r from-[var(--hero-accent-from)] via-primary to-[var(--hero-accent-to)]" />
 
@@ -46,12 +38,8 @@ export const Footer = () => {
         {/* Banner CTA đầu chân trang */}
         <div className="mb-12 flex flex-col justify-between gap-6 rounded-2xl border border-white/15 bg-linear-to-r from-[#074754] via-[#063f4b] to-[#084c59] p-6 shadow-lg sm:p-8 lg:flex-row lg:items-center">
           <div>
-            <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
-              Sẵn sàng số hóa xưởng nhôm kính của bạn?
-            </h2>
-            <p className="mt-1.5 text-sm text-slate-200/90">
-              Đội ngũ XTTECH hướng dẫn triển khai từ khảo sát đến vận hành thực tế.
-            </p>
+            <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">Sẵn sàng số hóa xưởng nhôm kính của bạn?</h2>
+            <p className="mt-1.5 text-sm text-slate-200/90">Đội ngũ XT Tech hướng dẫn triển khai từ khảo sát đến vận hành thực tế.</p>
           </div>
           <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
             <button
@@ -76,10 +64,11 @@ export const Footer = () => {
           <div className="flex flex-col gap-4 lg:col-span-4">
             <div className="inline-flex w-fit items-center gap-2.5 rounded-xl bg-white px-3.5 py-2 shadow-sm">
               <XTLogo className="h-8 w-8 drop-shadow-[0_2px_5px_rgba(4,88,99,0.35)]" />
-              <span className="text-xl font-black tracking-tight text-primary">XTTECH</span>
+              <span className="text-xl font-black tracking-tight text-primary">XT Tech</span>
             </div>
             <p className="text-sm text-white sm:max-w-sm">
-              Giải pháp số hóa cho xưởng nhôm kính & xây dựng — Quản trị khép kín từ khảo sát, thiết kế 3D, bóc tách tự động theo công thức đến quản lý thi công công trình.
+              Giải pháp số hóa cho xưởng nhôm kính & xây dựng — Quản trị khép kín từ khảo sát, thiết kế 3D, bóc tách tự động theo công thức đến quản
+              lý thi công công trình.
             </p>
             <div className="space-y-1 text-xs text-slate-300/90 sm:max-w-sm">
               <p>
@@ -88,7 +77,6 @@ export const Footer = () => {
               <p>
                 <span className="font-semibold text-white">Địa chỉ:</span> {CONTACT_INFO.address}
               </p>
-            
             </div>
           </div>
 
@@ -133,9 +121,7 @@ export const Footer = () => {
                       href={item.href}
                       className="group inline-flex items-center gap-2 text-white transition-all hover:translate-x-0.5 hover:text-teal-200"
                     >
-                      {Icon && (
-                        <Icon className="h-4 w-4 shrink-0 text-teal-300/70 transition-colors group-hover:text-[#4eb622]" />
-                      )}
+                      {Icon && <Icon className="h-4 w-4 shrink-0 text-teal-300/70 transition-colors group-hover:text-[#4eb622]" />}
                       <span>{item.label}</span>
                     </Link>
                   </li>
@@ -176,19 +162,14 @@ export const Footer = () => {
       <div className="relative border-t border-white/10 bg-black/25 pt-4 pb-6 sm:py-4">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6 lg:px-8">
           <p className="text-center text-xs text-slate-400 sm:text-left">
-            © {currentYear} <span className="font-semibold text-white">XTTECH</span>. Tất cả các quyền được bảo lưu.
+            © {currentYear} <span className="font-semibold text-white">XT Tech</span>. Tất cả các quyền được bảo lưu.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-slate-400 sm:justify-end sm:gap-5">
             {FOOTER_BOTTOM_LINKS.map((item, idx) => (
               <React.Fragment key={item.label}>
                 {idx > 0 && <span className="hidden h-3 w-px bg-white/15 sm:inline-block" />}
                 {item.external ? (
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="whitespace-nowrap transition-colors hover:text-white"
-                  >
+                  <a href={item.href} target="_blank" rel="noreferrer" className="whitespace-nowrap transition-colors hover:text-white">
                     {item.label}
                   </a>
                 ) : (
@@ -210,15 +191,11 @@ export const Footer = () => {
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         size="md"
-        title="Đăng ký sử dụng XTTECH XMS Fab"
+        title="Đăng ký sử dụng XT Tech XMS Fab"
         className="max-w-lg border border-primary/20"
         bodyClassName="p-5 sm:p-6"
       >
-        <RegisterInlineForm
-          key={`footer-reg-${isRegisterModalOpen}`}
-          variant="modal"
-          onBack={() => setIsRegisterModalOpen(false)}
-        />
+        <RegisterInlineForm key={`footer-reg-${isRegisterModalOpen}`} variant="modal" onBack={() => setIsRegisterModalOpen(false)} />
       </Modal>
     </footer>
   );

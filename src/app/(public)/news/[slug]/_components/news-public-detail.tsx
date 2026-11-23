@@ -20,12 +20,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { Button, Skeleton } from '@/components';
-import {
-  isNewsArticleLiked,
-  NEWS_CATEGORY_MAP,
-  PUBLIC_NEWS_QUERY_KEYS,
-  setNewsArticleLiked,
-} from '@/config';
+import { isNewsArticleLiked, NEWS_CATEGORY_MAP, PUBLIC_NEWS_QUERY_KEYS, setNewsArticleLiked } from '@/config';
 import { getPublicNewsBySlug, getPublicNewsList, togglePublicNewsLike } from '@/actions';
 import { getFileUrl, sanitizeNewsHtml, showErrorToast, showSuccessToast } from '@/utils';
 import queryClient from '@/utils/query';
@@ -39,15 +34,7 @@ export interface NewsPublicDetailProps {
   initialIsLiked?: boolean;
 }
 
-const VIETNAMESE_WEEKDAYS = [
-  'Chủ nhật',
-  'Thứ hai',
-  'Thứ ba',
-  'Thứ tư',
-  'Thứ năm',
-  'Thứ sáu',
-  'Thứ bảy',
-];
+const VIETNAMESE_WEEKDAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
 function formatVietnameseArticleDate(dateStr?: string | null): string {
   if (!dateStr) return '--';
@@ -73,11 +60,7 @@ const ARTICLE_HTML_CLASS = `news-rich-media text-slate-800 text-base sm:text-[18
   [&_hr]:my-8 [&_hr]:border-slate-200 [&_mark]:bg-yellow-200 [&_mark]:px-1 [&_mark]:rounded-xs
   [&_s]:line-through [&_del]:line-through`;
 
-export function NewsPublicDetail({
-  slug,
-  initialArticle,
-  initialIsLiked = false,
-}: NewsPublicDetailProps) {
+export function NewsPublicDetail({ slug, initialArticle, initialIsLiked = false }: NewsPublicDetailProps) {
   const [clientLiked, setClientLiked] = useState<boolean>(initialIsLiked);
   const [optimisticLike, setOptimisticLike] = useState<{
     articleId: number;
@@ -96,16 +79,13 @@ export function NewsPublicDetail({
     queryFn: async () => {
       const data = await getPublicNewsBySlug(slug);
       // Đồng bộ ngay viewCount/likeCount/commentCount mới nhất vào cache danh sách tin tức
-      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>(
-        { queryKey: PUBLIC_NEWS_QUERY_KEYS.list },
-        (old) => {
-          if (!old?.items) return old;
-          return {
-            ...old,
-            items: old.items.map((item) => (item.id === data.id ? { ...item, ...data } : item)),
-          };
-        },
-      );
+      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list }, (old) => {
+        if (!old?.items) return old;
+        return {
+          ...old,
+          items: old.items.map((item) => (item.id === data.id ? { ...item, ...data } : item)),
+        };
+      });
       queryClient.invalidateQueries({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list });
       queryClient.invalidateQueries({ queryKey: ['admin-news'] });
       return data;
@@ -124,18 +104,13 @@ export function NewsPublicDetail({
     getPublicNewsBySlug(slug)
       .then((freshArticle) => {
         queryClient.setQueryData<NewsArticle>(PUBLIC_NEWS_QUERY_KEYS.detail(slug), freshArticle);
-        queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>(
-          { queryKey: PUBLIC_NEWS_QUERY_KEYS.list },
-          (old) => {
-            if (!old?.items) return old;
-            return {
-              ...old,
-              items: old.items.map((item) =>
-                item.id === freshArticle.id ? { ...item, ...freshArticle } : item,
-              ),
-            };
-          },
-        );
+        queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list }, (old) => {
+          if (!old?.items) return old;
+          return {
+            ...old,
+            items: old.items.map((item) => (item.id === freshArticle.id ? { ...item, ...freshArticle } : item)),
+          };
+        });
       })
       .catch(() => {
         // Bỏ qua nếu lỗi mạng tạm thời trên client vì đã có dữ liệu SSR
@@ -150,9 +125,7 @@ export function NewsPublicDetail({
 
   const relatedArticles = useMemo(() => {
     if (!listData?.items || !article) return [];
-    return listData.items
-      .filter((item) => item.category === article.category && item.id !== article.id)
-      .slice(0, 4);
+    return listData.items.filter((item) => item.category === article.category && item.id !== article.id).slice(0, 4);
   }, [listData, article]);
 
   const popularArticles = useMemo(() => {
@@ -171,10 +144,7 @@ export function NewsPublicDetail({
       .slice(0, 4);
   }, [listData, article]);
 
-  const sanitizedContent = useMemo(
-    () => sanitizeNewsHtml(article?.content || ''),
-    [article?.content],
-  );
+  const sanitizedContent = useMemo(() => sanitizeNewsHtml(article?.content || ''), [article?.content]);
 
   useEffect(() => {
     if (!article?.id) return;
@@ -184,21 +154,12 @@ export function NewsPublicDetail({
     }
   }, [article?.id, clientLiked]);
 
-  const isLiked = article
-    ? optimisticLike?.articleId === article.id
-      ? optimisticLike.liked
-      : clientLiked
-    : false;
+  const isLiked = article ? (optimisticLike?.articleId === article.id ? optimisticLike.liked : clientLiked) : false;
 
-  const currentLikeCount = article
-    ? optimisticLike?.articleId === article.id
-      ? optimisticLike.likeCount
-      : article.likeCount
-    : 0;
+  const currentLikeCount = article ? (optimisticLike?.articleId === article.id ? optimisticLike.likeCount : article.likeCount) : 0;
 
   const likeMutation = useMutation({
-    mutationFn: (nextLiked: boolean) =>
-      togglePublicNewsLike(slug, { action: nextLiked ? 'like' : 'unlike' }),
+    mutationFn: (nextLiked: boolean) => togglePublicNewsLike(slug, { action: nextLiked ? 'like' : 'unlike' }),
     onMutate: (nextLiked) => {
       if (!article) return undefined;
       const prevCount = currentLikeCount;
@@ -212,21 +173,14 @@ export function NewsPublicDetail({
       if (!article) return;
       setOptimisticLike({ articleId: article.id, liked: nextLiked, likeCount: res.likeCount });
       setClientLiked(nextLiked);
-      queryClient.setQueryData<NewsArticle>(PUBLIC_NEWS_QUERY_KEYS.detail(slug), (old) =>
-        old ? { ...old, likeCount: res.likeCount } : old,
-      );
-      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>(
-        { queryKey: PUBLIC_NEWS_QUERY_KEYS.list },
-        (old) => {
-          if (!old?.items) return old;
-          return {
-            ...old,
-            items: old.items.map((item) =>
-              item.id === article.id ? { ...item, likeCount: res.likeCount } : item,
-            ),
-          };
-        },
-      );
+      queryClient.setQueryData<NewsArticle>(PUBLIC_NEWS_QUERY_KEYS.detail(slug), (old) => (old ? { ...old, likeCount: res.likeCount } : old));
+      queryClient.setQueriesData<{ items?: NewsArticle[]; meta?: unknown }>({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list }, (old) => {
+        if (!old?.items) return old;
+        return {
+          ...old,
+          items: old.items.map((item) => (item.id === article.id ? { ...item, likeCount: res.likeCount } : item)),
+        };
+      });
       queryClient.invalidateQueries({ queryKey: PUBLIC_NEWS_QUERY_KEYS.list });
       queryClient.invalidateQueries({ queryKey: ['admin-news'] });
       queryClient.invalidateQueries({ queryKey: ['admin-news-detail', article.id] });
@@ -264,16 +218,10 @@ export function NewsPublicDetail({
     const height = 540;
     const left = Math.max(0, (window.screen.width - width) / 2);
     const top = Math.max(0, (window.screen.height - height) / 2);
-    window.open(
-      shareUrl,
-      '_blank',
-      `noopener,noreferrer,width=${width},height=${height},left=${left},top=${top}`,
-    );
+    window.open(shareUrl, '_blank', `noopener,noreferrer,width=${width},height=${height},left=${left},top=${top}`);
   };
 
-  const handleShareChannel = (
-    channel: 'zalo' | 'facebook' | 'messenger' | 'instagram' | 'gmail' | 'telegram',
-  ) => {
+  const handleShareChannel = (channel: 'zalo' | 'facebook' | 'messenger' | 'instagram' | 'gmail' | 'telegram') => {
     if (typeof window === 'undefined' || !article) return;
     const currentUrl = window.location.href;
     const encodedUrl = encodeURIComponent(currentUrl);
@@ -282,17 +230,13 @@ export function NewsPublicDetail({
 
     switch (channel) {
       case 'facebook': {
-        openSharePopup(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodeURIComponent(titleText)}`,
-        );
+        openSharePopup(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodeURIComponent(titleText)}`);
         break;
       }
       case 'zalo': {
         navigator.clipboard.writeText(currentUrl);
         showSuccessToast('Đã sao chép liên kết! Bạn có thể dán gửi ngay trên Zalo.');
-        openSharePopup(
-          `https://sp.zalo.me/share_inline?d=${btoa(encodeURIComponent(JSON.stringify({ url: currentUrl })))}`,
-        );
+        openSharePopup(`https://sp.zalo.me/share_inline?d=${btoa(encodeURIComponent(JSON.stringify({ url: currentUrl })))}`);
         break;
       }
       case 'messenger': {
@@ -313,17 +257,13 @@ export function NewsPublicDetail({
         break;
       }
       case 'gmail': {
-        const subject = encodeURIComponent(`[XTTECH News] ${titleText}`);
-        const body = encodeURIComponent(
-          `${summaryText}\n\nXem chi tiết bài viết tại:\n${currentUrl}`,
-        );
+        const subject = encodeURIComponent(`[XT Tech News] ${titleText}`);
+        const body = encodeURIComponent(`${summaryText}\n\nXem chi tiết bài viết tại:\n${currentUrl}`);
         openSharePopup(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`);
         break;
       }
       case 'telegram': {
-        openSharePopup(
-          `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(titleText)}`,
-        );
+        openSharePopup(`https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(titleText)}`);
         break;
       }
     }
@@ -356,9 +296,7 @@ export function NewsPublicDetail({
           <Newspaper className="w-7 h-7" />
         </div>
         <h1 className="text-xl font-bold text-slate-900">Không tìm thấy bài viết</h1>
-        <p className="text-sm text-slate-500 mt-2">
-          Bài viết này không tồn tại hoặc đã bị gỡ khỏi hệ thống.
-        </p>
+        <p className="text-sm text-slate-500 mt-2">Bài viết này không tồn tại hoặc đã bị gỡ khỏi hệ thống.</p>
         <Link href="/news" className="inline-block mt-5">
           <Button variant="primary" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
             Quay lại trang Tin tức
@@ -369,8 +307,7 @@ export function NewsPublicDetail({
   }
 
   const categoryLabel = NEWS_CATEGORY_MAP[article.category] || article.category;
-  const authorDisplayName =
-    article.author?.fullName || article.author?.username || 'Ban biên tập XTTECH';
+  const authorDisplayName = article.author?.fullName || article.author?.username || 'Ban biên tập XT Tech';
   const thumbnailSrc = getFileUrl(article.thumbnailUrl);
 
   return (
@@ -386,10 +323,7 @@ export function NewsPublicDetail({
                   Tin tức
                 </Link>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-                <Link
-                  href={`/news?category=${encodeURIComponent(article.category)}`}
-                  className="text-slate-500 hover:text-primary transition-colors"
-                >
+                <Link href={`/news?category=${encodeURIComponent(article.category)}`} className="text-slate-500 hover:text-primary transition-colors">
                   {categoryLabel}
                 </Link>
               </nav>
@@ -429,19 +363,10 @@ export function NewsPublicDetail({
                     }`}
                     suppressHydrationWarning
                   >
-                    <Heart
-                      className={`w-3.5 h-3.5 transition-transform ${
-                        isLiked ? 'text-rose-500 fill-rose-500 scale-110' : 'text-rose-500'
-                      }`}
-                    />{' '}
+                    <Heart className={`w-3.5 h-3.5 transition-transform ${isLiked ? 'text-rose-500 fill-rose-500 scale-110' : 'text-rose-500'}`} />{' '}
                     <span suppressHydrationWarning>{currentLikeCount}</span>
                   </button>
-                  <a
-                    href="#comments"
-                    className="inline-flex items-center gap-1 hover:text-primary"
-                    title="Bình luận"
-                    suppressHydrationWarning
-                  >
+                  <a href="#comments" className="inline-flex items-center gap-1 hover:text-primary" title="Bình luận" suppressHydrationWarning>
                     <MessageSquare className="w-3.5 h-3.5 text-primary" /> {article.commentCount}
                   </a>
                 </div>
@@ -449,31 +374,21 @@ export function NewsPublicDetail({
 
               {/* Sapo / Tóm tắt in đậm, chữ lớn phóng khoáng */}
               {article.summary && (
-                <p className="mt-5 text-base sm:text-lg lg:text-[19px] font-bold text-slate-800 leading-relaxed">
-                  {article.summary}
-                </p>
+                <p className="mt-5 text-base sm:text-lg lg:text-[19px] font-bold text-slate-800 leading-relaxed">{article.summary}</p>
               )}
 
               {/* Ảnh đại diện tự co giãn đúng tỉ lệ */}
               {thumbnailSrc && (
                 <figure className="mt-6 space-y-2">
                   <div className="w-full overflow-hidden bg-slate-50 rounded-xl shadow-xs">
-                    <img
-                      src={thumbnailSrc}
-                      alt={article.title}
-                      className="w-full h-auto block object-contain mx-auto"
-                    />
+                    <img src={thumbnailSrc} alt={article.title} className="w-full h-auto block object-contain mx-auto" />
                   </div>
                   <figcaption className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                    {article.title}. Ảnh: <em className="italic">XTTECH</em>.
+                    {article.title}. Ảnh: <em className="italic">XT Tech</em>.
                   </figcaption>
                 </figure>
               )}
-                 <div
-                className={`mt-6 ${ARTICLE_HTML_CLASS}`}
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-                suppressHydrationWarning
-              />
+              <div className={`mt-6 ${ARTICLE_HTML_CLASS}`} dangerouslySetInnerHTML={{ __html: sanitizedContent }} suppressHydrationWarning />
 
               <div className="mt-10 pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <button
@@ -487,16 +402,9 @@ export function NewsPublicDetail({
                       : 'bg-white text-slate-700 border-slate-200 hover:border-rose-300 hover:text-rose-600'
                   }`}
                 >
-                  <Heart
-                    className={`w-4 h-4 transition-transform ${
-                      isLiked ? 'fill-rose-500 text-rose-500 scale-110' : ''
-                    }`}
-                  />
+                  <Heart className={`w-4 h-4 transition-transform ${isLiked ? 'fill-rose-500 text-rose-500 scale-110' : ''}`} />
                   <span suppressHydrationWarning>{isLiked ? 'Đã yêu thích' : 'Thả tim bài viết'}</span>
-                  <span
-                    className="px-2 py-0.5 rounded-full text-xs font-mono tabular-nums bg-slate-100 text-slate-800"
-                    suppressHydrationWarning
-                  >
+                  <span className="px-2 py-0.5 rounded-full text-xs font-mono tabular-nums bg-slate-100 text-slate-800" suppressHydrationWarning>
                     {currentLikeCount}
                   </span>
                 </button>
@@ -544,11 +452,7 @@ export function NewsPublicDetail({
                 </div>
               </div>
 
-              <NewsCommentsSection
-                slug={article.slug}
-                articleId={article.id}
-                commentCount={article.commentCount}
-              />
+              <NewsCommentsSection slug={article.slug} articleId={article.id} commentCount={article.commentCount} />
             </div>
           </article>
 
@@ -561,9 +465,7 @@ export function NewsPublicDetail({
                   <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200/80">
                     <div className="flex items-center gap-2">
                       <span className="w-1.5 h-4 rounded-full bg-primary" />
-                      <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-                        Cùng chuyên mục
-                      </h2>
+                      <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">Cùng chuyên mục</h2>
                     </div>
                     <Link
                       href={`/news?category=${encodeURIComponent(article.category)}`}
@@ -589,25 +491,15 @@ export function NewsPublicDetail({
                   <div className="flex items-center justify-between gap-2 pb-3 mb-2 border-b border-slate-200/80">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-primary" />
-                      <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-                        Đọc nhiều nhất
-                      </h2>
+                      <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">Đọc nhiều nhất</h2>
                     </div>
-                    <Link
-                      href="/news"
-                      className="text-xs font-semibold text-primary hover:underline"
-                    >
+                    <Link href="/news" className="text-xs font-semibold text-primary hover:underline">
                       Tất cả
                     </Link>
                   </div>
                   <div className="divide-y divide-slate-100">
                     {popularArticles.map((pop, idx) => (
-                      <NewsArticleCard
-                        key={pop.id}
-                        article={pop}
-                        variant="numbered"
-                        rank={idx + 1}
-                      />
+                      <NewsArticleCard key={pop.id} article={pop} variant="numbered" rank={idx + 1} />
                     ))}
                   </div>
                 </section>
@@ -618,18 +510,11 @@ export function NewsPublicDetail({
                 <section className="rounded-xl border border-slate-200/80 bg-slate-50/40 p-5">
                   <div className="flex items-center gap-2 pb-3 mb-3 border-b border-slate-200/80">
                     <Flame className="w-4 h-4 text-rose-500 fill-rose-500 shrink-0" />
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-                      Tin Hot & Được yêu thích
-                    </h2>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">Tin Hot & Được yêu thích</h2>
                   </div>
                   <div className="divide-y divide-slate-200/60">
                     {hotArticles.map((hot) => (
-                      <NewsArticleCard
-                        key={hot.id}
-                        article={hot}
-                        variant="bullet"
-                        showDateOnBullet
-                      />
+                      <NewsArticleCard key={hot.id} article={hot} variant="bullet" showDateOnBullet />
                     ))}
                   </div>
                 </section>

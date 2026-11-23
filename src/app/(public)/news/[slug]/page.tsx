@@ -16,11 +16,7 @@ import {
 } from '@/config';
 import { NewsPublicDetail } from './_components/news-public-detail';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   let decodedSlug: string;
   try {
@@ -41,12 +37,9 @@ export async function generateMetadata({
     };
   }
 
-  const description =
-    article.summary?.trim() ||
-    stripHtmlToPlainText(article.content, 155) ||
-    PAGE_SEO_META.news.description;
+  const description = article.summary?.trim() || stripHtmlToPlainText(article.content, 155) || PAGE_SEO_META.news.description;
   const categoryLabel = NEWS_CATEGORY_MAP[article.category] || article.category;
-  const authorName = article.author?.fullName || article.author?.username || 'Ban biên tập XTTECH';
+  const authorName = article.author?.fullName || article.author?.username || 'Ban biên tập XT Tech';
 
   return buildPageMetadata({
     title: article.title,
@@ -61,11 +54,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function NewsDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   let decodedSlug: string;
   try {
@@ -89,15 +78,8 @@ export default async function NewsDetailPage({
 
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-      <NewsPublicDetail
-        slug={decodedSlug}
-        initialArticle={article}
-        initialIsLiked={initialIsLiked}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <NewsPublicDetail slug={decodedSlug} initialArticle={article} initialIsLiked={initialIsLiked} />
     </main>
   );
 }
