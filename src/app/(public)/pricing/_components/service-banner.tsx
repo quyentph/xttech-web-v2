@@ -1,17 +1,14 @@
 import React from 'react';
-import { CreditCard, Rocket, Layers, HardHat, Briefcase } from 'lucide-react';
+import { CreditCard, Wrench, Layers, HardHat, Briefcase } from 'lucide-react';
 
 interface ServiceBannerProps {
   activeMainTab?: string;
   onMainTabChange?: (tabId: string) => void;
 }
 
-/* Màu nhấn (cyan) – đồng bộ theo --hero-accent-raw */
-const ACCENT = '#25f4f4';
-
 const MAIN_TABS = [
   { id: 'bang-gia', label: 'Bảng giá', icon: CreditCard },
-  { id: 'trien-khai', label: 'Triển khai', icon: Rocket },
+  { id: 'trien-khai', label: 'Triển khai', icon: Wrench },
 ];
 
 /* 3 ngành hiển thị dưới tiêu đề – khớp với 3 tab ở PricingTabs */

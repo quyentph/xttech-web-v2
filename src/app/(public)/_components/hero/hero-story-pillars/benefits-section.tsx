@@ -1,26 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { Briefcase, CheckCircle2, Users, RefreshCw, ClipboardCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
-import { cn } from '@/utils/cn';
 
 export function BenefitsSection() {
-  const [activeIdleCard, setActiveIdleCard] = useState<0 | 1>(0);
-  const [isHoveringCards, setIsHoveringCards] = useState(false);
-
-  // Hiệu ứng luân phiên làm nổi bật 2 thẻ lợi ích khi chưa hover
-  useEffect(() => {
-    if (isHoveringCards) return;
-
-    const timer = setInterval(() => {
-      setActiveIdleCard((prev) => (prev === 0 ? 1 : 0));
-    }, 3000);
-
-    return () => clearInterval(timer);
-  }, [isHoveringCards]);
-
   return (
     <section id="benefits" className="relative scroll-mt-16 overflow-hidden bg-white py-6 lg:py-8 border-b border-slate-200/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

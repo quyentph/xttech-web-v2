@@ -6,9 +6,8 @@ import { Gem } from 'lucide-react';
 import { INTRODUCE_EASE_OUT, SOFTWARE_BENEFITS } from '../_constants/introduce.constants';
 
 const UNIFIED_STEP_STYLE = {
-  card: 'bg-white text-slate-900 shadow-md shadow-slate-200/40 hover:shadow-xl hover:shadow-primary/10',
-  title: 'text-hero-accent group-hover:brightness-110',
-  desc: 'text-slate-600',
+  title: 'text-primary font-black tracking-tight leading-snug text-lg sm:text-xl lg:text-2xl',
+  desc: 'mt-2 text-sm sm:text-base leading-relaxed text-slate-600',
   node: 'border-2 border-primary bg-white text-primary shadow-md shadow-primary/15',
 };
 
@@ -44,7 +43,7 @@ export function IntroduceBenefitsSection() {
             className="pointer-events-none absolute left-4 top-4 bottom-4 w-0.5 bg-linear-to-b from-primary/20 via-primary to-primary/20 lg:hidden"
           />
 
-          <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+          <div className="space-y-12 sm:space-y-16 lg:space-y-20">
             {SOFTWARE_BENEFITS.map((benefit, idx) => {
               const stepNumber = benefit.letter || String(idx + 1).padStart(2, '0');
               const isEven = idx % 2 === 0; // chẵn: bên trái (bên này), lẻ: bên phải (bên kia)
@@ -67,42 +66,23 @@ export function IntroduceBenefitsSection() {
                     {stepNumber}
                   </div>
 
-                  {/* Thẻ Card: So le bên trái (isEven) hoặc bên phải (isOdd) */}
+                  {/* Nội dung text: Đẩy xa hẳn ra 2 bên, tạo khoảng đệm thoáng đãng với trục giữa */}
                   <div
-                    className={`w-full pl-9 sm:pl-10 lg:pl-0 ${
+                    className={`w-full pl-12 sm:pl-16 lg:pl-0 ${
                       isEven
-                        ? 'lg:w-[calc(50%-2.5rem)] xl:w-[calc(50%-3.5rem)] lg:mr-auto'
-                        : 'lg:w-[calc(50%-2.5rem)] xl:w-[calc(50%-3.5rem)] lg:ml-auto'
+                        ? 'lg:w-[calc(50%-5rem)] xl:w-[calc(50%-7rem)] 2xl:w-[calc(50%-8rem)] lg:mr-auto lg:text-right lg:pr-6 xl:lg:pr-10'
+                        : 'lg:w-[calc(50%-5rem)] xl:w-[calc(50%-7rem)] 2xl:w-[calc(50%-8rem)] lg:ml-auto lg:text-left lg:pl-6 xl:lg:pl-10'
                     }`}
                   >
                     <motion.div
-                      initial={{ opacity: 0, x: isEven ? -36 : 36, y: 14 }}
+                      initial={{ opacity: 0, x: isEven ? -24 : 24, y: 10 }}
                       whileInView={{ opacity: 1, x: 0, y: 0 }}
                       viewport={{ once: true, amount: 0.25, margin: '0px 0px -40px 0px' }}
-                      transition={{ duration: 0.52, delay: idx * 0.1, ease: INTRODUCE_EASE_OUT }}
-                      className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 xl:p-8 transition-all duration-300 ease-out hover:-translate-y-1 ${UNIFIED_STEP_STYLE.card}`}
+                      transition={{ duration: 0.5, delay: idx * 0.08, ease: INTRODUCE_EASE_OUT }}
+                      className="py-2 lg:py-3"
                     >
-                      {/* Đường connector nhánh ngang nối vào trục giữa (Desktop) */}
-                      {isEven ? (
-                        <div
-                          aria-hidden="true"
-                          className="pointer-events-none hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-10 -mr-10 xl:w-14 xl:-mr-14 border-t-2 border-dashed border-primary/40 z-10"
-                        />
-                      ) : (
-                        <div
-                          aria-hidden="true"
-                          className="pointer-events-none hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-10 -ml-10 xl:w-14 xl:-ml-14 border-t-2 border-dashed border-primary/40 z-10"
-                        />
-                      )}
-
-                      <div>
-                        <h3
-                          className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tight leading-snug transition-all duration-200 ${UNIFIED_STEP_STYLE.title}`}
-                        >
-                          {benefit.title}
-                        </h3>
-                        <p className={`mt-2.5 text-xs sm:text-sm lg:text-base leading-relaxed ${UNIFIED_STEP_STYLE.desc}`}>{benefit.desc}</p>
-                      </div>
+                      <h3 className={UNIFIED_STEP_STYLE.title}>{benefit.title}</h3>
+                      <p className={UNIFIED_STEP_STYLE.desc}>{benefit.desc}</p>
                     </motion.div>
                   </div>
                 </div>

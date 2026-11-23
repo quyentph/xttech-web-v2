@@ -131,7 +131,7 @@ export function RegisterInlineForm({ onBack, variant = 'inline', onSuccess }: Re
           <div className="flex items-start gap-2.5 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-slate-700 leading-relaxed">
             <ShieldCheck className="h-4.5 w-4.5 shrink-0 text-primary mt-0.5" />
             <div>
-              Trải nghiệm ngay gói <strong className="font-bold text-slate-900">Adamas (cao nhất)</strong> của XT Tech trong <span className="font-bold text-primary">14 ngày</span>. Sau 14 ngày, tài khoản tự động chuyển về <strong className="font-bold text-slate-900">G0: 50 bộ cửa</strong> (không mất dữ liệu).
+              Trải nghiệm ngay gói <strong className="font-bold text-slate-900">Platium (cao nhất)</strong> của XT Tech trong <span className="font-bold text-primary">14 ngày</span>. Sau 14 ngày, tài khoản tự động chuyển về <strong className="font-bold text-slate-900">G0: 50 bộ cửa</strong> (không mất dữ liệu).
             </div>
           </div>
 

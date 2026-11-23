@@ -86,7 +86,7 @@ function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
             alt={block.imageAlt}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className={`${block.imageAnimationClass} object-cover transition-transform duration-700 ease-out group-hover:scale-108`}
+            className={`${block.imageAnimationClass} object-cover`}
           />
         </div>
       </div>
