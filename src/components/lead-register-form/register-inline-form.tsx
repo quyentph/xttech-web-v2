@@ -216,9 +216,7 @@ export function RegisterInlineForm({ onBack, variant = 'inline', onSuccess }: Re
                 </>
               )}
             </button>
-            <p className="mt-2 text-center text-[11px] text-slate-500">
-              * Miễn phí hoàn toàn 14 ngày gói Adamas • Tự động về gói G0 • Không mất dữ liệu
-            </p>
+            
           </div>
         </form>
       )}

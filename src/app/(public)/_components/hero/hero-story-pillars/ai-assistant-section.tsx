@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { HeroSectionDemoProps } from './hero-story-pillars.constants';
-import { Sparkles } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { HeroAiAssistantVisual } from '../hero-ai-assistant-visual';
 
 export function AiAssistantSection({ onOpenDemo }: HeroSectionDemoProps) {
@@ -32,7 +32,7 @@ export function AiAssistantSection({ onOpenDemo }: HeroSectionDemoProps) {
             aria-label="Đăng ký nhận demo phần mềm XTTech"
             className="group inline-flex max-w-full items-center justify-center gap-1.5 sm:gap-2.5 rounded-full border border-primary sm:border-2 bg-white px-4 py-2 sm:px-8 sm:py-3 md:px-10 md:py-3.5 text-[11px] xs:text-xs sm:text-sm md:text-base font-bold uppercase tracking-wide sm:tracking-wider text-primary shadow-xs sm:shadow-md shadow-primary/10 transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white hover:border-primary hover:shadow-xl hover:shadow-primary/25 cursor-pointer whitespace-nowrap"
           >
-            <Sparkles className="h-3.5 w-3.5 sm:h-5 sm:w-5 shrink-0 text-primary transition-all duration-300 group-hover:text-white group-hover:rotate-12" />
+            <UserPlus className="h-3.5 w-3.5 sm:h-5 sm:w-5 shrink-0 text-primary transition-all duration-300 group-hover:text-white group-hover:rotate-12" />
             <span>ĐĂNG KÝ SỬ DỤNG MIỄN PHÍ</span>
           </button>
         </div>

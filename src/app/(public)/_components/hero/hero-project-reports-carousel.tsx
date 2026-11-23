@@ -95,8 +95,8 @@ export const HeroProjectReportsCarousel = () => {
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-3">
-                      <div className="h-6 w-1 rounded-full bg-amber-500 transition-all duration-300 group-hover:bg-primary group-hover:h-7" />
-                      <span className="text-xl font-black tracking-tight text-amber-500 transition-colors duration-300 group-hover:text-primary">
+                      <div className="h-6 w-1 rounded-full bg-primary transition-all duration-300 group-hover:h-7" />
+                      <span className="text-xl font-black tracking-tight text-primary transition-colors duration-300">
                         {item.number}
                       </span>
                       <h4 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-1 transition-colors duration-300 group-hover:text-primary">
