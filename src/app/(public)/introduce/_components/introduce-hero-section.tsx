@@ -125,7 +125,7 @@ export function IntroduceHeroSection() {
             <div className="xttech-logo-enter inline-flex items-center justify-center gap-3 sm:gap-5 lg:gap-6">
               <img
                 src="/image-xttech/logo-xttech.svg"
-                alt="XT Tech Logo"
+                alt="XT TECH Logo"
                 className="object-contain"
                 style={{
                   width: 'clamp(24px, 3.4vw, 44px)',
@@ -139,7 +139,7 @@ export function IntroduceHeroSection() {
                   lineHeight: 1.1,
                 }}
               >
-                XT Tech
+                XT TECH
               </span>
             </div>
 

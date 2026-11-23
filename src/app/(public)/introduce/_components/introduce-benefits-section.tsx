@@ -20,7 +20,7 @@ export function IntroduceBenefitsSection() {
         <div className="mx-auto mb-14 max-w-3xl text-center sm:mb-18 lg:mb-22">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Lợi ích vận hành thực tế</span>
+            <span>Giá trị cốt lõi</span>
           </span>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
             Giá trị cốt lõi khi <span className="text-primary">vận hành trên XT Tech</span>

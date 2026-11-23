@@ -7,7 +7,7 @@ const LoginIntro = () => {
       {/* Brand Logo */}
       <div className="flex items-center gap-2.5">
         <XTLogo className="w-10 h-10 drop-shadow-[0_2px_6px_rgba(4,88,99,0.35)]" />
-        <span className="font-bold text-primary text-2xl tracking-tight">XT Tech</span>
+        <span className="font-bold text-primary text-2xl tracking-tight">XT TECH</span>
       </div>
 
       <div className="flex flex-col gap-2">

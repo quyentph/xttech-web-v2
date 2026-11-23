@@ -64,7 +64,7 @@ export const Footer = () => {
           <div className="flex flex-col gap-4 lg:col-span-4">
             <div className="inline-flex w-fit items-center gap-2.5 rounded-xl bg-white px-3.5 py-2 shadow-sm">
               <XTLogo className="h-8 w-8 drop-shadow-[0_2px_5px_rgba(4,88,99,0.35)]" />
-              <span className="text-xl font-black tracking-tight text-primary">XT Tech</span>
+              <span className="text-xl font-black tracking-tight text-primary">XT TECH</span>
             </div>
             <p className="text-sm text-white sm:max-w-sm">
               Giải pháp số hóa cho xưởng nhôm kính & xây dựng — Quản trị khép kín từ khảo sát, thiết kế 3D, bóc tách tự động theo công thức đến quản

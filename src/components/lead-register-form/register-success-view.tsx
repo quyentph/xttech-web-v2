@@ -45,6 +45,10 @@ export function RegisterSuccessView({ formData, onReset, onBack }: RegisterSucce
             <span className="font-semibold text-slate-800 text-right truncate">{formData.companyName}</span>
           </div>
         )}
+        <div className="flex items-center justify-between gap-3 border-t border-slate-200/70 pt-2">
+          <span className="text-slate-500 shrink-0">Gói trải nghiệm</span>
+          <span className="font-bold text-primary text-right">Adamas 14 ngày (tự động về G0)</span>
+        </div>
       </div>
 
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-red-500">

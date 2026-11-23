@@ -106,7 +106,7 @@ export const Hero = () => {
               <div
                 className={`space-y-5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   isRegisterMode
-                    ? 'opacity-0 -translate-x-12 pointer-events-none absolute top-0 left-0 w-full z-0 lg:translate-x-[calc(100%+2.5rem)] lg:opacity-100 lg:pointer-events-auto lg:z-20'
+                    ? 'opacity-0 -translate-x-12 pointer-events-none absolute top-0 left-0 w-full z-0 lg:translate-x-[calc(100%+2.5rem)] lg:opacity-100 lg:pointer-events-auto lg:z-20 lg:h-full lg:flex lg:flex-col lg:justify-center'
                     : 'relative z-10 translate-x-0 opacity-100 pointer-events-auto'
                 }`}
               >
