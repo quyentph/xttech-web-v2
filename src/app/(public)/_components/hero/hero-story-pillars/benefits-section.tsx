@@ -33,26 +33,12 @@ export function BenefitsSection() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5"
           >
-            <div
-              onMouseEnter={() => setIsHoveringCards(true)}
-              onMouseLeave={() => setIsHoveringCards(false)}
-              className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0 lg:pb-0 lg:block lg:space-y-3.5 lg:overflow-visible"
-            >
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0 lg:pb-0 lg:block lg:space-y-3.5 lg:overflow-visible">
               {/* Card 1: Giám đốc & BQL Dự án */}
-              <div
-                className={cn(
-                  'group relative w-[84vw] max-w-[340px] shrink-0 snap-center lg:w-auto lg:max-w-none overflow-hidden rounded-2xl border bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40 p-4.5 sm:p-5 transition-all duration-500 hover:-translate-y-1 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/10',
-                  !isHoveringCards && activeIdleCard === 0
-                    ? '-translate-y-1 border-amber-300 shadow-lg shadow-amber-500/10'
-                    : 'border-amber-200/90 shadow-sm',
-                )}
-              >
+              <div className="group relative w-[84vw] max-w-[340px] shrink-0 snap-center lg:w-auto lg:max-w-none overflow-hidden rounded-2xl border border-amber-200/90 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40 p-4.5 sm:p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/10">
                 <span
                   aria-hidden="true"
-                  className={cn(
-                    'pointer-events-none absolute inset-x-0 top-0 h-1 origin-left bg-amber-500 transition-transform duration-500 ease-out group-hover:scale-x-100',
-                    !isHoveringCards && activeIdleCard === 0 ? 'scale-x-100' : 'scale-x-0',
-                  )}
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left bg-amber-500 scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-center gap-3 pb-3 border-b border-amber-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm shadow-amber-500/30 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
@@ -90,20 +76,10 @@ export function BenefitsSection() {
               </div>
 
               {/* Card 2: Nhân viên & Thợ xưởng */}
-              <div
-                className={cn(
-                  'group relative w-[84vw] max-w-[340px] shrink-0 snap-center lg:w-auto lg:max-w-none overflow-hidden rounded-2xl border bg-gradient-to-br from-teal-50/80 via-white to-teal-50/40 p-4.5 sm:p-5 transition-all duration-500 hover:-translate-y-1 hover:border-primary/45 hover:shadow-xl hover:shadow-primary/10',
-                  !isHoveringCards && activeIdleCard === 1
-                    ? '-translate-y-1 border-primary/45 shadow-lg shadow-primary/10'
-                    : 'border-teal-200/90 shadow-sm',
-                )}
-              >
+              <div className="group relative w-[84vw] max-w-[340px] shrink-0 snap-center lg:w-auto lg:max-w-none overflow-hidden rounded-2xl border border-teal-200/90 bg-gradient-to-br from-teal-50/80 via-white to-teal-50/40 p-4.5 sm:p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/45 hover:shadow-xl hover:shadow-primary/10">
                 <span
                   aria-hidden="true"
-                  className={cn(
-                    'pointer-events-none absolute inset-x-0 top-0 h-1 origin-left bg-primary transition-transform duration-500 ease-out group-hover:scale-x-100',
-                    !isHoveringCards && activeIdleCard === 1 ? 'scale-x-100' : 'scale-x-0',
-                  )}
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left bg-primary scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-center gap-3 pb-3 border-b border-teal-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm shadow-primary/30 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
