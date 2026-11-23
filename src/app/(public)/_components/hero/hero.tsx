@@ -77,7 +77,7 @@ export const Hero = () => {
     <div className="relative overflow-hidden bg-white font-sans text-gray-900 selection:bg-primary/10 selection:text-primary">
       <section
         id="about"
-        className="relative scroll-mt-20 overflow-hidden bg-linear-to-br from-hero-bg-from via-primary to-hero-bg-to pt-10 pb-12 text-white lg:pt-14 lg:pb-16"
+        className="relative scroll-mt-20 overflow-hidden bg-linear-to-br from-hero-bg-from via-primary to-hero-bg-to py-10 sm:py-14 lg:py-18 xl:py-20 text-white"
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-10"
@@ -91,7 +91,7 @@ export const Hero = () => {
         <div className="pointer-events-none absolute right-0 bottom-0 h-96 w-96 rounded-full bg-teal-300/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10 lg:min-h-[540px]">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10 min-h-[460px] sm:min-h-[520px] lg:min-h-[580px]">
             <div className="lg:col-span-6 relative">
               <div
                 className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
