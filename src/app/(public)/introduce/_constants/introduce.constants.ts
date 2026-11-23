@@ -1,4 +1,4 @@
-import { Briefcase, Building2, Compass, HardHat, Layers, Target, Users, Wrench, type LucideIcon } from 'lucide-react';
+import { Briefcase, Building2, Compass, Eye, HardHat, Layers, Users, Wrench, type LucideIcon } from 'lucide-react';
 
 export const INTRODUCE_EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -189,7 +189,7 @@ export const MISSION_VISION_BLOCKS: MissionVisionBlock[] = [
     id: 'vision',
     badge: 'Tầm nhìn XT Tech',
     title: 'Tầm nhìn',
-    icon: Target,
+    icon: Eye,
     summaryLead: 'Trở thành',
     summaryHighlight: 'đơn vị dẫn đầu',
     summaryTail: 'trong lĩnh vực chuyển đổi số cho ngành nhôm cao cấp và xây dựng tại Việt Nam.',

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
-import { Check } from 'lucide-react';
+import { Check, Users } from 'lucide-react';
 import { INTRODUCE_EASE_OUT, TARGET_AUDIENCES } from '../_constants/introduce.constants';
 
 const STAIRCASE_STEPS = [
@@ -34,7 +34,10 @@ export function IntroduceAudienceSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header tiêu đề */}
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center rounded-full bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">Đối tượng sử dụng</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+            <Users className="h-3.5 w-3.5" />
+            <span>Đối tượng sử dụng</span>
+          </span>
           <h1 className="mt-3 text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl lg:text-4xl">
             XT Tech phù hợp với <span className="text-primary">những ai?</span>
           </h1>
