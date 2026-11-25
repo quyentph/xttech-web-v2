@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, FileSpreadsheet } from 'lucide-react';
 import { Modal, RegisterInlineForm } from '@/components';
-import useAuthStore from '@/stores/useAuthStore';
 import { HERO_HIGHLIGHTS } from './hero.constants';
 import { HeroAdviseCadSection } from './hero-advise-cad-section';
 import { HeroBrandsSection } from './hero-brands-section';
@@ -14,7 +13,6 @@ import { HeroFeaturedArticlesSection } from './hero-featured-articles-section';
 import { HeroStoryPillarsSection } from './hero-story-pillars';
 
 const AUTO_REGISTER_DELAY_MS = 8000;
-const HERO_AUTO_MODAL_STORAGE_KEY = 'xttech_hero_auto_register_shown';
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 
 function subscribeDesktopMedia(onChange: () => void): () => void {
@@ -32,36 +30,15 @@ export const Hero = () => {
   const [inlineResetKey, setInlineResetKey] = useState(0);
   const [isAutoModalOpen, setIsAutoModalOpen] = useState(false);
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isRegisterMode = manualRegisterMode ?? isDesktop;
-  const isRegisterModeRef = useRef(isRegisterMode);
 
   useEffect(() => {
-    isRegisterModeRef.current = isRegisterMode;
-  }, [isRegisterMode]);
-
-  useEffect(() => {
-    if (isAuthenticated) return;
-    try {
-      if (window.sessionStorage.getItem(HERO_AUTO_MODAL_STORAGE_KEY) === '1') {
-        return;
-      }
-    } catch {
-      return;
-    }
-
     const timer = window.setTimeout(() => {
-      if (isRegisterModeRef.current) return;
-      try {
-        window.sessionStorage.setItem(HERO_AUTO_MODAL_STORAGE_KEY, '1');
-      } catch {
-        // Bỏ qua nếu trình duyệt chặn sessionStorage
-      }
       setIsAutoModalOpen(true);
     }, AUTO_REGISTER_DELAY_MS);
 
     return () => window.clearTimeout(timer);
-  }, [isAuthenticated]);
+  }, []);
 
   const handleCloseInline = () => {
     setManualRegisterMode(false);
