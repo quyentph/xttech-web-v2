@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import {
   INTRODUCE_EASE_OUT,
   MISSION_VISION_BLOCKS,
@@ -12,8 +12,6 @@ import {
 } from '../_constants/introduce.constants';
 
 function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
-  const Icon = block.icon;
-
   const textCol = (
     <motion.div
       initial={{ opacity: 0, x: block.imageFirst ? 70 : -70 }}
@@ -22,8 +20,7 @@ function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
       transition={{ duration: 0.7, delay: block.imageFirst ? 0.1 : 0, ease: INTRODUCE_EASE_OUT }}
       className={`space-y-6 lg:col-span-6 ${block.imageFirst ? 'order-1 lg:order-2' : ''}`}
     >
-      <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
-        <Icon className="h-3.5 w-3.5" />
+      <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-medium text-primary">
         <span>{block.badge}</span>
       </div>
 
@@ -44,21 +41,16 @@ function MissionVisionRow({ block }: { block: MissionVisionBlock }) {
         </div>
 
         <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-          {block.summaryLead}{' '}
-          <strong className="font-semibold text-slate-900">{block.summaryHighlight}</strong>{' '}
-          {block.summaryTail}
+          {block.summaryLead} {block.summaryHighlight} {block.summaryTail}
         </p>
       </div>
 
       <div className="space-y-3 pt-2">
-        <p className="text-sm font-semibold tracking-wide text-slate-900 uppercase">{block.listTitle}</p>
-        <ul className="space-y-3">
+        <p className="text-sm font-medium tracking-wide text-slate-800 uppercase">{block.listTitle}</p>
+        <ul className="space-y-2.5">
           {block.items.map((item) => (
-            <li key={item.lead} className="flex items-start gap-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-              <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
-              <span>
-                <strong className="font-semibold text-slate-800">{item.lead}</strong> {item.text}
-              </span>
+            <li key={item.lead} className="text-sm leading-relaxed text-slate-600 sm:text-base">
+              {item.lead} {item.text}
             </li>
           ))}
         </ul>
